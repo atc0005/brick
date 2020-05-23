@@ -1,0 +1,122 @@
+# Copyright 2020 Adam Chalkley
+#
+# https://github.com/atc0005/brick
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Whether lookup errors against various files should be ignored. It is common
+# to encounter lookup errors when first deploying this application, but not
+# once the application has been in actual use. This setting defaults to
+# `false` and assumes that a sysadmin will pre-create the files as part of the
+# deployment process.
+ignore_lookup_errors = false
+
+
+[network]
+
+# TCP port that this application should listen on for incoming HTTP requests.
+local_tcp_port = 8000
+
+# Local IP Address that this application should listen on for incoming HTTP requests.
+local_ip_address = "localhost"
+
+
+[logging]
+
+# Log message priority filter. Log messages with a lower level are ignored.
+#
+# Valid options include one of: fatal, error, warn, info, debug
+level = "info"
+
+# Log output is written to this output target. Valid options are one of the
+# standard application outputs: stdout or stderr
+output = "stdout"
+
+# This setting controls which output format is used for log messages generated
+# by this application. This value is from a smaller subset of the formats
+# supported by the third-party leveled-logging package used by this
+# application. Valid values include: cli, json, logfmt, text and discard
+# (none).
+format = "text"
+
+
+[disabledusers]
+
+# The fully-qualified path to the EZproxy include file that where this
+# application should write disabled user accounts.
+# file_path = "/home/ubuntu/users.brick-disabled.txt"
+# file_path = "/tmp/users.brick-disabled.txt"
+file_path = "/var/cache/brick/users.brick-disabled.txt"
+
+# Desired file permissions when this file is created.
+# Note: The ezproxy daemon will need to be able to read this file.
+# Also note: octal with prefix `0o`
+file_permissions = 0o644
+
+# This is appended to each username as it is written to the file in order for
+# EZproxy to treat the user account as ineligible to login
+entry_suffix = "::deny"
+
+
+[reportedusers]
+
+# The fully-qualified path to log file where this application should log user
+# disable request events for fail2ban to ingest.
+# file_path = "/home/ubuntu/users.brick-reported.log"
+# file_path = "/tmp/users.brick-reported.log"
+file_path = "/var/log/brick/users.brick-reported.log"
+
+# Desired file permissions when this file is created.
+# Note: fail2ban will need to be able to read this file.
+# Also note: octal with prefix `0o`
+file_permissions = 0o644
+
+
+[ignoredusers]
+
+# Fully-qualified path to a list of user accounts that should not be banned
+# by this application. Lines beginning with a '#' character are ignored.
+# Leading and trailing whitespace per line is ignored.
+# ignored_users_file = "/home/ubuntu/users.brick-ignored.txt"
+# file_path = "/tmp/users.brick-ignored.txt"
+file_path = "/usr/local/etc/brick/users.brick-ignored.txt"
+
+
+[ignoredipaddresses]
+
+# Fully-qualified path to a list of individual IP Addresses that should not be
+# banned by this application. Lines beginning with a '#' character are
+# ignored. Leading and trailing whitespace per line is ignored.
+# ignored_ip_addresses_file = "/home/ubuntu/ips.brick-ignored.txt"
+# file_path = "/tmp/ips.brick-ignored.txt"
+file_path = "/usr/local/etc/brick/ips.brick-ignored.txt"
+
+
+[msteams]
+
+webhook_url = ""
+retries = 2
+delay = 5
+
+
+# TODO: Add this in later
+#
+# [email]
+#
+# smtp_server_fqdn = ""
+# smtp_server_port = ""
+# smtp_server_username = ""
+# smtp_server_password = ""
+# smtp_server_secure = ""
+# retries = 2
+# delay = 2

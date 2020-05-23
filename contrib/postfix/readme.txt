@@ -1,0 +1,31 @@
+Copyright 2020 Adam Chalkley
+
+https://github.com/atc0005/brick
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+
+
+This is a sample Postfix SMTP server configuration that relays all incoming
+mail to another server/service/daemon running on localhost:1025.
+
+The idea is to have this Postfix daemon running as an easy catch-all for
+tooling that doesn't offer easy alternate configuration of another
+system/port. This is not intended for production use, but instead for a local
+development environment where you're likely running a tool like
+https://github.com/maildev/maildev as a Docker container (tcp port 1025).
+
+The configuration files included in this path provide a "null-client"
+configuration. This means that this system passes ALL mail to the daemon on
+localhost:1025. This allows a tool like MailDev to receive this mail and
+provide it for display via a web UI.

@@ -1,0 +1,50 @@
+# Copyright 2020 Adam Chalkley
+#
+# https://github.com/atc0005/brick
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+##############################################################################
+# Purpose: Provide sample HTTP requests to test the web application within
+# this repo. These requests can be executed/submitted using a compatible tool
+# such as the REST Client extension for Visual Studio Code. See
+# https://github.com/Huachao/vscode-restclient for additional details.
+##############################################################################
+
+
+### View | Disabled users status
+
+POST http://localhost:8000/api/v1/users/status HTTP/1.1
+content-type: application/json
+
+< ./splunk-sanitized-payload-unformatted.json
+
+### View | Disabled Users list
+
+GET http://localhost:8000/api/v1/users/list HTTP/1.1
+
+### View | Front page
+
+GET http://localhost:8000/ HTTP/1.1
+
+### Disable | Disable user | Formatted
+
+POST http://localhost:8000/api/v1/users/disable HTTP/1.1
+content-type: application/json
+
+< ./splunk-sanitized-payload-formatted.json
+
+
+### Disable | Disable user via curl call | Unformatted
+
+curl -X POST -H "Content-Type: application/json" -d @splunk-sanitized-payload-unformatted.json http://localhost:8000/api/v1/users/disable
