@@ -26,6 +26,14 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.1.1] - 2020-05-24
+
+### Fixed
+
+- (GH-33) Fix link to removed page content
+- (GH-34) Missing doc coverage for deploying the `brick` binary
+  - oh what shame ...
+
 ## [v0.1.0] - 2020-05-24
 
 ### Added
@@ -95,5 +103,6 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.1.1...HEAD
+[v0.1.1]: https://github.com/atc0005/brick/releases/tag/v0.1.1
 [v0.1.0]: https://github.com/atc0005/brick/releases/tag/v0.1.0
