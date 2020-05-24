@@ -1,0 +1,120 @@
+# Copyright 2020 Adam Chalkley
+#
+# https://github.com/atc0005/brick
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# DEPLOYMENT INSTRUCTIONS
+#
+# See README.md file for details
+#
+# In short, copy this file to `/etc/logrotate.d/`
+
+# Purpose: Rotate log files associated with the `brick` application
+
+# TODO: You will need to extend this to cover any custom files that you
+# define. See either the systemd unit file (likely deployed to
+# `/etc/systed/system/brick.service`) for potential command-line flag settings
+# or the config file (likely also specified in the `brick.service` file) for
+# details. The most common locations for the config file are
+# `/etc/brick/config.toml` and `/usr/local/etc/brick/config.toml`.
+
+# Written to by rsyslog per our provided rsyslog snippet
+/var/log/brick/syslog.log
+{
+
+    # use date as a suffix of the rotated file
+    dateext
+
+    # keep 30 days worth of backlogs
+    #
+    # The 'maxage' directive protects against logs hanging around longer than X
+    # days, even if a combination of other settings (e.g., 'rotate' and notifempty)
+    # would keep the old logs around for a longer duration.
+    #
+    # For example, this scenario could result in log files hanging around much
+    # longer than 60 days:
+    #
+    #    rotate 60
+    #    daily
+    #    notifempty
+    #
+    # By also including 'maxage', that conf block will handle cases where no new
+    # content in the log file still results in the old logs being pruned after
+    # the specified time period.
+    #
+    # By also including 'rotate' with a matching value (instead of just using
+    #'maxage' by itself), we guard against what appears to be a default of
+    # 'rotate 0' if left undefined. In that case, old logs are thrown away instead
+    # of archived for the specified length of time (30 days in our example).
+    rotate 30
+    maxage 30
+    daily
+
+    missingok
+    notifempty
+    compress
+    sharedscripts
+    postrotate
+        # The provided systemd unit file doesn't provide a reload option, so
+        # here we use the init.d script which works on Ubuntu 14.04, 16.04 and
+        # newer.
+        /etc/init.d/rsyslog rotate > /dev/null
+    endscript
+}
+
+# Written to directly by brick. Because the application closes the file after
+# use, we should not have to restart the daemon after rotating out the file.
+# There IS the possibility that a race condition could occur, but we can cross
+# that bridge when we get there. fail2ban also seems capable of seeing that a
+# log rotation has occurred and will reopen the new file and pickup monitoring
+# from there.
+/var/log/brick/users.brick-reported.log
+{
+
+    # use date as a suffix of the rotated file
+    dateext
+
+    # keep 30 days worth of backlogs
+    #
+    # The 'maxage' directive protects against logs hanging around longer than X
+    # days, even if a combination of other settings (e.g., 'rotate' and notifempty)
+    # would keep the old logs around for a longer duration.
+    #
+    # For example, this scenario could result in log files hanging around much
+    # longer than 60 days:
+    #
+    #    rotate 60
+    #    daily
+    #    notifempty
+    #
+    # By also including 'maxage', that conf block will handle cases where no new
+    # content in the log file still results in the old logs being pruned after
+    # the specified time period.
+    #
+    # By also including 'rotate' with a matching value (instead of just using
+    #'maxage' by itself), we guard against what appears to be a default of
+    # 'rotate 0' if left undefined. In that case, old logs are thrown away instead
+    # of archived for the specified length of time (30 days in our example).
+    rotate 30
+    maxage 30
+    daily
+
+    # create new (empty) log files after rotating old ones
+    create
+
+    missingok
+    notifempty
+    compress
+
+}

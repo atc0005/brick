@@ -1,0 +1,56 @@
+# Copyright 2020 Adam Chalkley
+#
+# https://github.com/atc0005/brick
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# DEPLOYMENT INSTRUCTIONS
+#
+# See README.md file for details
+
+# https://www.freedesktop.org/software/systemd/man/systemd.service.html
+# https://www.freedesktop.org/software/systemd/man/systemd.unit.html
+
+
+[Unit]
+Description=Brick: Automatically disable EZproxy users via webhook requests
+Requires=network.target
+
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=15s
+TimeoutStopSec=15s
+
+# TIP: Due to the number of supported options, it is recommended to use a
+# config file to apply the desired configuration instead of specifying each
+# option manually via command-line flags.
+#
+# Examples are provided below. If the `--config-file` flag is provided all
+# settings can be configured via the specified configuration file unless
+# overridden by environment variables. If the `--config-file` flag is not
+# provided all settings will use default values, unless overridden by
+# environment variables.
+#
+# ExecStart=/usr/local/sbin/brick --config-file /etc/brick/config.toml
+# ExecStart=/usr/local/sbin/brick --config-file /usr/local/etc/brick/config.toml
+ExecStart=/usr/local/sbin/brick
+
+# See README.md for setup steps related to setting required
+# ownership/permissions.
+User=brick
+
+
+[Install]
+WantedBy=multi-user.target
