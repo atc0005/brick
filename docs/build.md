@@ -78,6 +78,6 @@ identified at this time.
    - for use on Linux
      - `make linux`
 1. Copy the newly compiled binary from the applicable path below and deploy
-   using the instructions provided in our [docs collection](#related).
+   using the instructions provided in our [deployment doc](deploy.md).
    - if using `Makefile`: look in `/tmp/release_assets/brick/`
    - if using `go build`: look in `/tmp/brick/`
