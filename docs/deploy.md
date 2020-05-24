@@ -17,6 +17,9 @@
   - [Log files](#log-files)
     - [Summary](#summary)
     - [Deploy logrotate snippet](#deploy-logrotate-snippet)
+  - [Deploy `brick` binary](#deploy-brick-binary)
+    - [Picking the right binary](#picking-the-right-binary)
+    - [Deploying the binary](#deploying-the-binary)
   - [Configure `brick`](#configure-brick)
     - [Start with the template configuration file](#start-with-the-template-configuration-file)
   - [Firewall rules](#firewall-rules)
@@ -137,6 +140,42 @@ See also the rsyslog-specific instructions in the [rsyslog](rsyslog.md) doc.
 #### Deploy logrotate snippet
 
 1. `sudo cp -vi contrib/logrotate/brick /etc/logrotate.d/`
+
+### Deploy `brick` binary
+
+#### Picking the right binary
+
+In addition to all of the supporting files and settings, let's not forget
+about deploying the actual brick executable (as an earlier version of these
+docs did).
+
+Depending on your target environment, you'll either need the 32-bit or 64-bit
+version of the binary that you generated earlier by following the [build
+instructions](build.md).
+
+| If you see this `uname -m` output | Use the filename with this pattern    | Your EZProxy server has this architecture |
+| --------------------------------- | ------------------------------------- | ----------------------------------------- |
+| `x86_64`                          | `brick-v0.1.0-0-g721e6d2-linux-amd64` | 64-bit                                    |
+| `i686`                            | `brick-v0.1.0-0-g721e6d2-linux-386`   | 32-bit                                    |
+
+For example, if you run `uname -m` on your EZproxy server and get `x86_64` as
+the output, you will want to deploy the `brick-v0.1.0-0-g721e6d2-linux-amd64`
+binary. Replace the `v0.1.0-0-g721e6d2` pattern with the latest available
+stable version.
+
+#### Deploying the binary
+
+1. Copy the appropriate binary to `/usr/local/sbin/brick` on the EZproxy server
+1. Set permissions on the brick birnary
+   - `sudo chmod -v u=rwx,g=rx,o=rx /usr/local/sbin/brick`
+
+If for example you learn that EZproxy is running on a 32-bit Linux
+distribution, then you will want to deploy the
+`brick-v0.1.0-0-g721e6d2-linux-386` binary to the EZproxy server as
+`/usr/local/sbin/brick` and set `0755` permissions on the file.
+
+Replace the `v0.1.0-0-g721e6d2` pattern with the latest available stable
+version.
 
 ### Configure `brick`
 
