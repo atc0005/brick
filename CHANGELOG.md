@@ -26,6 +26,32 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.1.2] - 2020-06-18
+
+### Added
+
+- Dependabot
+  - Enable Go Modules updates
+  - Enable GitHub Actions updates
+
+### Changed
+
+- Update dependencies
+  - `apex/log`
+    - `v1.1.4` to `v1.4.0`
+  - `actions/setup-go`
+    - `v1` to `v2.0.3`
+  - `actions/checkout`
+    - `v1` to `v2.3.0`
+  - `actions/setup-node`
+    - `v1` to `v2.0.0`
+
+### Fixed
+
+- Remove duplicate steps in deploy doc
+- Replace invalid config file parameters
+- Fix debug comment so that it reflects current behavior
+
 ## [v0.1.1] - 2020-05-24
 
 ### Fixed
@@ -103,6 +129,7 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.1.2...HEAD
+[v0.1.2]: https://github.com/atc0005/brick/releases/tag/v0.1.2
 [v0.1.1]: https://github.com/atc0005/brick/releases/tag/v0.1.1
 [v0.1.0]: https://github.com/atc0005/brick/releases/tag/v0.1.0
