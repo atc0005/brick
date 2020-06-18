@@ -300,7 +300,7 @@ func inList(needle string, haystack string) (bool, error) {
 		log.Debugf("Scanned line %d from %q: %q\n", lineno, haystack, currentLine)
 
 		currentLine = strings.TrimSpace(currentLine)
-		log.Debugf("Line %d from %q after lowercasing and whitespace removal: %q\n",
+		log.Debugf("Line %d from %q after whitespace removal: %q\n",
 			lineno, haystack, currentLine)
 
 		// explicitly ignore comments
