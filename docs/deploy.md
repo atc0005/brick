@@ -79,18 +79,11 @@ Mostly for the sake of complete examples, we will assume the following:
 
 1. `sudo mkdir -vp /usr/local/etc/brick`
 1. `sudo mkdir -vp /var/log/brick`
-1. `sudo touch /var/log/brick/users.brick-reported.log`
-   - pre-creating this file satisfies `fail2ban` requirements that the file
-     exist before the associated jail is activated
-1. `sudo touch /var/log/brick/syslog.log`
-   - our rsyslog configuration snippet directs matching log messages here
 1. `sudo chown -Rv brick:syslog /var/log/brick`
 1. `sudo chmod -Rv u=rwX,g+rX,o= /var/log/brick`
    - allow service account full access
    - allow rsyslog read-only access to directory and contents
    - deny access to all other non-root user accounts
-1. `sudo chmod -v g+rw /var/log/brick/syslog.log`
-    - allow rsyslog read-write access to log file
 1. `sudo mkdir -vp /var/cache/brick`
 1. `sudo chown -Rv brick:brick /var/cache/brick`
 
