@@ -87,7 +87,7 @@ file_permissions = 0o644
 # Fully-qualified path to a list of user accounts that should not be banned
 # by this application. Lines beginning with a '#' character are ignored.
 # Leading and trailing whitespace per line is ignored.
-# ignored_users_file = "/home/ubuntu/users.brick-ignored.txt"
+# file_path = "/home/ubuntu/users.brick-ignored.txt"
 # file_path = "/tmp/users.brick-ignored.txt"
 file_path = "/usr/local/etc/brick/users.brick-ignored.txt"
 
@@ -97,7 +97,7 @@ file_path = "/usr/local/etc/brick/users.brick-ignored.txt"
 # Fully-qualified path to a list of individual IP Addresses that should not be
 # banned by this application. Lines beginning with a '#' character are
 # ignored. Leading and trailing whitespace per line is ignored.
-# ignored_ip_addresses_file = "/home/ubuntu/ips.brick-ignored.txt"
+# file_path = "/home/ubuntu/ips.brick-ignored.txt"
 # file_path = "/tmp/ips.brick-ignored.txt"
 file_path = "/usr/local/etc/brick/ips.brick-ignored.txt"
 
