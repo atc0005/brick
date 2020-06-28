@@ -63,10 +63,10 @@ func validate(c Config) error {
 	case (c.LocalTCPPort() >= TCPDynamicPrivatePortStart) && (c.LocalTCPPort() <= TCPDynamicPrivatePortEnd):
 		log.Warnf(
 			"WARNING: Valid, non-privileged, but dynamic/private port between %d and %d configured. This range is reserved for dynamic (usually outgoing) connections. If you encounter errors with this application, please re-run this application and specify a port number between %d and %d",
-			TCPUserPortStart,
-			TCPUserPortEnd,
 			TCPDynamicPrivatePortStart,
 			TCPDynamicPrivatePortEnd,
+			TCPUserPortStart,
+			TCPUserPortEnd,
 		)
 
 	default:
