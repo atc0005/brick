@@ -21,7 +21,7 @@ package files
 
 const disabledUsersFileTemplateText string = `
 # Username "{{ .Username }}" from source IP "{{ .UserIP }}" disabled at "{{ .ArrivalTime }}" per alert "{{ .AlertName }}" received by "{{ .PayloadSenderIP }}" (SearchID: "{{ .SearchID }}")
-{{ .Username }}{{ .EntrySuffix }}
+{{ ToLower .Username }}{{ .EntrySuffix }}
 `
 
 // This is a standard message and only indicates that a report was received,

@@ -20,6 +20,7 @@ package files
 
 import (
 	"os"
+	"strings"
 	"text/template"
 
 	"github.com/atc0005/brick/events"
@@ -162,9 +163,20 @@ func NewReportedUserEventsLog(path string, permissions os.FileMode) *ReportedUse
 // already set.
 func NewDisabledUsers(path string, entrySuffix string, permissions os.FileMode) *DisabledUsers {
 
-	// parse templates
-	disabledUsersFileTemplate := template.Must(template.New(
-		"disabledUsersFileTemplate").Parse(disabledUsersFileTemplateText))
+	// parse template for disabled users file, provide a ToLower template
+	// function that can be used to case-fold values written to the disabled
+	// users file
+	disabledUsersFileTemplate := template.Must(
+		template.New(
+			"disabledUsersFileTemplate",
+		).Funcs(
+			template.FuncMap{
+				"ToLower": strings.ToLower,
+			},
+		).Parse(
+			disabledUsersFileTemplateText,
+		),
+	)
 
 	du := DisabledUsers{
 		FlatFile: FlatFile{
