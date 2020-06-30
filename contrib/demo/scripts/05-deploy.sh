@@ -27,17 +27,25 @@
 # current working directory.
 
 if [[ "$UID" -eq 0 ]]; then
-  echoerr "Run this script without sudo or as root, sudo will be called as needed."
+  echo "Run this script without sudo or as root, sudo will be called as needed."
   exit 1
 fi
 
-# Build application
+# Build applications
 go build -mod=vendor ../../../cmd/brick/
+go build -mod=vendor ../../../cmd/es/
+go build -mod=vendor ../../../cmd/ezproxy/
 
-# Deploy application
+# Deploy applications
 sudo service brick stop
 sudo mv -vf brick /usr/local/sbin/brick
+sudo mv -vf ezproxy /usr/local/ezproxy/ezproxy
+sudo mv -vf es /usr/local/sbin/es
+
+# Set executable bit
 sudo chmod -v +x /usr/local/sbin/brick
+sudo chmod -v +x /usr/local/ezproxy/ezproxy
+sudo chmod -v +x /usr/local/sbin/es
 
 # Start app
 sudo systemctl enable brick

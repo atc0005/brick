@@ -105,9 +105,8 @@ func main() {
 		syscall.SIGTERM, // full restart
 	)
 
-	// Where events.EventRecord values will be sent for processing. We
-	// use a buffered channel in an effort to reduce the delay for client
-	// requests.
+	// Where events will be sent for processing. We use a buffered channel in
+	// an effort to reduce the delay for client requests.
 	notifyWorkQueue := make(chan events.Record, config.NotifyMgrQueueDepth)
 
 	// Create "notifications manager" function as persistent goroutine to
@@ -155,6 +154,11 @@ func main() {
 			disabledUsers,
 			ignoredSources,
 			notifyWorkQueue,
+			appConfig.EZproxyTerminateSessions(),
+			appConfig.EZproxyActiveFilePath(),
+			appConfig.EZproxySearchDelay(),
+			appConfig.EZproxySearchRetries(),
+			appConfig.EZproxyExecutablePath(),
 		),
 	)
 

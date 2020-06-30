@@ -19,7 +19,7 @@
 # Purpose: Install core dependencies of this application.
 
 if [[ "$UID" -eq 0 ]]; then
-  echoerr "Run this script without sudo or as root, sudo will be called as needed."
+  echo "Run this script without sudo or as root, sudo will be called as needed."
   exit 1
 fi
 
@@ -45,9 +45,10 @@ then
     # install Go toolchain
     echo "Downloading and installing Go toolchain"
     cd /tmp
-    rm -f go1.14.3.linux-amd64.tar.gz
-    curl -L -O https://dl.google.com/go/go1.14.3.linux-amd64.tar.gz
-    sudo tar zxf go1.14.3.linux-amd64.tar.gz -C /usr/local/
+    export GO_VERSION="1.14.4"
+    rm -f go1.*.linux-amd64.tar.gz
+    curl -L -O https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz
+    sudo tar zxf go${GO_VERSION}.linux-amd64.tar.gz -C /usr/local/
     /usr/local/go/bin/go version
 else
     echo "Go toolchain already present"

@@ -1,6 +1,6 @@
 // Copyright 2020 Adam Chalkley
 //
-// https://github.com/atc0005/brick
+// https://github.com/atc0005/go-ezproxy
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,18 +14,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-module github.com/atc0005/brick
-
-// replace github.com/atc0005/go-ezproxy => ../go-ezproxy
-
-go 1.13
-
-require (
-	github.com/alexflint/go-arg v1.3.0
-	github.com/apex/log v1.4.0
-	github.com/atc0005/go-ezproxy v0.1.2
-	// temporarily use our fork; waiting on changes to be accepted upstream
-	github.com/atc0005/go-teams-notify v1.3.1-0.20200419155834-55cca556e726
-	github.com/atc0005/send2teams v0.4.4
-	github.com/pelletier/go-toml v1.8.0
-)
+// Package activefile is intended for the processing of EZproxy active users
+// and hosts files.
+package activefile

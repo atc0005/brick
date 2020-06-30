@@ -19,6 +19,9 @@
 
 # Linux binaries
 /brick
+/es
+/ezproxy
+/ezproxy-mock
 
 # Local Visual Studio Code editor settings (e.g., ignored words for Spelling extension)
 /.vscode

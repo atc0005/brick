@@ -19,7 +19,7 @@
 # Purpose: Install Docker for use in demo environment
 
 if [[ "$UID" -eq 0 ]]; then
-  echoerr "Run this script without sudo or as root, sudo will be called as needed."
+  echo "Run this script without sudo or as root, sudo will be called as needed."
   exit 1
 fi
 

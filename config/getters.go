@@ -184,6 +184,7 @@ func (c Config) IgnoredUsersFile() string {
 // IsSetIgnoredUsersFile indicates whether a user-provided path to the file
 // containing a list of user accounts which should not be disabled and whose
 // associated IP should not be banned by this application was provided.
+// DEPRECATED: See GH-46
 func (c Config) IsSetIgnoredUsersFile() bool {
 	switch {
 	case c.cliConfig.IgnoredUsers.File != nil:
@@ -212,6 +213,7 @@ func (c Config) IgnoredIPAddressesFile() string {
 // IsSetIgnoredIPAddressesFile indicates whether a user-provided path to the
 // file containing a list of individual IP Addresses which should not be
 // banned by this application was provided.
+// DEPRECATED: See GH-46
 func (c Config) IsSetIgnoredIPAddressesFile() bool {
 	switch {
 	case c.cliConfig.IgnoredIPAddresses.File != nil:
@@ -224,16 +226,22 @@ func (c Config) IsSetIgnoredIPAddressesFile() bool {
 }
 
 // ConfigFile returns the user-provided path to the config file for this
-// application or an empty string otherwise.
+// application or the default value if not provided. CLI flag or environment
+// variables are the only way to specify a value for this setting.
 func (c Config) ConfigFile() string {
 	switch {
 	case c.cliConfig.ConfigFile != nil:
 		return *c.cliConfig.ConfigFile
 	default:
-		return ""
+		return defaultConfigFile
 	}
 }
 
+// IgnoreLookupErrors returns the user-provided choice regarding ignoring
+// lookup errors or the default value if not provided. CLI flag values take
+// precedence if provided.
+//
+// TODO: See GH-62.
 func (c Config) IgnoreLookupErrors() bool {
 	switch {
 	case c.cliConfig.IgnoreLookupErrors != nil:
@@ -245,6 +253,9 @@ func (c Config) IgnoreLookupErrors() bool {
 	}
 }
 
+// DisabledUsersFileEntrySuffix returns the user-provided disabled users entry
+// suffix or the default value if not provided. CLI flag values take
+// precedence if provided.
 func (c Config) DisabledUsersFileEntrySuffix() string {
 	// TODO: Set this as a method on the DisabledUsers type instead/also?
 	switch {
@@ -257,6 +268,9 @@ func (c Config) DisabledUsersFileEntrySuffix() string {
 	}
 }
 
+// TeamsWebhookURL returns the user-provided webhook URL used for Teams
+// notifications or the default value if not provided. CLI flag values take
+// precedence if provided.
 func (c Config) TeamsWebhookURL() string {
 
 	switch {
@@ -349,4 +363,89 @@ func (c Config) EmailNotificationDelay() int {
 	log.Warn("Implement this as part of GH-3")
 
 	return 0
+}
+
+// EZproxyExecutablePath returns the user-provided, fully-qualified path to
+// the EZproxy executable or the default value if not provided. CLI flag
+// values take precedence if provided.
+func (c Config) EZproxyExecutablePath() string {
+	switch {
+	case c.cliConfig.EZproxy.ExecutablePath != nil:
+		return *c.cliConfig.EZproxy.ExecutablePath
+	case c.fileConfig.EZproxy.ExecutablePath != nil:
+		return *c.fileConfig.EZproxy.ExecutablePath
+	default:
+		return defaultEZproxyExecutablePath
+	}
+}
+
+// EZproxyActiveFilePath returns the user-provided, fully-qualified path to
+// the EZproxy Active Users and Hosts "state" file or the default value if not
+// provided. CLI flag values take precedence if provided.
+func (c Config) EZproxyActiveFilePath() string {
+	switch {
+	case c.cliConfig.EZproxy.ActiveFilePath != nil:
+		return *c.cliConfig.EZproxy.ActiveFilePath
+	case c.fileConfig.EZproxy.ActiveFilePath != nil:
+		return *c.fileConfig.EZproxy.ActiveFilePath
+	default:
+		return defaultEZproxyActiveFilePath
+	}
+}
+
+// EZproxyAuditFileDirPath returns the user-provided, fully-qualified path to
+// the EZproxy audit files directory or the default value if not provided. CLI
+// flag values take precedence if provided.
+func (c Config) EZproxyAuditFileDirPath() string {
+	switch {
+	case c.cliConfig.EZproxy.AuditFileDirPath != nil:
+		return *c.cliConfig.EZproxy.AuditFileDirPath
+	case c.fileConfig.EZproxy.AuditFileDirPath != nil:
+		return *c.fileConfig.EZproxy.AuditFileDirPath
+	default:
+		return defaultEZproxyAuditFileDirPath
+	}
+}
+
+// EZproxySearchRetries returns the user-provided number of retry attempts to
+// make for session lookup attempts that return zero results or the default
+// value if not provided. CLI flag values take precedence if provided.
+func (c Config) EZproxySearchRetries() int {
+	switch {
+	case c.cliConfig.EZproxy.SearchRetries != nil:
+		return *c.cliConfig.EZproxy.SearchRetries
+	case c.fileConfig.EZproxy.SearchRetries != nil:
+		return *c.fileConfig.EZproxy.SearchRetries
+	default:
+		return defaultEZproxySearchRetries
+	}
+}
+
+// EZproxySearchDelay returns the user-provided number of seconds between
+// session lookup attempts or the default value if not provided. CLI flag
+// values take precedence if provided.
+func (c Config) EZproxySearchDelay() int {
+	switch {
+	case c.cliConfig.EZproxy.SearchDelay != nil:
+		return *c.cliConfig.EZproxy.SearchDelay
+	case c.fileConfig.EZproxy.SearchDelay != nil:
+		return *c.fileConfig.EZproxy.SearchDelay
+	default:
+		return defaultEZproxySearchDelay
+	}
+}
+
+// EZproxyTerminateSessions indicates whether attempts should be made to
+// terminate sessions for reported user accounts. The user-provided value is
+// returned or the default value if not provided. CLI flag values take
+// precedence if provided.
+func (c Config) EZproxyTerminateSessions() bool {
+	switch {
+	case c.cliConfig.EZproxy.TerminateSessions != nil:
+		return *c.cliConfig.EZproxy.TerminateSessions
+	case c.fileConfig.EZproxy.TerminateSessions != nil:
+		return *c.fileConfig.EZproxy.TerminateSessions
+	default:
+		return defaultEZproxyTerminateSessions
+	}
 }

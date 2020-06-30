@@ -120,3 +120,50 @@ delay = 5
 # smtp_server_secure = ""
 # retries = 2
 # delay = 2
+
+
+[ezproxy]
+
+# Fully-qualified path to the EZproxy executable/binary. This is the same
+# executable that starts at boot. This file is usually named 'ezproxy'.
+executable_path = "/usr/local/ezproxy/ezproxy"
+
+# The fully-qualified path to the Active Users and Hosts "state" file used by
+# EZproxy (and this application) to track current sessions and hosts managed
+# by EZproxy.
+active_file_path = "/usr/local/ezproxy/ezproxy.hst"
+
+# The path to the directory containing the EZproxy audit files. The assumption
+# is made that all files within are based on YYYYMMDD.txt pattern. Any other
+# file pattern found within this path is ignored (e.g, .zip or .tar or whatnot
+# for a one-off quick backup made by a sysadmin of a specific file).
+audit_file_dir_path = "/usr/local/ezproxy/audit"
+
+# The number of retries allowed for the audit log and active files before the
+# application accepts that "cannot find matching session IDs for specific
+# user" is really the truth of it and not a race condition between this
+# application and the EZproxy application (e.g., EZproxy accepts a login, but
+# delays writing the state information for about 2 seconds to keep from
+# hammering the storage device).
+search_retries = 7
+
+# The delay in seconds between searches of the audit log or active file for a
+# specified username. This is an attempt to work around race conditions
+# between EZproxy updating its state file (which has been observed to have a
+# delay of up to several seconds) and this application *reading* the active
+# file. This delay is applied to the initial search and each subsequent
+# retried search for the provided username.
+search_delay = 1
+
+# Whether session termination support is enabled.
+#
+# If false, session termination will not be initiated by this application,
+# though current session IDs found as part of preparing for termination will
+# still be logged for troubleshooting purposes.
+#
+# If setting (or leaving) this as false, the assumption is that either no
+# handling of reported users is desired (other than perhaps logging and
+# notification) or that a tool such as fail2ban is used to monitor the
+# reported users log file and temporarily block the source IP in order to
+# force session timeout.
+terminate_sessions = false

@@ -36,6 +36,7 @@ absolutely essential) while developing this application.
   - `go-teams-notify`
     - (upstream) <https://github.com/dasrick/go-teams-notify>
     - (fork) <https://github.com/atc0005/go-teams-notify>
+  - <https://github.com/atc0005/go-ezproxy>
 
 - External
   - [Splunk](https://www.splunk.com/​)
@@ -45,12 +46,21 @@ absolutely essential) while developing this application.
 ### Instruction / Examples
 
 - EZproxy
+  - <https://help.oclc.org/Library_Management/EZproxy/Install_and_update_EZproxy/EZproxy_for_Linux_Install>
+  - <https://help.oclc.org/Library_Management/EZproxy/EZproxy_configuration/EZproxy_system_elements>
+  - <https://help.oclc.org/Library_Management/EZproxy/Configure_resources/Audit>
+  - <https://help.oclc.org/Library_Management/EZproxy/Configure_resources/LogFormat>
+  - <https://help.oclc.org/Library_Management/EZproxy/Configure_resources/Option_LogSession>
+  - <https://help.oclc.org/Library_Management/EZproxy/Configure_resources/Option_LogUser>
   - <https://help.oclc.org/Library_Management/EZproxy/Authenticate_users/EZproxy_authentication_methods/Text_file_authentication>
   - <https://help.oclc.org/Library_Management/EZproxy/Get_started/Join_the_EZproxy_listserv_and_Community_Center>
 
 - Logging
   - <https://github.com/apex/log>
   - <https://brandur.org/logfmt>
+
+- HTTP
+  - <https://blog.simon-frey.eu/manual-flush-golang-http-responsewriter/>
 
 - Splunk / JSON payload
   - [Splunk Enterprise (v8.0.1) > Alerting Manual > Use a webhook alert action](https://docs.splunk.com/Documentation/Splunk/8.0.1/Alert/Webhooks)

@@ -13,9 +13,9 @@ Automatically disable EZproxy user accounts via incoming webhook requests.
 <!-- omit in toc -->
 ## Table of contents
 
+- [Project home](#project-home)
 - [Status](#status)
 - [Overview](#overview)
-- [Project home](#project-home)
 - [Features](#features)
   - [Current](#current)
   - [Missing](#missing)
@@ -27,6 +27,12 @@ Automatically disable EZproxy user accounts via incoming webhook requests.
   - [Index](#index)
 - [License](#license)
 - [References](#references)
+
+## Project home
+
+See [our GitHub repo](https://github.com/atc0005/brick) for the latest code,
+to file an issue or submit improvements for review and potential inclusion
+into the project.
 
 ## Status
 
@@ -62,12 +68,6 @@ See also:
 
 - [High-level overview](docs/start-here.md)
 - our other [documentation](#documentation) for further instructions
-
-## Project home
-
-See [our GitHub repo](https://github.com/atc0005/brick) for the latest code,
-to file an issue or submit improvements for review and potential inclusion
-into the project.
 
 ## Features
 

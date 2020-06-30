@@ -42,6 +42,11 @@ const (
 	defaultLogOutput    string = "stdout"
 	defaultLogFormat    string = "text"
 
+	// This application does not assume a specific path for the configuration
+	// file, so we default to an empty string if the user does not specify a
+	// value via CLI or environment variable.
+	defaultConfigFile string = ""
+
 	// This is appended to each username as it is written to the file in order
 	// for EZproxy to treat the user account as ineligible to login
 	defaultDisabledUsersFileEntrySuffix string      = "::deny"
@@ -65,6 +70,28 @@ const (
 	// the number of seconds to wait between retry attempts; applies to
 	// Microsoft Teams notifications only
 	defaultMSTeamsDelay int = 5
+
+	// this is based on the official installation instructions
+	defaultEZproxyExecutablePath string = "/usr/local/ezproxy/ezproxy"
+
+	// This text file contains information on active users and virtual web
+	// server proxies. This file is also known as the Active Users and Hosts
+	// file or the "state" file and is found in the same directory as the
+	// EZproxy executable.
+	defaultEZproxyActiveFilePath string = "/usr/local/ezproxy/ezproxy.hst"
+
+	// Audit logs are stored in this path.
+	defaultEZproxyAuditFileDirPath string = "/usr/local/ezproxy/audit"
+
+	// Number of retry attempts that are made to lookup sessions for a
+	// specified username after receiving zero search results.
+	defaultEZproxySearchRetries int = 7
+
+	// Delay between search attempts in seconds
+	defaultEZproxySearchDelay int = 1
+
+	// Session termination is disabled by default
+	defaultEZproxyTerminateSessions bool = false
 )
 
 // TODO: Expose these settings via flags, config file

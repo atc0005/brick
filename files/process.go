@@ -17,7 +17,6 @@
 package files
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 	"strings"
@@ -26,25 +25,113 @@ import (
 
 	"github.com/apex/log"
 
+	"github.com/atc0005/go-ezproxy"
+	"github.com/atc0005/go-ezproxy/activefile"
+
 	"github.com/atc0005/brick/events"
+	"github.com/atc0005/brick/internal/caller"
+	"github.com/atc0005/brick/internal/fileutils"
 )
 
-func ProcessEvent(
+func processRecord(record events.Record, notifyWorkQueue chan<- events.Record) {
+
+	if record.Error != nil {
+		log.Error(record.Error.Error())
+	}
+
+	// shouldn't encounter "loop variable XYZ captured by func literal" issue
+	// because we're not in a loop (record isn't changing)
+	go func() {
+		notifyWorkQueue <- record
+	}()
+
+}
+
+// ProcessDisableEvent receives a care-package of configuration settings, the
+// original alert, a channel to send event records on and values representing
+// the disabled users and reported user events log files. This function
+// handles orchestration of multiple actions taken in response to the received
+// alert and request to disable a user account (and disable the associated
+// sessions). This function returns a collection of
+//
+// TODO: This function and those called within are *badly* in need of
+// refactoring.
+func ProcessDisableEvent(
 	alert events.SplunkAlertEvent,
 	disabledUsers *DisabledUsers,
 	reportedUserEventsLog *ReportedUserEventsLog,
 	ignoredSources IgnoredSources,
 	notifyWorkQueue chan<- events.Record,
-) error {
+	terminateSessions bool,
+	ezproxyActiveFilePath string,
+	ezproxySessionsSearchDelay int,
+	ezproxySessionSearchRetries int,
+	ezproxyExecutable string,
+) {
 
-	if err := logEventReportingUsername(alert, reportedUserEventsLog); err != nil {
-		return err
+	// Record/log that a username was reported
+	//
+	// It so happens that we are going to try and disable a username. The
+	// assumption with this remark is that the remote monitoring system is
+	// just passing along specific information to a specific endpoint, but in
+	// reality we're setting up an alert in the monitoring system with a
+	// specific outcome in mind.
+	disableRequestReceivedResult := logEventDisableRequestReceived(
+		alert,
+		reportedUserEventsLog,
+	)
+
+	processRecord(disableRequestReceivedResult, notifyWorkQueue)
+
+	// check whether username or IP Address is ignored, return early if true
+	// or if there is an error looking up the status which the sysadmin did
+	// not opt to disregard.
+	ignoredEntryFound, ignoredEntryResults := isIgnored(alert, reportedUserEventsLog, ignoredSources)
+	switch {
+	case ignoredEntryResults.Error != nil:
+
+		if ignoredSources.IgnoreLookupErrors {
+			// If sysadmin opted to ignore lookup errors then honor the
+			// request; emit complaint (to console, local logs, syslog via
+			// systemd, etc) and ignore the lookup error by proceeding.
+			//
+			// WARNING: See GH-62; this "feature" may be removed in a future
+			// release in order to avoid potentially unexpected logic bugs.
+			log.Warn(ignoredEntryResults.Error.Error())
+			break
+		}
+
+		// send record for notification
+		processRecord(ignoredEntryResults, notifyWorkQueue)
+
+		// exit after sending notification
+		return
+
+	// early exit to force desired ignore behavior
+	case ignoredEntryFound:
+
+		// Note: `logEventIgnoredUsername()` is called within `isIgnored()`,
+		// so we refrain from calling it again explicitly here.
+		processRecord(ignoredEntryResults, notifyWorkQueue)
+
+		// exit after sending notification
+		return
+
 	}
 
 	// check to see if username has already been disabled
 	disabledUserEntry := alert.Username + disabledUsers.EntrySuffix
-	disableEntryFound, disableEntryLookupErr := inList(disabledUserEntry, disabledUsers.FilePath)
-	if disableEntryLookupErr != nil {
+	disableEntryFound, disableEntryLookupErr := fileutils.HasLine(
+		disabledUserEntry,
+		"#",
+		disabledUsers.FilePath,
+	)
+
+	// Handle logic for disabling user account
+	switch {
+
+	case disableEntryLookupErr != nil:
+
 		errMsg := fmt.Errorf(
 			"error while checking disabled status for user %q from IP %q: %w",
 			alert.Username,
@@ -52,280 +139,394 @@ func ProcessEvent(
 			disableEntryLookupErr,
 		)
 
-		if !ignoredSources.IgnoreLookupErrors {
+		if ignoredSources.IgnoreLookupErrors {
+			// If sysadmin opted to ignore lookup errors then honor the
+			// request; emit complaint (to console, local logs, syslog via
+			// systemd, etc) and ignore the lookup error by proceeding.
+			//
+			// WARNING: See GH-62; this "feature" may be removed in a future
+			// release in order to avoid potentially unexpected logic bugs.
+			log.Warn(disableEntryLookupErr.Error())
 
-			// only send notifications if lookup errors are not ignored
-			go func() {
-				notifyWorkQueue <- events.Record{
-					Alert: alert,
-					Error: errMsg,
-				}
-			}()
-
-			return errMsg
+			// NOTE: If the lookup error is being ignored, we skip all
+			// attempts to disable the user account.
+			break
 		}
 
-		// console, local logs, syslog via systemd, etc.
-		log.Warn(errMsg.Error())
-	}
-
-	// if username has not been disabled yet, proceed with additional checks
-	// before attempting to disable the account
-	if !disableEntryFound {
-
-		// check to see if username has been ignored
-		userIgnoreEntryFound, userIgnoreLookupErr := inList(alert.Username, ignoredSources.IgnoredUsersFile)
-		if userIgnoreLookupErr != nil {
-
-			errMsg := fmt.Errorf(
-				"error while checking ignored status for user %q from IP %q: %w",
-				alert.Username,
-				alert.UserIP,
-				userIgnoreLookupErr,
-			)
-
-			if !ignoredSources.IgnoreLookupErrors {
-
-				// only send notifications if lookup errors are not ignored
-				go func() {
-					notifyWorkQueue <- events.Record{
-						Alert: alert,
-						Error: errMsg,
-					}
-				}()
-
-				return errMsg
-			}
-
-			// console, local logs, syslog via systemd, etc.
-			log.Warn(errMsg.Error())
-		}
-
-		if userIgnoreEntryFound {
-
-			logEventIgnoringUsernameErr := logEventIgnoringUsername(
-				alert,
-				reportedUserEventsLog,
-				ignoredSources.IgnoredUsersFile,
-			)
-
-			ignoreUserMsg := fmt.Sprintf(
-				"Ignoring disable request from %q for user %q from IP %q due to presence in %q file.",
-				alert.PayloadSenderIP,
-				alert.Username,
-				alert.UserIP,
-				ignoredSources.IgnoredUsersFile,
-			)
-			go func() {
-				notifyWorkQueue <- events.Record{
-					Alert:  alert,
-					Error:  logEventIgnoringUsernameErr,
-					Note:   ignoreUserMsg,
-					Action: events.ActionSuccessIgnoredUsername,
-				}
-			}()
-
-			return logEventIgnoringUsernameErr
-		}
-
-		// check to see if IP Address has been ignored
-		ipAddressIgnoreEntryFound, ipAddressIgnoreLookupErr := inList(
-			alert.UserIP, ignoredSources.IgnoredIPAddressesFile)
-		if ipAddressIgnoreLookupErr != nil {
-
-			errMsg := fmt.Errorf(
-				"error while checking ignored status for IP %q associated with user %q: %w",
-				alert.UserIP,
-				alert.Username,
-				ipAddressIgnoreLookupErr,
-			)
-
-			if !ignoredSources.IgnoreLookupErrors {
-
-				// only send notifications if lookup errors are not ignored
-				go func() {
-					notifyWorkQueue <- events.Record{
-						Alert: alert,
-						Error: errMsg,
-					}
-				}()
-
-				return errMsg
-			}
-
-			// console, local logs, syslog via systemd, etc.
-			log.Warn(errMsg.Error())
-		}
-
-		if ipAddressIgnoreEntryFound {
-
-			logEventIgnoringUsernameErr := logEventIgnoringUsername(
-				alert,
-				reportedUserEventsLog,
-				ignoredSources.IgnoredIPAddressesFile,
-			)
-
-			ignoreIPAddressMsg := fmt.Sprintf(
-				"Ignoring disable request from %q for user %q from IP %q due to presence in %q file.",
-				alert.PayloadSenderIP,
-				alert.Username,
-				alert.UserIP,
-				ignoredSources.IgnoredIPAddressesFile,
-			)
-
-			go func() {
-				notifyWorkQueue <- events.Record{
-					Alert:  alert,
-					Error:  logEventIgnoringUsernameErr,
-					Note:   ignoreIPAddressMsg,
-					Action: events.ActionSuccessIgnoredIPAddress,
-				}
-			}()
-
-			return logEventIgnoringUsernameErr
-
-		}
-
-		// disable user account
-		if err := disableUser(alert, disabledUsers); err != nil {
-
-			go func() {
-				notifyWorkQueue <- events.Record{
-					Alert: alert,
-					Error: err,
-				}
-			}()
-
-			return err
-		}
-
-		if err := logEventDisablingUsername(alert, reportedUserEventsLog); err != nil {
-
-			go func() {
-				notifyWorkQueue <- events.Record{
-					Alert: alert,
-					Error: err,
-				}
-			}()
-
-			return err
-		}
-
-		disableSuccessMsg := fmt.Sprintf(
-			"Disabled user %q from IP %q",
-			alert.Username,
-			alert.UserIP,
+		result := events.NewRecord(
+			alert,
+			errMsg,
+			// FIXME: Not sure what Note or "summary" field value to use here
+			"",
+			events.ActionFailureDisabledUsername,
+			nil,
 		)
 
-		go func() {
-			notifyWorkQueue <- events.Record{
-				Alert:  alert,
-				Note:   disableSuccessMsg,
-				Action: events.ActionSuccessDisabledUsername,
-			}
-		}()
+		processRecord(result, notifyWorkQueue)
 
-		log.Infof(disableSuccessMsg)
+		return
 
-		// required to indicate that we successfully disabled user account
-		return nil
+	case !disableEntryFound:
 
-	}
+		// log our intent to disable the username
+		logEventDisablingUsername(alert, reportedUserEventsLog)
 
-	// if username is already disabled, skip adding to disable file, but still
-	// log the request so that all associated IPs can be banned by fail2ban
-	alreadyDisabledMsg := fmt.Sprintf(
-		"Received disable request from %q for user %q from IP %q;"+
-			" username is already disabled",
-		alert.PayloadSenderIP,
-		alert.Username,
-		alert.UserIP,
-	)
+		// disable usename
+		if err := disableUser(alert, disabledUsers); err != nil {
+			result := events.NewRecord(
+				alert,
+				err,
+				// FIXME: Unsure what note to use here
+				"",
+				events.ActionFailureDisabledUsername,
+				nil,
+			)
 
-	go func() {
-		notifyWorkQueue <- events.Record{
-			Alert: alert,
-			// this isn't technically an "error", more of a "something worth
-			// noting" event
-			Note:   alreadyDisabledMsg,
-			Action: events.ActionSuccessDuplicateUsername,
+			processRecord(result, notifyWorkQueue)
+
+			return
 		}
-	}()
 
-	log.Debug(alreadyDisabledMsg)
+		// log success (file, notifications, etc.)
+		disableUsernameResult := logEventDisabledUsername(alert, reportedUserEventsLog)
+		processRecord(disableUsernameResult, notifyWorkQueue)
 
-	if err := logEventUserAlreadyDisabled(alert, reportedUserEventsLog); err != nil {
+	case disableEntryFound:
 
-		go func() {
-			notifyWorkQueue <- events.Record{
-				Alert: alert,
-				Error: err,
-			}
-		}()
+		usernameAlreadyDisabledResult := logEventUsernameAlreadyDisabled(alert, reportedUserEventsLog)
+		processRecord(usernameAlreadyDisabledResult, notifyWorkQueue)
 
-		return err
 	}
 
-	// FIXME: Anything else needed at this point?
-	return nil
+	// At this point the username has been disabled, either just now or as
+	// part of a previous report. We should proceed with session termination
+	// if enabled or note that the setting is not enabled for troubleshooting
+	// purposes later.
+	switch {
+	case !terminateSessions:
+
+		log.Warn("Sessions termination is disabled via configuration setting. Sessions will persist until they timeout.")
+
+		userSessions, userSessionsLookupErr := getUserSessions(
+			alert,
+			reportedUserEventsLog,
+			ezproxyActiveFilePath,
+			ezproxySessionsSearchDelay,
+			ezproxySessionSearchRetries,
+			ezproxyExecutable,
+		)
+
+		if userSessionsLookupErr != nil {
+			record := events.NewRecord(
+				alert,
+				userSessionsLookupErr,
+				"",
+				events.ActionFailureUserSessionLookupFailure,
+				nil,
+			)
+
+			processRecord(record, notifyWorkQueue)
+
+		}
+
+		var userSessionIDs []string
+		for _, session := range userSessions {
+			userSessionIDs = append(userSessionIDs, session.SessionID)
+		}
+
+		sessionsSkipped := strings.Join(userSessionIDs, `", "`)
+
+		sessionsSkippedMsg := fmt.Sprintf(
+			`Skipping termination of sessions: "%s"`,
+			sessionsSkipped,
+		)
+
+		log.Warn(sessionsSkippedMsg)
+
+		record := events.NewRecord(
+			alert,
+			nil,
+			sessionsSkippedMsg,
+			events.ActionSkippedTerminateUserSessions,
+			nil,
+		)
+
+		processRecord(record, notifyWorkQueue)
+
+	case terminateSessions:
+
+		userSessions, userSessionsLookupErr := getUserSessions(
+			alert,
+			reportedUserEventsLog,
+			ezproxyActiveFilePath,
+			ezproxySessionsSearchDelay,
+			ezproxySessionSearchRetries,
+			ezproxyExecutable,
+		)
+
+		if userSessionsLookupErr != nil {
+			record := events.NewRecord(
+				alert,
+				userSessionsLookupErr,
+				"",
+				events.ActionFailureUserSessionLookupFailure,
+				nil,
+			)
+
+			processRecord(record, notifyWorkQueue)
+
+		}
+
+		// logEventTerminatingUserSession is called within this function for
+		// each session termination attempt (one or many) and
+		// logEventTerminatedUserSessions is called at the end of the function
+		// to provide a summary of the results.
+		terminateUserSessionsResult := terminateUserSessions(
+			alert,
+			reportedUserEventsLog,
+			userSessions,
+			ezproxyActiveFilePath,
+			ezproxyExecutable,
+		)
+
+		processRecord(terminateUserSessionsResult, notifyWorkQueue)
+
+	}
 
 }
 
-// inList accepts a string and a fully-qualified path to a file containing a
-// list of such strings (commonly usernames or single IP Addresses), one per
-// line. Lines beginning with a `#` character are ignored. Leading and
-// trailing whitespace per line is ignored.
-func inList(needle string, haystack string) (bool, error) {
+// isIgnored is a wrapper function to help concentrate common ignored status
+// checks in one place. If there are issues checking ignored status,
+// explicitly state that the username or IP Address is ignored and return the
+// error. The caller can then apply other logic to determine how the error
+// condition should be treated.
+func isIgnored(
+	alert events.SplunkAlertEvent,
+	reportedUserEventsLog *ReportedUserEventsLog,
+	ignoredSources IgnoredSources,
+) (bool, events.Record) {
 
-	log.Debugf("Attempting to open %q", haystack)
+	ignoredUserEntryFound, ignoredUserLookupErr := fileutils.HasLine(
+		alert.Username,
+		"#",
+		ignoredSources.IgnoredUsersFile,
+	)
 
-	// TODO: How do we handle the situation where the file does not exist
-	// ahead of time? Since this application will manage the file, it should
-	// be able to create it with the desired permissions?
-	f, err := os.Open(haystack)
-	if err != nil {
-		return false, fmt.Errorf("error encountered opening file %q: %w", haystack, err)
-	}
-	defer f.Close()
+	if ignoredUserLookupErr != nil {
 
-	log.Debugf("Searching for: %q", needle)
+		errMsg := fmt.Errorf(
+			"error while checking ignored status for user %q from IP %q: %w",
+			alert.Username,
+			alert.UserIP,
+			ignoredUserLookupErr,
+		)
 
-	s := bufio.NewScanner(f)
-	var lineno int
+		result := events.NewRecord(
+			alert,
+			errMsg,
+			// FIXME: Unsure what note to add here
+			"",
+			events.ActionFailureIgnoredUsername,
+			nil,
+		)
 
-	// TODO: Does Scan() perform any whitespace manipulation already?
-	for s.Scan() {
-		lineno++
-		currentLine := s.Text()
-		log.Debugf("Scanned line %d from %q: %q\n", lineno, haystack, currentLine)
-
-		currentLine = strings.TrimSpace(currentLine)
-		log.Debugf("Line %d from %q after whitespace removal: %q\n",
-			lineno, haystack, currentLine)
-
-		// explicitly ignore comments
-		if strings.HasPrefix(currentLine, "#") {
-			log.Debugf("Ignoring comment line %d", lineno)
-			continue
-		}
-
-		log.Debugf("Checking whether line %d is a match: %q %q", lineno, currentLine, needle)
-		if strings.EqualFold(currentLine, needle) {
-			log.Debugf("Match found on line %d, returning true to indicate this", lineno)
-			return true, nil
-		}
+		// on error, assume username or IP should be ignored
+		return true, result
 
 	}
 
-	log.Debug("Exited s.Scan() loop")
+	if ignoredUserEntryFound {
+		ignoredUsernameResult := logEventIgnoredUsername(
+			alert,
+			reportedUserEventsLog,
+			ignoredSources.IgnoredUsersFile,
+		)
 
-	// report any errors encountered while scanning the input file
-	if err := s.Err(); err != nil {
-		return false, err
+		return true, ignoredUsernameResult
+
 	}
 
-	// otherwise, report that the requested needle was not found
-	return false, nil
+	// check to see if IP Address has been ignored
+	ipAddressIgnoreEntryFound, ipAddressIgnoreLookupErr := fileutils.HasLine(
+		alert.UserIP,
+		"#",
+		ignoredSources.IgnoredIPAddressesFile,
+	)
+
+	if ipAddressIgnoreLookupErr != nil {
+
+		errMsg := fmt.Errorf(
+			"error while checking ignored status for IP %q associated with user %q: %w",
+			alert.UserIP,
+			alert.Username,
+			ipAddressIgnoreLookupErr,
+		)
+
+		result := events.NewRecord(
+			alert,
+			errMsg,
+			// FIXME: Unsure what note to add here
+			"",
+			events.ActionFailureIgnoredIPAddress,
+			nil,
+		)
+
+		// on error, assume username or IP should be ignored
+		return true, result
+	}
+
+	if ipAddressIgnoreEntryFound {
+
+		ignoredIPAddressResult := logEventIgnoredIPAddress(
+			alert,
+			reportedUserEventsLog,
+			ignoredSources.IgnoredIPAddressesFile,
+		)
+
+		return true, ignoredIPAddressResult
+
+	}
+
+	// the username and associated IP Addr is *not* ignored if:
+	//
+	// - no error occurs looking up the ignored status
+	// - no match is found
+
+	// FIXME: Not a fan of returning an empty Record here. If we drop Records
+	// directly into the notifyWorkQueue channel instead of passing up this is
+	// no longer necessary.
+	return false, events.Record{}
+
+}
+
+func getUserSessions(
+	alert events.SplunkAlertEvent,
+	reportedUserEventsLog *ReportedUserEventsLog,
+	ezproxyActiveFilePath string,
+	ezproxySessionsSearchDelay int,
+	ezproxySessionSearchRetries int,
+	ezproxyExecutable string,
+) (ezproxy.UserSessions, error) {
+
+	reader, readerErr := activefile.NewReader(alert.Username, ezproxyActiveFilePath)
+	if readerErr != nil {
+		activeFileReaderErr := fmt.Errorf(
+			"error while creating activeFile reader to retrieve sessions associated with user %q: %w",
+			alert.Username,
+			readerErr,
+		)
+
+		return nil, activeFileReaderErr
+	}
+
+	// Adjust stubbornness of newly created reader (overridding
+	// library/package default values with our own)
+	if err := reader.SetSearchDelay(ezproxySessionsSearchDelay); err != nil {
+		searchDelayErr := fmt.Errorf(
+			"error while setting search delay for activeFile reader to retrieve sessions associated with user %q: %w",
+			alert.Username,
+			err,
+		)
+
+		return nil, searchDelayErr
+
+	}
+
+	if err := reader.SetSearchRetries(ezproxySessionSearchRetries); err != nil {
+		searchRetriesErr := fmt.Errorf(
+			"error while setting search retries for activeFile reader to retrieve sessions associated with user %q: %w",
+			alert.Username,
+			err,
+		)
+
+		return nil, searchRetriesErr
+	}
+
+	log.Debugf(
+		"%s: Searching %q for %q",
+		caller.GetFuncName(),
+		ezproxyActiveFilePath,
+		alert.Username,
+	)
+
+	activeSessions, userSessionsLookupErr := reader.MatchingUserSessions()
+	if userSessionsLookupErr != nil {
+		userSessionsRetrievalErr := fmt.Errorf(
+			"error retrieving matching user sessions associated with user %q: %w",
+			alert.Username,
+			userSessionsLookupErr,
+		)
+
+		return nil, userSessionsRetrievalErr
+	}
+
+	return activeSessions, nil
+}
+
+func terminateUserSessions(
+	alert events.SplunkAlertEvent,
+	reportedUserEventsLog *ReportedUserEventsLog,
+	activeSessions ezproxy.UserSessions,
+	ezproxyActiveFilePath string,
+	ezproxyExecutable string,
+) events.Record {
+
+	// TODO: On the fence re emitting this output each time
+	// log.Debug("ProcessEvent: Session termination enabled")
+	log.Info("Session termination enabled")
+
+	// build sessions list specific to provided user and active file using
+	// an ezproxy.SessionsReader
+
+	// If we received an alert from monitoring systems, there *should* be
+	// at least one user session active in order for the alert to have
+	// been generated in the first place. If not, we are considering that
+	// an error.
+	//
+	// NOTE: The atc0005/go-ezproxy package performs retries per our above
+	// configuration, so this session count "error" is *after* we have
+	// already retried a set number of times; retries are performed in
+	// case there is a race condition between EZproxy creating the session
+	// and our receiving the notification.
+	if len(activeSessions) == 0 {
+
+		activeSessionsCountErr := fmt.Errorf(
+			"0 active sessions found for username %q in file %q",
+			alert.Username,
+			ezproxyActiveFilePath,
+		)
+
+		return events.NewRecord(
+			alert,
+			activeSessionsCountErr,
+			"",
+			events.ActionFailureTerminatedUserSession,
+			nil,
+		)
+	}
+
+	log.Infof(
+		"%d active sessions found for %q",
+		len(activeSessions),
+		alert.Username,
+	)
+
+	for _, session := range activeSessions {
+		logEventTerminatingUserSession(alert, session)
+	}
+
+	terminationResults := activeSessions.Terminate(ezproxyExecutable)
+
+	// User sessions *should* now be terminated; results of the attempts
+	// are recorded for further review to confirm.
+
+	logTerminatedUserSessionsResult := logEventTerminatedUserSessions(
+		alert,
+		reportedUserEventsLog,
+		terminationResults,
+	)
+
+	return logTerminatedUserSessionsResult
 
 }
 
@@ -339,8 +540,8 @@ func disableUser(alert events.SplunkAlertEvent, disabledUsers *DisabledUsers) er
 	log.Debug("DisableUser: disabling user per alert")
 	if err := appendToFile(
 		fileEntry{
-			SplunkAlertEvent: alert,
-			EntrySuffix:      disabledUsers.EntrySuffix,
+			Alert:       alert,
+			EntrySuffix: disabledUsers.EntrySuffix,
 		},
 		disabledUsers.Template,
 		disabledUsers.FilePath,

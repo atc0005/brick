@@ -1,8 +1,6 @@
-#!/bin/bash
-
 # Copyright 2020 Adam Chalkley
 #
-# https://github.com/atc0005/brick
+# https://github.com/atc0005/go-ezproxy
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,23 +14,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Purpose: Install applications specific to demo environment
+# https://github.com/igorshubovych/markdownlint-cli#configuration
+# https://github.com/DavidAnson/markdownlint#optionsconfig
 
-if [[ "$UID" -eq 0 ]]; then
-  echo "Run this script without sudo or as root, sudo will be called as needed."
-  exit 1
-fi
+# Setting the special default rule to true or false includes/excludes all
+# rules by default.
+"default": true
 
-# Refresh package lists
-sudo apt-get update
+# We know that line lengths will be long in the main README file, so don't
+# report those cases.
+"MD013": false
 
-# Install demo tooling
-sudo apt-get install -y \
-    ccze \
-    guake \
-    guake-indicator
-
-# Install Visual Studio Code
-cd /tmp
-curl -L https://go.microsoft.com/fwlink/?LinkID=760868 > vscode-installer.deb
-sudo apt-get install -y ./vscode-installer.deb
+# Don't complain if sub-heading names are duplicated since this is a common
+# practice in CHANGELOG.md (e.g., "Fixed").
+"MD024":
+  "siblings_only": true

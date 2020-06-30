@@ -24,12 +24,15 @@ import (
 	"text/template"
 
 	"github.com/atc0005/brick/events"
+	"github.com/atc0005/go-ezproxy"
 )
 
 // fileEntry represents the values that are used when generating entries via
-// templates for flat-files: disable user accounts, log file of actions taken
+// templates for flat-files associated with disabling user accounts,
+// terminating active user sessions and logging actions taken.
 type fileEntry struct {
-	events.SplunkAlertEvent
+	Alert              events.SplunkAlertEvent
+	UserSession        ezproxy.UserSession
 	EntrySuffix        string
 	IgnoredEntriesFile string
 }
@@ -106,9 +109,9 @@ type ReportedUserEventsLog struct {
 	// the user account is disabled.
 	DisableFirstEventTemplate *template.Template
 
-	// DisableRepeatEventTemplate is a parsed template representing the log line written
-	// when a user account is reported via alert payload again after the user
-	// account is already disabled.
+	// DisableRepeatEventTemplate is a parsed template representing the log
+	// line written when a user account is reported via alert payload again
+	// after the user account is already disabled.
 	DisableRepeatEventTemplate *template.Template
 
 	// IgnoreTemplate is a parsed template representing the log line written
@@ -116,6 +119,12 @@ type ReportedUserEventsLog struct {
 	// or associated IP Address is ignored due to its presence in either the
 	// specified "safe" or "ignored" user accounts file or IP Addresses file.
 	IgnoreTemplate *template.Template
+
+	// TerminateUserSessionEventTemplate is a parsed template representing the
+	// log line written when a user account is reported via alert payload and
+	// an associated user session is terminated. There may be multiple log
+	// lines, one for each active user session associated with the username.
+	TerminateUserSessionEventTemplate *template.Template
 }
 
 // IgnoredSources represents the various sources of "safe" or "ignore" entries
@@ -144,15 +153,19 @@ func NewReportedUserEventsLog(path string, permissions os.FileMode) *ReportedUse
 	ignoredUserEventTemplate := template.Must(template.New(
 		"ignoredUserEventTemplate").Parse(ignoredUserEventTemplateText))
 
+	terminatedUserSessionEventTemplate := template.Must(template.New(
+		"terminatedUserSessionEventTemplate").Parse(terminatedUserEventTemplateText))
+
 	ruel := ReportedUserEventsLog{
 		FlatFile: FlatFile{
 			FilePath:        path,
 			FilePermissions: permissions,
 		},
-		ReportTemplate:             reportedUserEventTemplate,
-		DisableFirstEventTemplate:  disabledUserFirstEventTemplate,
-		DisableRepeatEventTemplate: disabledUserRepeatEventTemplate,
-		IgnoreTemplate:             ignoredUserEventTemplate,
+		ReportTemplate:                    reportedUserEventTemplate,
+		DisableFirstEventTemplate:         disabledUserFirstEventTemplate,
+		DisableRepeatEventTemplate:        disabledUserRepeatEventTemplate,
+		IgnoreTemplate:                    ignoredUserEventTemplate,
+		TerminateUserSessionEventTemplate: terminatedUserSessionEventTemplate,
 	}
 
 	return &ruel

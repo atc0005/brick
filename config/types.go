@@ -147,6 +147,60 @@ type MSTeams struct {
 	Retries *int `toml:"retries" arg:"--teams-notify-retries,env:BRICK_MSTEAMS_WEBHOOK_RETRIES" help:"The number of attempts that this application will make to deliver Microsoft Teams messages before giving up."`
 }
 
+// EZproxy represents that various configuration settings used to interact
+// with EZproxy and files/settings used by EZproxy.
+type EZproxy struct {
+
+	// ExecutablePath is the fully-qualified path to the EZproxy
+	// executable/binary. This executable is usually named 'ezproxy' and is
+	// set to start at system boot. The fully-qualified path to this
+	// executable is required for session termination.
+	ExecutablePath *string `toml:"executable_path" arg:"--ezproxy-executable-path,env:BRICK_EZPROXY_EXECUTABLE_PATH" help:"The fully-qualified path to the EZproxy executable/binary. This executable is usually named 'ezproxy' and is set to start at system boot. The fully-qualified path to this executable is required for session termination."`
+
+	// ActiveFilePath is the fully-qualified path to the Active Users and
+	// Hosts "state" file used by EZproxy (and this application) to track
+	// current sessions and hosts managed by EZproxy.
+	ActiveFilePath *string `toml:"active_file_path" arg:"--ezproxy-active-file-path,env:BRICK_EZPROXY_ACTIVE_FILE_PATH" help:"The fully-qualified path to the Active Users and Hosts 'state' file used by EZproxy (and this application) to track current sessions and hosts managed by EZproxy."`
+
+	// AuditFileDirPath is the path to the directory containing the EZproxy
+	// audit files. The assumption is made that all files within are based on
+	// YYYYMMDD.txt pattern. Any other file pattern found within this path is
+	// ignored (e.g, .zip or .tar or whatnot for a one-off quick backup made
+	// by a sysadmin of a specific file).
+	AuditFileDirPath *string `toml:"audit_file_dir_path" arg:"--ezproxy-audit-file-dir-path,env:BRICK_EZPROXY_AUDIT_FILE_DIR_PATH" help:"The path to the directory containing the EZproxy audit files. The assumption is made that all files within are based on YYYYMMDD.txt pattern. Any other file pattern found within this path is ignored (e.g, .zip or .tar or whatnot for a one-off quick backup made by a sysadmin of a specific file)."`
+
+	// SearchRetries is the number of retries allowed for the audit log and
+	// active files before the application accepts that "cannot find matching
+	// session IDs for specific user" is really the truth of it and not a race
+	// condition between this application and the EZproxy application (e.g.,
+	// EZproxy accepts a login, but delays writing the state information for
+	// about 2 seconds to keep from hammering the storage device).
+	SearchRetries *int `toml:"search_retries" arg:"--ezproxy-search-retries,env:BRICK_EZPROXY_SEARCH_RETRIES" help:"The number of retries allowed for the audit log and active files before the application accepts that 'cannot find matching session IDs for specific user' is really the truth of it and not a race condition between this application and the EZproxy application (e.g., EZproxy accepts a login, but delays writing the state information for about 2 seconds to keep from hammering the storage device)."`
+
+	// SearchDelay is the delay in seconds between searches of the audit log
+	// or active file for a specified username. This is an attempt to work
+	// around race conditions between EZproxy updating its state file (which
+	// has been observed to have a delay of up to several seconds) and this
+	// application *reading* the active file. This delay is applied to the
+	// initial search and each subsequent retried search for the provided
+	// username.
+	SearchDelay *int `toml:"search_delay" arg:"--ezproxy-search-delay,env:BRICK_EZPROXY_SEARCH_DELAY" help:"The delay in seconds between searches of the audit log or active file for a specified username. This is an attempt to work around race conditions between EZproxy updating its state file (which has been observed to have a delay of up to several seconds) and this application *reading* the active file. This delay is applied to the initial search and each subsequent retried search for the provided username."`
+
+	// TerminateSessions controls whether session termination support is
+	// enabled.
+	//
+	// If false, session termination will not be initiated by this
+	// application, though current session IDs found as part of preparing for
+	// termination will still be logged for troubleshooting purposes.
+	//
+	// If setting (or leaving) this as false, the assumption is that either no
+	// handling of reported users is desired (other than perhaps logging and
+	// notification) or that a tool such as fail2ban is used to monitor the
+	// reported users log file and temporarily block the source IP in order to
+	// force session timeout.
+	TerminateSessions *bool `toml:"terminate_sessions" arg:"--ezproxy-terminate-sessions,env:BRICK_EZPROXY_TERMINATE_SESSIONS" help:"Whether session termination support is enabled. If false, session termination will not be initiated by this application, though current session IDs found as part of preparing for termination will still be logged for troubleshooting purposes. 	// If setting (or leaving) this as false, the assumption is that either no handling of reported users is desired (other than perhaps logging and notification) or that a tool such as fail2ban is used to monitor the reported users log file and temporarily block the source IP in order to force session timeout."`
+}
+
 // configTemplate is our base configuration template used to collect values
 // specified by various configuration sources. This template struct is
 // embedded within the main Config struct once for each config source.
@@ -162,6 +216,7 @@ type configTemplate struct {
 	IgnoredUsers
 	IgnoredIPAddresses
 	MSTeams
+	EZproxy
 
 	IgnoreLookupErrors *bool `toml:"ignore_lookup_errors" arg:"--ignore-lookup-errors,env:BRICK_IGNORE_LOOKUP_ERRORS" help:"Whether application should continue if attempts to lookup existing disabled or ignored status for a username or IP Address fail."`
 

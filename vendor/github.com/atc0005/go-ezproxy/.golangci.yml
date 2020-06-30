@@ -1,8 +1,6 @@
-#!/bin/bash
-
 # Copyright 2020 Adam Chalkley
 #
-# https://github.com/atc0005/brick
+# https://github.com/atc0005/go-ezproxy
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,23 +14,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Purpose: Install applications specific to demo environment
-
-if [[ "$UID" -eq 0 ]]; then
-  echo "Run this script without sudo or as root, sudo will be called as needed."
-  exit 1
-fi
-
-# Refresh package lists
-sudo apt-get update
-
-# Install demo tooling
-sudo apt-get install -y \
-    ccze \
-    guake \
-    guake-indicator
-
-# Install Visual Studio Code
-cd /tmp
-curl -L https://go.microsoft.com/fwlink/?LinkID=760868 > vscode-installer.deb
-sudo apt-get install -y ./vscode-installer.deb
+linters:
+  enable:
+    - depguard
+    - dogsled
+    - dupl
+    - goconst
+    - gocritic
+    - gofmt
+    - goimports
+    - golint
+    - gosec
+    - maligned
+    - misspell
+    - prealloc
+    - scopelint
+    - stylecheck
+    - unconvert
