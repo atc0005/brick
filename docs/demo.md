@@ -73,8 +73,9 @@ This demo is intended to answer that question by covering:
 1. Add `/var/log/brick` path to workspace
 1. Add `/usr/local/etc/brick` path to workspace
 1. Add `/var/cache/brick` path to workspace
+1. Add `/usr/local/ezproxy` path to workspace
 1. Install extensions
-   - `Better TOML`
+   - `Even Better TOML` (`tamasfe.even-better-toml`)
 1. Configure settings
 
    ```json
@@ -105,6 +106,8 @@ Configure `brick`:
 1. Set `msteams.webhook_url` to the webhook URL retrieved from the test
    Microsoft Teams channel
 1. Comment out `msteams.webhook_url` line
+1. Set `ezproxy.terminate_sessions` to `true`
+   - TODO: Decide if this will be enabled initially, or as a follow-up item
 
 ### Terminal
 
@@ -136,7 +139,7 @@ Configure `guake` for demo:
    1. `disabled user entries`
       - `/var/cache/brick/users.brick-disabled.txt`
    1. `reported user entries`
-      - `/var/log/brick/users.brick-reported.txt`
+      - `/var/log/brick/users.brick-reported.log`
    1. `fail2ban log`
       - `/var/log/fail2ban.log`
 
@@ -395,9 +398,12 @@ The following enhancement requests would help regardless of whether we use
 
 - Add support for dynamically denying access to specified IPs
   - without restarting EZproxy
-- Add support to terminate active user sessions via API or other external
-  control
+- Add (official) support to terminate active user sessions via API or other
+  external control
   - without restarting EZproxy
+  - Note: This support is available as of right now (learned this after the
+    May 2020 demo), but OCLC Support has indicated it isn't official and could
+    go away without notice.
 
 ## References
 

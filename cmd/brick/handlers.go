@@ -20,6 +20,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -90,6 +91,11 @@ func disableUserHandler(
 	disabledUsers *files.DisabledUsers,
 	ignoredSources files.IgnoredSources,
 	notifyWorkQueue chan<- events.Record,
+	terminateSessions bool,
+	ezproxyActiveFilePath string,
+	ezproxySessionsSearchDelay int,
+	ezproxySessionSearchRetries int,
+	ezproxyExecutable string,
 ) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -121,9 +127,9 @@ func disableUserHandler(
 		// have the option of displaying it in a raw format (e.g.,
 		// troubleshooting), replace the Body with a new io.ReadCloser to
 		// allow later access to r.Body for JSON-decoding purposes
-		requestBody, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+		requestBody, requestBodyReadErr := ioutil.ReadAll(r.Body)
+		if requestBodyReadErr != nil {
+			http.Error(w, requestBodyReadErr.Error(), http.StatusBadRequest)
 			return
 		}
 
@@ -135,8 +141,7 @@ func disableUserHandler(
 		// error, respond to the client with the error message and appropriate
 		// status code.
 		var payloadV2 events.SplunkAlertPayloadV2
-		err = json.NewDecoder(r.Body).Decode(&payloadV2)
-		if err != nil {
+		if err := json.NewDecoder(r.Body).Decode(&payloadV2); err != nil {
 			log.Errorf("Error decoding r.Body into payloadV2:\n%v\n\n", err)
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
@@ -154,8 +159,25 @@ func disableUserHandler(
 
 		}
 
-		// inform sender that the payload was received
-		fmt.Fprintln(w, "OK: Payload received")
+		// Explicitly confirm that the payload was received so that the sender
+		// can go ahead and disconnect. This prevents holding up the sender
+		// while this application performs further (unrelated from the
+		// sender's perspective) processing.
+		//
+		// FIXME: Is having a newline here best practice, or no?
+		if _, err := io.WriteString(w, "OK: Payload received\n"); err != nil {
+			log.Error("disableUserHandler: Failed to send OK status response to payload sender")
+		}
+
+		// Manually flush http.ResponseWriter in an additional effort to
+		// prevent undue wait time for payload sender
+		if f, ok := w.(http.Flusher); ok {
+			log.Debug("disableUserHandler: Manually flushing http.ResponseWriter")
+			f.Flush()
+		} else {
+			log.Warn("disableUserHandler: http.Flusher interface not available, cannot flush http.ResponseWriter")
+			log.Warn("disableUserHandler: Not flushing http.ResponseWriter may cause a noticeable delay between requests")
+		}
 
 		// if we made it this far, the payload checks out and we should be
 		// able to safely retrieve values that we need. We will also append
@@ -174,50 +196,27 @@ func disableUserHandler(
 			Headers:         r.Header,
 		}
 
-		log.Debugf(
-			"disableUserHandler: Received disable request from %q for user %q from IP %q.",
-			alert.PayloadSenderIP,
-			alert.Username,
-			alert.UserIP,
-		)
-
-		// Send to Notification Manager for processing
-		record := events.Record{
-			Alert: alert,
-			Note:  "disable request received",
-		}
-		go func() { notifyWorkQueue <- record }()
-
-		if err := files.ProcessEvent(
+		// All return values from subfunction calls are dropped into the
+		// notifyWorkQueue channel; nothing is returned here for further
+		// processing.
+		//
+		// NOTE: Because this is executed in a goroutine, the client (e.g.,
+		// monitoring system) gets a near-immediate response back and the
+		// connection is closed. There are probably other/better ways to
+		// achieve that specific result without using a goroutine, but the
+		// effect is worth noting for further exploration later.
+		go files.ProcessDisableEvent(
 			alert,
 			disabledUsers,
 			reportedUserEventsLog,
 			ignoredSources,
 			notifyWorkQueue,
-		); err != nil {
-
-			// TODO: Ensure that any errors bubble-up to *something* that will
-			// get the errors in front of us. A later step in this app's
-			// design is to expose errors via an endpoint so that monitoring
-			// systems like Nagios can poll for unresolved errors. Perhaps
-			// CRITICAL for failed writes, WARNING for writes pending a
-			// delayed retry (based on the assumption that a later re-check in
-			// the monitoring system will find the pending write no longer
-			// present, signaling an OK state).
-			log.Error(err.Error())
-
-			// FIXME: This is likely a duplicate of something handled further
-			// down?
-			go func() {
-				notifyWorkQueue <- events.Record{
-					Alert: alert,
-					Error: err,
-					Note:  "ProcessEvent() failure",
-				}
-			}()
-
-			return
-		}
+			terminateSessions,
+			ezproxyActiveFilePath,
+			ezproxySessionsSearchDelay,
+			ezproxySessionSearchRetries,
+			ezproxyExecutable,
+		)
 
 	}
 }

@@ -32,7 +32,7 @@
 SHELL = /bin/bash
 
 # Space-separated list of cmd/BINARY_NAME directories to build
-WHAT 					= brick
+WHAT 					= brick es ezproxy
 
 # TODO: This will need to be standardized across all cmd files in order to
 # work as intended.
@@ -53,7 +53,7 @@ GOLANGCI_LINT_VERSION		= v1.27.0
 
 # The default `go build` process embeds debugging information. Building
 # without that debugging information reduces the binary size by around 28%.
-BUILDCMD				=	go build -mod=vendor -a -ldflags="-s -w -X $(VERSION_VAR_PKG).version=$(VERSION)"
+BUILDCMD				=	go build -mod=vendor -a -ldflags="-s -w -X $(VERSION_VAR_PKG).Version=$(VERSION)"
 GOCLEANCMD				=	go clean -mod=vendor ./...
 GITCLEANCMD				= 	git clean -xfd
 CHECKSUMCMD				=	sha256sum -b
@@ -149,11 +149,11 @@ windows:
 
 	@for target in $(WHAT); do \
 		mkdir -p $(OUTPUTDIR)/$$target && \
-		echo "Building 386 binaries" && \
+		echo "Building $$target 386 binary" && \
 		env GOOS=windows GOARCH=386 $(BUILDCMD) -o $(OUTPUTDIR)/$$target/$$target-$(VERSION)-windows-386.exe ${PWD}/cmd/$$target && \
-		echo "Building amd64 binaries" && \
+		echo "Building $$target amd64 binary" && \
 		env GOOS=windows GOARCH=amd64 $(BUILDCMD) -o $(OUTPUTDIR)/$$target/$$target-$(VERSION)-windows-amd64.exe ${PWD}/cmd/$$target && \
-		echo "Generating checksum files" && \
+		echo "Generating $$target checksum files" && \
 		$(CHECKSUMCMD) $(OUTPUTDIR)/$$target/$$target-$(VERSION)-windows-386.exe > $(OUTPUTDIR)/$$target/$$target-$(VERSION)-windows-386.exe.sha256 && \
 		$(CHECKSUMCMD) $(OUTPUTDIR)/$$target/$$target-$(VERSION)-windows-amd64.exe > $(OUTPUTDIR)/$$target/$$target-$(VERSION)-windows-amd64.exe.sha256; \
 	done
@@ -167,11 +167,11 @@ linux:
 
 	@for target in $(WHAT); do \
 		mkdir -p $(OUTPUTDIR)/$$target && \
-		echo "Building 386 binaries" && \
+		echo "Building $$target 386 binary" && \
 		env GOOS=linux GOARCH=386 $(BUILDCMD) -o $(OUTPUTDIR)/$$target/$$target-$(VERSION)-linux-386 ${PWD}/cmd/$$target && \
-		echo "Building amd64 binaries" && \
+		echo "Building $$target amd64 binary" && \
 		env GOOS=linux GOARCH=amd64 $(BUILDCMD) -o $(OUTPUTDIR)/$$target/$$target-$(VERSION)-linux-amd64 ${PWD}/cmd/$$target && \
-		echo "Generating checksum files" && \
+		echo "Generating $$target checksum files" && \
 		$(CHECKSUMCMD) $(OUTPUTDIR)/$$target/$$target-$(VERSION)-linux-386 > $(OUTPUTDIR)/$$target/$$target-$(VERSION)-linux-386.sha256 && \
 		$(CHECKSUMCMD) $(OUTPUTDIR)/$$target/$$target-$(VERSION)-linux-amd64 > $(OUTPUTDIR)/$$target/$$target-$(VERSION)-linux-amd64.sha256; \
 	done

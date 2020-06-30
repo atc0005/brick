@@ -122,14 +122,16 @@ func validate(c Config) error {
 		return fmt.Errorf("path to reported users log file not provided")
 	}
 
-	// Verify that the user did not option to set an empty string as the
-	// value, otherwise we fail the config validation by returning an error.
+	// Verify that the user did not opt to set an empty string as the value,
+	// otherwise we fail the config validation by returning an error.
+	// DEPRECATED: See GH-46
 	if c.IsSetIgnoredUsersFile() && c.IgnoredUsersFile() == "" {
 		return fmt.Errorf("empty path to ignored users file provided")
 	}
 
-	// Verify that the user did not option to set an empty string as the
-	// value, otherwise we fail the config validation by returning an error.
+	// Verify that the user did not opt to set an empty string as the value,
+	// otherwise we fail the config validation by returning an error.
+	// DEPRECATED: See GH-46
 	if c.IsSetIgnoredIPAddressesFile() && c.IgnoredIPAddressesFile() == "" {
 		return fmt.Errorf("empty path to ignored ip addresses file provided")
 	}
@@ -164,6 +166,34 @@ func validate(c Config) error {
 		return fmt.Errorf(
 			"invalid retries limit specified for MS Teams notifications: %d",
 			c.TeamsNotificationRetries(),
+		)
+	}
+
+	if c.EZproxyExecutablePath() == "" {
+		return fmt.Errorf("path to EZproxy executable file not provided")
+	}
+
+	if c.EZproxyActiveFilePath() == "" {
+		return fmt.Errorf("path to EZproxy active users state file not provided")
+	}
+
+	if c.EZproxyAuditFileDirPath() == "" {
+		return fmt.Errorf("path to EZproxy audit file directory not provided")
+	}
+
+	if c.EZproxySearchDelay() < 0 {
+		log.Debugf("unsupported delay specified for EZproxy session lookup attempts: %d ", c.EZproxySearchDelay())
+		return fmt.Errorf(
+			"invalid delay specified for EZproxy session lookup attempts: %d",
+			c.EZproxySearchDelay(),
+		)
+	}
+
+	if c.EZproxySearchRetries() < 0 {
+		log.Debugf("unsupported retry limit specified for EZproxy session lookup attempts: %d ", c.EZproxySearchRetries())
+		return fmt.Errorf(
+			"invalid retries limit specified for EZproxy session lookup attempts: %d",
+			c.EZproxySearchRetries(),
 		)
 	}
 

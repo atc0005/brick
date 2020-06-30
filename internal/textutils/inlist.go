@@ -14,18 +14,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-module github.com/atc0005/brick
+package textutils
 
-// replace github.com/atc0005/go-ezproxy => ../go-ezproxy
-
-go 1.13
-
-require (
-	github.com/alexflint/go-arg v1.3.0
-	github.com/apex/log v1.4.0
-	github.com/atc0005/go-ezproxy v0.1.2
-	// temporarily use our fork; waiting on changes to be accepted upstream
-	github.com/atc0005/go-teams-notify v1.3.1-0.20200419155834-55cca556e726
-	github.com/atc0005/send2teams v0.4.4
-	github.com/pelletier/go-toml v1.8.0
-)
+// InList is a helper function to emulate Python's `if "x"
+// in list:` functionality
+func InList(needle string, haystack []string) bool {
+	for _, item := range haystack {
+		if item == needle {
+			return true
+		}
+	}
+	return false
+}

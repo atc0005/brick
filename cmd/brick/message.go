@@ -19,12 +19,14 @@ package main
 import (
 	"context"
 	"fmt"
-	"runtime"
+	"strconv"
 	"time"
 
 	"github.com/apex/log"
 	"github.com/atc0005/brick/config"
 	"github.com/atc0005/brick/events"
+	"github.com/atc0005/brick/internal/caller"
+	"github.com/atc0005/go-ezproxy"
 
 	// use our fork for now until recent work can be submitted for inclusion
 	// in the upstream project
@@ -33,87 +35,227 @@ import (
 	send2teams "github.com/atc0005/send2teams/teams"
 )
 
+// addFactPair accepts a MessageCard, MessageCardSection, a key and one or
+// many values related to the provided key. An attempt is made to format the
+// key and all values as code in an effort to keep Teams from parsing some
+// special characters as Markdown code formatting characters. If an error
+// occurs, this error is used as the MessageCard Text field to help make this
+// failure more prominent, otherwise the top-level MessageCard fields remain
+// untouched.
+//
+// FIXME: Rework and offer upstream?
+func addFactPair(msg *goteamsnotify.MessageCard, section *goteamsnotify.MessageCardSection, key string, values ...string) {
+
+	for idx := range values {
+		values[idx] = send2teams.TryToFormatAsCodeSnippet(values[idx])
+	}
+
+	if err := section.AddFactFromKeyValue(
+		key,
+		values...,
+	); err != nil {
+		from := caller.GetFuncFileLineInfo()
+		errMsg := fmt.Sprintf("%s error returned from attempt to add fact from key/value pair: %v", from, err)
+		log.Errorf("%s %s", from, errMsg)
+		msg.Text = msg.Text + "\n\n" + send2teams.TryToFormatAsCodeSnippet(errMsg)
+	}
+}
+
+// FIXME: Move this elsewhere or remove; it does not look like a viable option
+// func generateTable(sTermResults []ezproxy.TerminateUserSessionResult) string {
+//
+// 	// TODO: Can we generate a Markdown table here?
+// 	sessionResultsTableHeader := `
+// 		| ID | IP | ExitCode | StdOut | StdErr | ErrorMsg | <br>
+// 		| --- | --- | --- | --- | --- | --- | <br>
+// 		`
+//
+// 	// addFactPair(&msgCard, sessionTerminationResultsSection, "Error", record.Error.Error())
+//
+// 	var sessionResultsTableBody string
+// 	for _, result := range sTermResults {
+//
+// 		// guard against (nil) lack of error in results slice entry
+// 		errStr := "None"
+// 		if result.Error != nil {
+// 			errStr = result.Error.Error()
+// 		}
+//
+// 		sessionResultsTableBody += fmt.Sprintf(
+// 			"| %s | %s | %d | %s | %s | %s | <br>",
+// 			result.SessionID,
+// 			result.IPAddress,
+// 			result.ExitCode,
+// 			result.StdOut,
+// 			result.StdErr,
+// 			errStr,
+// 		)
+// 	}
+//
+// 	// TODO: No clue if this will work, figured it was worth a shot.
+// 	sessionResultsTable := sessionResultsTableHeader + sessionResultsTableBody
+//
+// 	return sessionResultsTable
+// }
+
+// getTerminationResultsList generates a Markdown list summarizing session
+// termination results. See also atc0005/go-ezproxy#18.
+func getTerminationResultsList(sTermResults []ezproxy.TerminateUserSessionResult) string {
+
+	var sessionResultsStringSets string
+	for _, result := range sTermResults {
+
+		// guard against (nil) lack of error in results slice entry
+		errStr := "None"
+		if result.Error != nil {
+			errStr = result.Error.Error()
+		}
+
+		sessionResultsStringSets += fmt.Sprintf(
+			"- { SessionID: %q, IPAddress: %q, ExitCode: %q, StdOut: %q, StdErr: %q, Error: %q }\n\n",
+			result.SessionID,
+			result.IPAddress,
+			strconv.Itoa(result.ExitCode),
+			result.StdOut,
+			result.StdErr,
+			errStr,
+		)
+	}
+
+	return sessionResultsStringSets
+}
+
+// getMsgCardMainSectionText evaluates the provided event Record and builds a
+// primary message suitable for display as the main notification Text field.
+// This message is generated first from the Note field if available, or from
+// the Error field. This precedence allows for using a provided Note as a brief
+// summary while still using the Error field in a dedicated section.
+func getMsgCardMainSectionText(record events.Record) string {
+
+	// This part of the message card is valuable "real estate" for eyeballs;
+	// we should ensure we are communicating what just occurred instead
+	// of using a mostly static block of text.
+
+	var msgCardTextField string
+
+	switch {
+	case record.Note != "":
+		msgCardTextField = "Summary: " + record.Note
+	case record.Error != nil:
+		msgCardTextField = "Error: " + record.Error.Error()
+
+	// Attempting to use an empty string for the top-level message card Text
+	// field results in a notification failure, so set *something* to meet
+	// those requirements.
+	default:
+		msgCardTextField = "FIXME: Missing Note for this event record!"
+	}
+
+	return msgCardTextField
+
+}
+
+// getMsgCardTitle is a helper function used to generate the title for message
+// cards. This function uses the provided prefix and event Record to generate
+// stable titles reflecting the step in the disable user process at which the
+// notification was generated; the intent is to quickly tell where the process
+// halted for troubleshooting purposes.
+func getMsgCardTitle(msgCardTitlePrefix string, record events.Record) string {
+
+	var msgCardTitle string
+
+	switch record.Action {
+
+	// case record.Error != nil:
+	// 	msgCardTitle = "[ERROR] " + record.Error.Error()
+
+	// TODO: Calculate step labeling based off of enabled features (see GH-65).
+
+	case events.ActionSuccessDisableRequestReceived, events.ActionFailureDisableRequestReceived:
+		msgCardTitle = msgCardTitlePrefix + "[step 1 of 3] " + record.Action
+
+	case events.ActionSuccessDisabledUsername, events.ActionFailureDisabledUsername:
+		msgCardTitle = msgCardTitlePrefix + "[step 2 of 3] " + record.Action
+
+	case events.ActionSuccessDuplicatedUsername, events.ActionFailureDuplicatedUsername:
+		msgCardTitle = msgCardTitlePrefix + "[step 2 of 3] " + record.Action
+
+	case events.ActionSuccessIgnoredUsername, events.ActionFailureIgnoredUsername:
+		msgCardTitle = msgCardTitlePrefix + "[step 2 of 3] " + record.Action
+
+	case events.ActionSuccessIgnoredIPAddress, events.ActionFailureIgnoredIPAddress:
+		msgCardTitle = msgCardTitlePrefix + "[step 2 of 3] " + record.Action
+
+	case events.ActionSuccessTerminatedUserSession,
+		events.ActionFailureUserSessionLookupFailure,
+		events.ActionFailureTerminatedUserSession,
+		events.ActionSkippedTerminateUserSessions:
+		msgCardTitle = msgCardTitlePrefix + "[step 3 of 3] " + record.Action
+
+	default:
+		msgCardTitle = msgCardTitlePrefix + " [UNKNOWN] " + record.Action
+		log.Warnf("UNKNOWN record: %v+\n", record)
+	}
+
+	return msgCardTitle
+}
+
+// createMessage receives an event Record and generates a MessageCard which is
+// used to generate a Microsoft Teams message.
 func createMessage(record events.Record) goteamsnotify.MessageCard {
 
 	log.Debugf("createMessage: alert received: %#v", record)
-
-	// FIXME: Pull this out as a separate helper function?
-	// FIXME: Rework and offer upstream?
-	addFactPair := func(msg *goteamsnotify.MessageCard, section *goteamsnotify.MessageCardSection, key string, values ...string) {
-
-		// attempt to format all values as code in an effort to keep Teams
-		// from parsing some special characters as Markdown code formatting
-		// characters
-		for idx := range values {
-			values[idx] = send2teams.TryToFormatAsCodeSnippet(values[idx])
-		}
-
-		if err := section.AddFactFromKeyValue(
-			key,
-			values...,
-		); err != nil {
-
-			// runtime.Caller(skip int) (pc uintptr, file string, line int, ok bool)
-			_, file, line, ok := runtime.Caller(0)
-			from := fmt.Sprintf("createMessage [file %s, line %d]:", file, line)
-			if !ok {
-				from = "createMessage:"
-			}
-			errMsg := fmt.Sprintf("%s error returned from attempt to add fact from key/value pair: %v", from, err)
-			log.Errorf("%s %s", from, errMsg)
-			msg.Text = msg.Text + "\n\n" + send2teams.TryToFormatAsCodeSnippet(errMsg)
-		}
-	}
 
 	// build MessageCard for submission
 	msgCard := goteamsnotify.NewMessageCard()
 
 	msgCardTitlePrefix := config.MyAppName + ": "
 
-	if record.Action == "" {
-		msgCard.Title = msgCardTitlePrefix + "(1/2) Disable user account request received"
-	} else {
-		msgCard.Title = msgCardTitlePrefix + "(2/2) " + record.Action
-	}
+	msgCard.Title = getMsgCardTitle(msgCardTitlePrefix, record)
 
-	msgCard.Text = fmt.Sprintf(
-		"Disable request received for user %s at IP %s by alert %s",
-		send2teams.TryToFormatAsCodeSnippet(record.Alert.Username),
-		send2teams.TryToFormatAsCodeSnippet(record.Alert.UserIP),
-		send2teams.TryToFormatAsCodeSnippet(record.Alert.AlertName),
-	)
+	// msgCard.Text = record.Note
+	msgCard.Text = getMsgCardMainSectionText(record)
 
 	/*
-		Record/Annotations Section
+		Errors Section
 	*/
 
-	// TODO: Flesh this section out more by reviewing/updating app code to
-	// provide more Error and Note details
+	disableUserRequestErrors := goteamsnotify.NewMessageCardSection()
+	disableUserRequestErrors.Title = "## Disable User Request Errors"
+	disableUserRequestErrors.StartGroup = true
 
-	if record.Error != nil || record.Note != "" {
-		disableUserRequestAnnotationsSection := goteamsnotify.NewMessageCardSection()
-		disableUserRequestAnnotationsSection.Title = "## Disable User Request Annotations"
-		disableUserRequestAnnotationsSection.StartGroup = true
+	switch {
+	case record.Error != nil:
+		addFactPair(&msgCard, disableUserRequestErrors, "Error", record.Error.Error())
+	case record.Error == nil:
+		disableUserRequestErrors.Text = "None"
+	}
 
-		// TODO: Should we display these fields regardless?
+	if err := msgCard.AddSection(disableUserRequestErrors); err != nil {
+		errMsg := fmt.Sprintf("Error returned from attempt to add disableUserRequestErrors: %v", err)
+		log.Error("createMessage: " + errMsg)
+		msgCard.Text = msgCard.Text + "\n\n" + send2teams.TryToFormatAsCodeSnippet(errMsg)
+	}
 
-		if record.Error != nil {
-			addFactPair(&msgCard, disableUserRequestAnnotationsSection, "Error", record.Error.Error())
-		}
+	// If Session Termination is enabled, create Termination Results section
+	if record.SessionTerminationResults != nil {
 
-		if record.Note != "" {
-			disableUserRequestAnnotationsSection.Text = "Note: " + record.Note
-		}
+		sessionTerminationResultsSection := goteamsnotify.NewMessageCardSection()
+		sessionTerminationResultsSection.Title = "## Session Termination Results"
+		sessionTerminationResultsSection.StartGroup = true
 
-		if err := msgCard.AddSection(disableUserRequestAnnotationsSection); err != nil {
-			errMsg := fmt.Sprintf("Error returned from attempt to add disableUserRequestAnnotationsSection: %v", err)
+		sessionTerminationResultsSection.Text = getTerminationResultsList(record.SessionTerminationResults)
+
+		if err := msgCard.AddSection(sessionTerminationResultsSection); err != nil {
+			errMsg := fmt.Sprintf("Error returned from attempt to add sessionTerminationResultsSection: %v", err)
 			log.Error("createMessage: " + errMsg)
 			msgCard.Text = msgCard.Text + "\n\n" + send2teams.TryToFormatAsCodeSnippet(errMsg)
 		}
+
 	}
 
 	/*
-		Disable User Request Details Section - Core of SplunkAlertEvent details
+		Disable User Request Details Section - Core of alert details
 	*/
 
 	disableUserRequestDetailsSection := goteamsnotify.NewMessageCardSection()

@@ -22,6 +22,11 @@
 # Create user account
 sudo useradd --system --shell /bin/false brick
 
+# Setup test ezproxy directory
+sudo mkdir -vp /usr/local/ezproxy/audit
+sudo chown -Rv brick:$USER /usr/local/ezproxy
+sudo chmod -Rv u=rwX,g=rwX,o= brick:$USER /usr/local/ezproxy
+
 # Setup output directories
 sudo mkdir -vp /usr/local/etc/brick
 sudo mkdir -vp /var/log/brick
