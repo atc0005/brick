@@ -69,6 +69,8 @@ identified at this time.
 1. Build binaries
    - for the current operating system
      - `go build -mod=vendor ./cmd/brick/`
+     - `go build -mod=vendor ./cmd/es/`
+     - `go build -mod=vendor ./cmd/ezproxy/`
        - *forces build to use bundled dependencies in top-level `vendor`
          folder*
    - for all supported platforms (where `make` is installed)
@@ -77,7 +79,11 @@ identified at this time.
       - `make windows`
    - for use on Linux
      - `make linux`
-1. Copy the newly compiled binary from the applicable path below and deploy
+1. Copy the newly compiled binaries from the applicable paths below and deploy
    using the instructions provided in our [deployment doc](deploy.md).
-   - if using `Makefile`: look in `/tmp/release_assets/brick/`
-   - if using `go build`: look in `/tmp/brick/`
+   - if using `Makefile`:
+     - `/tmp/brick/release_assets/brick/`
+     - `/tmp/brick/release_assets/es/`
+     - `/tmp/brick/release_assets/ezproxy/`
+   - if using separate `go build` invocations
+     - `/tmp/brick/`
