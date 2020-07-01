@@ -26,14 +26,7 @@
 The `brick` application has been tested with:
 
 - Go 1.13+
-- Windows 10 Version 1903+ (limited)
-  - native
-  - WSL
 - Ubuntu Linux 16.04, 18.04
-
-However, `brick` relies upon `fail2ban` to temporarily ban offending IPs in
-order to force login sessions to timeout. No Windows equivalent has been
-identified at this time.
 
 ## Instructions
 
