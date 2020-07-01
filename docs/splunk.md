@@ -18,10 +18,10 @@ If drawn on a whiteboard, Splunk is likely somewhere off to the side.
 
 EZproxy is in the center, `fail2ban` and `brick` are nearby (or in the same
 sphere) and other resources (such as maybe Microsoft Teams and email) are off
-somewhere off to another side. This quick sketch for illustration wouldn't
+somewhere to another side. This quick sketch for illustration wouldn't
 tell the whole picture however, and would greatly undervalue the role Splunk
 plays in resource abuse "management" (it's hard to say with a straight face
-that it can ever be completely prevent).
+that it can ever be completely prevented).
 
 By taking the time to implement and refine alerts, Splunk will become an
 invaluable tool to monitor and report abusive activity to your sysadmin team
@@ -37,7 +37,8 @@ Once you have created, tested and refined one or more email-based alerts, you
 are ready to begin using webhook payloads to report problematic user accounts
 to `brick`.
 
-1. Review the [official documentation](references.md) for setting up a "webhook alert action"
+1. Review the [official documentation](references.md) for setting up a
+   "webhook alert action"
 1. Follow those instructions and set the target webhook URL
    1. we'll assume that your EZproxy server has a FQDN of ezproxy.example.com
       and is normally accessible at <https://ezproxy.example.com/>
@@ -47,10 +48,11 @@ to `brick`.
 1. As noted in the [deploy](deploy.md) doc, make sure you have a firewall
    rule in place to limit payload delivery to the `disable` endpoint to only
    your Splunk server and any trusted SysAdmin / IT Support team members
-1. If you haven't already done so, [build](build.md) and [deploy](deploy.md)
-   the `brick` application
-1. The same goes for `fail2ban`, if you haven't yet, install and configure
-   [fail2ban](fail2ban.md)
+1. If you haven't already done so, [build](build.md), [deploy](deploy.md) and
+   [configure](configure.md) the `brick` application
+1. The same goes for `fail2ban`, if you haven't yet, install and
+   [configure](configure.md) [fail2ban](fail2ban.md) *or* exclusively use
+   EZproxy's native (unofficial) support for terminating user sessions.
 1. Test!
 
 ## Payload schema / format
@@ -158,8 +160,8 @@ application:
 ```
 
 `brick` parses and uses select fields from that payload for its work. As time
-permits we will refine further to exclude unwanted fields and bring in new
-ones.
+permits, we hope to further refine the delivered payload to exclude unwanted
+fields and bring in new ones.
 
 Files:
 

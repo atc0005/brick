@@ -22,9 +22,19 @@ user accounts using an authentication method different from the one users are
 normally authenticated with. This allows user accounts to authenticate using
 LDAP, but be explicitly disabled using flat-files.
 
-As of April 2020 (v7.0.16), the OCLC Support team has confirmed that EZproxy
-does not support automatic/programmatic termination of active sessions. This
-means two things:
+When asked, the OCLC Support team confirmed that EZproxy (April 2020, v7.0.16)
+did not officially support automatic/programmatic termination of active
+sessions. I later learned otherwise (GH-13, GH-31) and was told (paraphrasing)
+that while it may work now, the feature I discovered was not officially
+supported. I took this to mean that the feature could be pulled (or simply
+stop working) in the future.
+
+`brick` v0.2.0 added optional support for automatic user sessions termination.
+See the [configure](configure.md) doc and the main [README](../README.md) file
+for additional information for this feature. If enabled, `fail2ban` becomes an
+optional layer in abuse control.
+
+If automatic/native user sessions termination is not enabled:
 
 - abusive user login sessions continue to be active until they are manually
   terminated or timeout
@@ -37,12 +47,12 @@ currently supports. This is accomplished by adding user accounts to a specific
 file, one per line, with an explicit `::deny` suffix per user account entry.
 When those user accounts attempt to login again they will be denied access.
 
-To handle terminating active sessions, this application relies upon a local
+To handle timing out active sessions, this application relies upon a local
 installation of `fail2ban` which runs alongside an EZproxy instance and this
-application.
+application. See the [fail2ban](fail2ban.md) document for settings specific to
+`fail2ban`.
 
-This document covers specific settings used by EZproxy. See the
-[fail2ban](fail2ban.md) document for settings specific to `fail2ban`.
+This document covers specific settings used by EZproxy.
 
 ## Settings
 
@@ -82,7 +92,7 @@ EZproxy honors it and denies login access to the user account when the next
 login attempt occurs. As already noted, active sessions must be manually
 terminated or timed out in order to interrupt access.
 
-By default, this application is configured to write entries to
+By default, this application is [configured](configure.md) to write entries to
 `/var/cache/brick/users.brick-disabled.txt`. This can be overridden by
 command-line flag (e.g., systemd unit file) or configuration file (usually
 located at `/usr/local/etc/brick/config.toml`). To configure EZproxy to use
