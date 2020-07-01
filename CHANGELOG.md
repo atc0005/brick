@@ -26,6 +26,65 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.2.0] - 2020-07-03
+
+This release brings two notable features:
+
+- Optional automatic user sessions termination support
+- `es` binary to list or optionally terminate user sessions
+
+`fail2ban` should work as well with this release as it did before with the
+v0.1.0 release.
+
+### Added
+
+- Add optional native EZproxy support to terminate user sessions
+- New binaries
+  - `es` binary
+    - small CLI app to list and optionally terminate user sessions for a
+      specific username
+    - intended for quick troubleshooting or as an optional replacement for
+      logging into the admin UI to terminate user sessions for a specific
+      username
+  - `ezproxy` (mock) binary
+    - small CLI binary intended to be called by `brick` for development
+      purposes
+    - returns some expected response codes and text for valid input
+    - returns some non-standard, "unexpected" results to help test error
+      handling
+- See also the new
+  [`atc0005/go-ezproxy`](https://github.com/atc0005/go-ezproxy) project which
+  is used by this one to perform most EZproxy-related session actions
+  - `atc0005/go-ezproxy` `v0.1.3` is vendored with this release
+
+### Changed
+
+- Update dependencies
+  - `actions/checkout`
+    - `v2.3.0` to `v2.3.1`
+  - `actions/setup-go`
+    - `v2.0.3` to `v2.1.0`
+  - `actions/setup-node`
+    - `v2.0.0` to `v2.1.0`
+- Teams notifications
+  - explicit step X of Y labeling to notification titles
+  - consistent use of Note (preferred) and Error (fallback) field values to
+    generate primary "summary" text
+  - rename "Request Annotations" to "Request Errors" to reflect dedicated
+    single purpose vs blend of Note and Error field values as before
+- Documentation
+  - cover new v0.2.0 features
+  - attempt to present `fail2ban` and the new v0.2.0 automatic user sessions
+    termination as viable options
+
+### Fixed
+
+- TCP port range recommendation via config validation warning
+- Clarify suggested port range in config settings doc
+- Force writing disabled username entries as lowercase
+  - other uses of the reported username are left as-is with the intent to aid
+    in troubleshooting
+
 ## [v0.1.2] - 2020-06-18
 
 ### Added
@@ -129,7 +188,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.2.0...HEAD
+[v0.2.0]: https://github.com/atc0005/brick/releases/tag/v0.2.0
 [v0.1.2]: https://github.com/atc0005/brick/releases/tag/v0.1.2
 [v0.1.1]: https://github.com/atc0005/brick/releases/tag/v0.1.1
 [v0.1.0]: https://github.com/atc0005/brick/releases/tag/v0.1.0
