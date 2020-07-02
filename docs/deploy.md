@@ -144,7 +144,8 @@ docs did).
 
 Depending on your target environment, you'll either need the 32-bit or 64-bit
 version of the binary that you generated earlier by following the [build
-instructions](build.md).
+instructions](build.md). Replace the `v0.1.0-0-g721e6d2` pattern below with
+the latest available stable version.
 
 | If you see this `uname -m` output | Use the filename with this pattern    | Your EZProxy server has this architecture |
 | --------------------------------- | ------------------------------------- | ----------------------------------------- |
@@ -153,8 +154,7 @@ instructions](build.md).
 
 For example, if you run `uname -m` on your EZproxy server and get `x86_64` as
 the output, you will want to deploy the `brick-v0.1.0-0-g721e6d2-linux-amd64`
-binary. Replace the `v0.1.0-0-g721e6d2` pattern with the latest available
-stable version.
+binary.
 
 #### Deploying the binary
 
@@ -177,6 +177,9 @@ version.
 1. Copy the starter/template configuration file from
    `contrib/brick/config.example.toml` and modify accordingly using the
    [configuration](configure.md) guide.
+1. Decide whether you will enable automatic sessions termination or use
+   `fail2ban`. See the [fail2ban](fail2ban.md) doc and the
+   [configuration](configure.md) guide for more information.
 1. Set a Microsoft Teams webhook URL to enable Teams channel notifications.
    - Skip this step if you don't use Microsoft Teams.
 1. Copy the starter/template "ignore" files and modify accordingly

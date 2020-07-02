@@ -29,12 +29,13 @@ messages destined for our remote log server(s).
 You may need to disable this directive if you encounter problems with messages
 not forwarding as expected in your environment.
 
-Tangent: If you're not already  forwarding/centralizing your server log
-messages, you should consider doing so. Having log messages centralized in one
-searchable location (e.g., Graylog, Splunk, ...) makes
-troubleshooting/monitoring much more effective and with lower cost
-alternatives such as Graylog, centralized log management becomes approachable
-for even lightly staffed IT teams.
+Tangent:
+
+If you're not already forwarding/centralizing your server log messages, you
+should consider doing so. Having log messages centralized in one searchable
+location (e.g., Graylog, Splunk, ...) makes troubleshooting much more
+effective. With lower cost alternatives such as Graylog, centralized log
+management becomes approachable for even lightly staffed IT teams.
 
 ## Log files
 

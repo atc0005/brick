@@ -46,19 +46,28 @@ audience are still missing.
 This application is intended to be used as a HTTP endpoint that runs alongside
 an EZproxy instance. This endpoint receives webhook requests from a monitoring
 system (Splunk as of this writing), disables the user account identified by
-the monitoring system rules and generates one or more notifications listing
-the action taken. fail2ban is used to ban the offending IP for `MaxLifetime`
-minutes (EZproxy setting) + a small buffer to force active sessions associated
-with the disabled user account to timeout and terminate.
+the rules enabled on the monitoring system and generates one or more
+notifications listing the action taken. At this point, the associated user
+sessions can be optionally (and automatically) terminated using two
+approaches:
 
-The combination of stopping new logins for the disabled user account and
-timing out existing sessions works around the lack of native support for this
-behavior in EZproxy itself.
+1. using (not officially documented) EZproxy binary subcommand
+1. using the provided fail2ban config files
+
+If using native termination support, all active user sessions associated with
+the reported username will be terminated using the kill subcommand provided by
+the official ezproxy binary. The sysadmin will need to provide the path to the
+ezproxy and the associated Active Users and Hosts "state" file where sessions
+are tracked.
+
+If installed and configured appropriately, fail2ban can be used to to monitor
+the reported users log file and ban the associated IP address for
+`MaxLifetime` minutes (EZproxy setting) + a small buffer to force active
+sessions associated with the disabled user account to timeout and terminate.
 
 The net effect is that reported user accounts are immediately disabled and
-existing sessions forced to timeout, at which point compromised accounts can
-no longer be used on EZproxy until manually removed from the disabled users
-file.
+compromised accounts can no longer be used with EZproxy until manually removed
+from the disabled users file.
 
 **NOTE:** This application has not been designed to identify user accounts
 directly, but rather relies on other systems (currently limited to Splunk) to
@@ -74,6 +83,16 @@ See also:
 ### Current
 
 - Highly configurable (with more configuration choices to be exposed in the future)
+
+- Optional automatic (but not officially documented) termination of user
+  sessions via official EZproxy binary
+
+- `es` CLI application
+  - small CLI app to list and optionally terminate user sessions for a
+    specific username
+  - intended for quick troubleshooting or as an optional replacement for
+    logging into the admin UI to terminate user sessions for a specific
+    username
 
 - Supports configuration settings from multiple sources
   - command-line flags
@@ -106,19 +125,27 @@ See also:
       - due to IP Address inclusion in ignore file for IP Addresses
     - username disabled
 
-- `contrib` files/content provided to allow for spinning up a [demo
-  environment](docs/demo.md) in order to provide a hands-on sense of what this
-  project can do
-  - `fail2ban`
-  - `postfix`
-  - `docker`
-    - `Maildev` container
-  - `brick`
-  - `rsyslog`
-  - `systemd`
-  - sample JSON payloads for use with `curl` or other http/API clients
-  - [demo environment](docs/demo.md) doc
-  - slides from group presentation/demo
+- `contrib` files/content
+  - intended solely for demo purposes
+    - `postfix`
+    - `docker`
+      - `Maildev` container
+    - sample JSON payloads for use with `curl` or other http/API clients
+    - [demo environment](docs/demo.md) doc
+    - slides from group presentation/demo
+    - shell scripts to setup test/demo environment
+  - intended for demo *and* as a template for production use
+    - `fail2ban`
+    - `brick`
+    - `rsyslog`
+    - `systemd`
+
+The `contrib` content is provided both to allow for spinning up a [demo
+environment](docs/demo.md) in order to provide a hands-on sense of what this
+project can do and (at least some of the files) to use as a template for a
+production installation (e.g., the `fail2ban` config files). At some point we
+hope to provide one or more Ansible playbooks (GH-29) to replace the shell
+scripts currently used by this project for setting up a test/demo environment.
 
 ### Missing
 
@@ -143,7 +170,7 @@ Known issues:
 
 See the [`CHANGELOG.md`](CHANGELOG.md) file for the changes associated with
 each release of this application. Changes that have been merged to `master`,
-but not yet an official release may also be noted in the file under the
+but not yet in an official release may also be noted in the file under the
 `Unreleased` section. A helpful link to the Git commit history since the last
 official release is also provided for further review.
 

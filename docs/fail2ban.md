@@ -26,9 +26,13 @@ terminate. New Splunk alerts should trigger causing further IP Addresses to
 be logged (and banned) until all (or nearly all) sessions for IP Addresses
 associated with the disabled user account are terminated.
 
-`fail2ban` is in a lot of ways the "missing piece" for this application.
-Without `fail2ban`, `brick` serves the purpose by helping control new abuse,
-but is otherwise (at this time) unable to reliably stop *active* abuse.
+**NOTE**: As of v0.2.0, `brick` has the ability to perform session termination
+using the official `ezproxy` binary's `kill` subcommand. This support can be
+used alongside `fail2ban` or in place of it.
+
+The directions in this doc assume that you wish to either use both methods to
+control user sessions *or* that you will use `fail2ban` exclusively for this
+purpose.
 
 ## Directions
 
@@ -38,8 +42,7 @@ but is otherwise (at this time) unable to reliably stop *active* abuse.
   - substitute with the appropriate package manager for your Linux
     distribution (e.g., replace `apt-get` with `yum`).
 - your EZproxy server is *not* a Windows system.
-  - Note: Due to `brick` relying on `fail2ban`, Windows is not a supported
-    platform at this time.
+  - Note: Windows is not a supported platform at this time.
 - your EZproxy server does not already have `fail2ban` installed
 - you are going to test these (and all other setup instructions) in a test
   environment *first* before deploying to production
