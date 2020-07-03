@@ -26,6 +26,41 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.1.3] - 2020-07-02
+
+### Changed
+
+- Document audit file and active user file fields
+
+  - Extend GoDoc coverage
+    - mention new subpackage doc coverage
+    - auditlog package
+      - add overview
+      - add field types
+      - explicit coverage of race condition
+    - activefile package
+      - add overview
+      - add field types
+        - known
+        - unknown
+      - line ordering
+      - explicit coverage of race condition
+
+  - README
+    - Move project repo section up
+    - Link to new Input File Formats doc
+
+- Update dependencies
+  - `actions/setup-go`
+    - `v2.0.3` to `v2.1.0`
+  - `actions/setup-node`
+    - `v2.0.0` to `v2.1.0`
+
+### Fixed
+
+- CHANGELOG
+  - fix v0.1.2 release URL
+
 ## [v0.1.2] - 2020-06-19
 
 ### Changed
@@ -107,8 +142,9 @@ application is released (currently pending review).
 
 <!-- Version header ref links here  -->
 
-[Unreleased]: https://github.com/atc0005/go-ezproxy/compare/v0.1.2...HEAD
-[v0.1.2]: https://github.com/atc0005/go-ezproxy/releases/tag/v0.1.1
+[Unreleased]: https://github.com/atc0005/go-ezproxy/compare/v0.1.3...HEAD
+[v0.1.3]: https://github.com/atc0005/go-ezproxy/releases/tag/v0.1.3
+[v0.1.2]: https://github.com/atc0005/go-ezproxy/releases/tag/v0.1.2
 [v0.1.1]: https://github.com/atc0005/go-ezproxy/releases/tag/v0.1.1
 [v0.1.0]: https://github.com/atc0005/go-ezproxy/releases/tag/v0.1.0
 

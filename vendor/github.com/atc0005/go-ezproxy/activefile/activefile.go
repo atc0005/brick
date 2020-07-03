@@ -58,7 +58,7 @@ type SessionEntry struct {
 	// username in order to reliably terminate active sessions.
 	SessionID string
 
-	// IPAddress is the seventh field for aline in the ActiveFile that starts
+	// IPAddress is the seventh field for a line in the ActiveFile that starts
 	// with capital letter 'S'. We *could* use this value to determine which
 	// session ID to terminate, though using this value from a remote
 	// payload/report by itself has a greater chance of terminating the wrong

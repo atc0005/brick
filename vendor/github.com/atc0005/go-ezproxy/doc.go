@@ -58,6 +58,11 @@ If using the ezproxy/auditlog package, you can also generate a SessionEntries
 collection representing all SessionEntry values from a specified audit log
 file or just the values applicable to a specifc user.
 
+FILE FORMATS
+
+Please see the doc coverage in each subpackage for coverage of the fields
+found within the audit logs and active user file relevant to our purposes.
+
 FUTURE
 
 This package currently provides functionality for working with an active user

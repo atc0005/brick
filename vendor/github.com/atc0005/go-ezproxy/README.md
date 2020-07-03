@@ -11,9 +11,9 @@ Go library and tooling for working with EZproxy.
 <!-- omit in toc -->
 ## Table of contents
 
+- [Project home](#project-home)
 - [Status](#status)
 - [Overview](#overview)
-- [Project home](#project-home)
 - [Features](#features)
   - [Current](#current)
   - [Missing](#missing)
@@ -24,6 +24,11 @@ Go library and tooling for working with EZproxy.
 - [References](#references)
   - [Related projects](#related-projects)
   - [Official EZproxy docs](#official-ezproxy-docs)
+
+## Project home
+
+See [our GitHub repo][repo-url-home] for the latest code, to file an issue or
+submit improvements for review and potential inclusion into the project.
 
 ## Status
 
@@ -41,6 +46,9 @@ as reporting or terminating active login sessions (either for all usernames or
 specific usernames), filtering (or not) audit file entries or traffic patterns
 (not implemented yet) for specific usernames or domains.
 
+See the [Input file formats](docs/input-files.md) doc for additional details
+regarding known and supported input file formats.
+
 **Just to be perfectly clear**:
 
 - this library is intended to supplement the provided functionality of the
@@ -48,11 +56,6 @@ specific usernames), filtering (or not) audit file entries or traffic patterns
   replace it.
 - this library is not in any way associated with OCLC, `EZproxy` or other
   services offered by OCLC.
-
-## Project home
-
-See [our GitHub repo][repo-url-home] for the latest code, to file an issue or
-submit improvements for review and potential inclusion into the project.
 
 ## Features
 
@@ -88,8 +91,13 @@ official release is also provided for further review.
 
 ## Documentation
 
-Please see our [GoDoc][docs-homepage] coverage. If something doesn't make
-sense, please [file an issue][repo-url-issues] and note what is (or was) unclear.
+Please see:
+
+- our [GoDoc][docs-homepage] coverage
+- our [topic-specific](docs/README.md) coverage
+
+If something doesn't make sense, please [file an issue][repo-url-issues] and
+note what is (or was) unclear.
 
 ## Examples
 
