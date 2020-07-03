@@ -11,6 +11,8 @@ github.com/aphistic/golf v0.0.0-20180712155816-02c07f170c5a/go.mod h1:3NqKYiepwy
 github.com/aphistic/sweet v0.2.0/go.mod h1:fWDlIh/isSE9n6EPsRmC0det+whmX6dJid3stzu0Xys=
 github.com/atc0005/go-ezproxy v0.1.2 h1:xCiLys6Lqc7CHYWOTHjW0ZVVtLFF2Hn6jggfhTCwaMg=
 github.com/atc0005/go-ezproxy v0.1.2/go.mod h1:petHyxg0DLcJTNRmLRV5k4hx/qdVTR8Ns81UFhugw6Y=
+github.com/atc0005/go-ezproxy v0.1.3 h1:WUKa8wTYkjrZfKM3v7MoAeeEuYmgkjdrA2s5F2YbgP4=
+github.com/atc0005/go-ezproxy v0.1.3/go.mod h1:petHyxg0DLcJTNRmLRV5k4hx/qdVTR8Ns81UFhugw6Y=
 github.com/atc0005/go-teams-notify v1.3.1-0.20200419155834-55cca556e726 h1:pUJFxj7XRR6UxgWTvG4BCf1cVsn7nNqxdigBhMd1r/c=
 github.com/atc0005/go-teams-notify v1.3.1-0.20200419155834-55cca556e726/go.mod h1:zUADEXrhalWyaQvxzYgHswljBWycIpX1UAFrggjcdi4=
 github.com/atc0005/send2teams v0.4.4 h1:d7OfycX7MEcF088Ohy/QdgUT0dkYdw9xPr/E7EMDwXQ=
