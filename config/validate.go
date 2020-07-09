@@ -56,7 +56,7 @@ func validate(c Config) error {
 			"Valid, non-privileged user port between %d and %d configured: %d",
 			TCPUserPortStart,
 			TCPUserPortEnd,
-			c.LocalTCPPort,
+			c.LocalTCPPort(),
 		)
 
 	// WARNING: User opted to use a dynamic or private TCP port
