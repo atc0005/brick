@@ -104,9 +104,24 @@ file_path = "/usr/local/etc/brick/ips.brick-ignored.txt"
 
 [msteams]
 
+# The full URL used to submit messages to the Teams channel. This URL is in
+# the form of
+#
+# https://outlook.office.com/webhook/xxx or
+# https://outlook.office365.com/webhook/xxx.
+#
+# This URL needs to be created in advance by adding/configuring a Webhook
+# Connector in a Microsoft Teams channel that you wish to submit messages to
+# using this application.
 webhook_url = ""
+
+# The number of attempts that this application will make to deliver Microsoft
+# Teams messages before giving up.
 retries = 2
-delay = 5
+
+# The number of seconds to wait between Microsoft Teams message delivery retry
+# attempts.
+retry_delay = 5
 
 
 # TODO: Add this in later

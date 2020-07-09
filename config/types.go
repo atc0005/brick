@@ -138,9 +138,9 @@ type MSTeams struct {
 	// application.
 	WebhookURL *string `toml:"webhook_url" arg:"--teams-webhook-url,env:BRICK_MSTEAMS_WEBHOOK_URL" help:"The Webhook URL provided by a preconfigured Connector. If specified, this application will attempt to send client request details to the Microsoft Teams channel associated with the webhook URL."`
 
-	// Delay is the number of seconds to wait between Microsoft Teams message
-	// delivery attempts.
-	Delay *int `toml:"delay" arg:"--teams-notify-delay,env:BRICK_MSTEAMS_WEBHOOK_DELAY" help:"The number of seconds to wait between Microsoft Teams message delivery attempts."`
+	// RetryDelay is the number of seconds to wait between Microsoft Teams
+	// message delivery retry attempts.
+	RetryDelay *int `toml:"retry_delay" arg:"--teams-notify-retry-delay,env:BRICK_MSTEAMS_WEBHOOK_RETRY_DELAY" help:"The number of seconds to wait between Microsoft Teams message delivery retry attempts."`
 
 	// Retries is the number of attempts that this application will make to
 	// deliver Microsoft Teams messages before giving up.

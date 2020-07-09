@@ -50,7 +50,7 @@ func (c *Config) String() string {
 			"IgnoredIPAddressesFile: [%q %t],"+
 			"TeamsWebhookURL: %q,"+
 			"TeamsNotificationRetries: %q,"+
-			"TeamsNotificationDelay: %q,"+
+			"TeamsNotificationRetryDelay: %q,"+
 			"ConfigFile: %q}",
 		c.LocalTCPPort(),
 		c.LocalIPAddress(),
@@ -67,7 +67,7 @@ func (c *Config) String() string {
 		c.IsSetIgnoredIPAddressesFile(),
 		c.TeamsWebhookURL(),
 		c.TeamsNotificationRetries(),
-		c.TeamsNotificationDelay(),
+		c.TeamsNotificationRetryDelay(),
 		c.ConfigFile(),
 	)
 }
@@ -87,17 +87,24 @@ func (c configTemplate) Description() string {
 	return MyAppDescription
 }
 
-// GetNotificationTimeout accepts the next scheduled notification, the number
-// of message submission retries and the delay between each attempt and
-// returns the timeout value for the entire message submission process,
-// including the initial attempt and all retry attempts.
+// GetNotificationTimeout calculates the timeout value for the entire message
+// submission process, including the initial attempt and all retry attempts.
 //
 // This overall timeout value is computed using multiple values; (1) the base
 // timeout value for a single message submission attempt, (2) the next
 // scheduled notification (which was created using the configured delay we
 // wish to force between message submission attempts), (3) the total number of
-// retries allowed, (4) the delay between retry attempts
-func GetNotificationTimeout(baseTimeout time.Duration, schedule time.Time, retries int, retriesDelay int) time.Duration {
+// retries allowed, (4) the delay between each retry attempt.
+//
+// This computed timeout value is intended to be used to cancel a notification
+// attempt once it reaches this timeout threshold.
+//
+func GetNotificationTimeout(
+	baseTimeout time.Duration,
+	schedule time.Time,
+	retries int,
+	retriesDelay int,
+) time.Duration {
 
 	timeoutValue := (baseTimeout + time.Until(schedule)) +
 		(time.Duration(retriesDelay) * time.Duration(retries))
