@@ -20,7 +20,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/apex/log"
+	"github.com/Showmax/go-fqdn"
 )
 
 /******************************************************************
@@ -345,8 +345,7 @@ func (c Config) NotifyTeams() bool {
 	// should be made to send a message to Teams.
 
 	// For now, use the same logic that validate() uses to determine whether
-	// validation checks should be run: Is c.WebhookURL set to a non-empty
-	// string.
+	// validation checks should be run.
 	return c.TeamsWebhookURL() != ""
 
 }
@@ -355,10 +354,14 @@ func (c Config) NotifyTeams() bool {
 // sent via email to specified recipients.
 func (c Config) NotifyEmail() bool {
 
-	// TODO: Add support for email notifications. For now, this method is a
-	// placeholder to allow logic for future notification support to be
-	// written.
-	return false
+	// Assumption: config.validate() has already been called for the existing
+	// instance of the Config type and this method is now being called by
+	// later stages of the codebase to determine only whether an attempt
+	// should be made to send a message to a SMTP server.
+
+	// For now, use the same logic that validate() uses to determine whether
+	// validation checks should be run.
+	return c.EmailServer() != ""
 
 }
 
@@ -367,39 +370,130 @@ func (c Config) NotifyEmail() bool {
 // default value if not provided. CLI flag values take precedence if provided.
 func (c Config) EmailNotificationRateLimit() time.Duration {
 	var rateLimitSeconds int
-	// switch {
-	// case c.cliConfig.Email.RateLimit != nil:
-	// 	rateLimitSeconds = *c.cliConfig.MSTeams.RateLimit
-	// case c.fileConfig.MSTeams.RateLimit != nil:
-	// 	rateLimitSeconds = *c.fileConfig.MSTeams.RateLimit
-	// default:
-	// 	rateLimitSeconds = defaultMSTeamsRateLimit
-	// }
-
-	log.Warn("FIXME: Placeholder value until GH-3 is implemented")
-	rateLimitSeconds = 5
+	switch {
+	case c.cliConfig.Email.RateLimit != nil:
+		rateLimitSeconds = *c.cliConfig.Email.RateLimit
+	case c.fileConfig.Email.RateLimit != nil:
+		rateLimitSeconds = *c.fileConfig.Email.RateLimit
+	default:
+		rateLimitSeconds = defaultSMTPRateLimit
+	}
 
 	return time.Duration(rateLimitSeconds) * time.Second
+}
+
+// EmailServer returns the user-provided SMTP server to be used for email
+// notifications or the default value if not provided. CLI flag values take
+// precedence if provided.
+func (c Config) EmailServer() string {
+	switch {
+	case c.cliConfig.Email.Server != nil:
+		return *c.cliConfig.Email.Server
+	case c.fileConfig.Email.Server != nil:
+		return *c.fileConfig.Email.Server
+	default:
+		return defaultSMTPServerFQDN
+	}
+}
+
+// EmailServerPort returns the user-provided TCP port for email notifications
+// or the default value if not provided. CLI flag values take precedence if
+// provided.
+func (c Config) EmailServerPort() int {
+	switch {
+	case c.cliConfig.Email.Port != nil:
+		return *c.cliConfig.Email.Port
+	case c.fileConfig.Email.Port != nil:
+		return *c.fileConfig.Email.Port
+	default:
+		return defaultSMTPServerPort
+	}
+}
+
+// EmailClientIdentity returns the user-provided identity for the server that
+// this application sends email notifications on behalf of. If not provided,
+// attempt to get the fully-qualified domain name for the system where this
+// application is running. If there are issues resolving the fqdn use our
+// fallback value. or the default CLI flag values take precedence if provided.
+func (c Config) EmailClientIdentity() string {
+	switch {
+	case c.cliConfig.Email.ClientIdentity != nil:
+		return *c.cliConfig.Email.ClientIdentity
+	case c.fileConfig.Email.ClientIdentity != nil:
+		return *c.fileConfig.Email.ClientIdentity
+	default:
+		// Since sysadmin did not specify a value, attempt to get
+		// fully-qualified domain name for the system where this application
+		// is running. If there are issues resolving the fqdn use our fallback
+		// value.
+		hostname := fqdn.Get()
+		if hostname == "unknown" {
+			hostname = defaultSMTPClientIdentity
+		}
+
+		return hostname
+	}
+}
+
+// EmailSenderAddress returns the user-provided email address used as the
+// sender for all outgoing email notifications from this application or the
+// default value if not provided. CLI flag values take precedence if provided.
+func (c Config) EmailSenderAddress() string {
+	switch {
+	case c.cliConfig.Email.SenderAddress != nil:
+		return *c.cliConfig.Email.SenderAddress
+	case c.fileConfig.Email.SenderAddress != nil:
+		return *c.fileConfig.Email.SenderAddress
+	default:
+		return defaultSMTPSenderAddress
+	}
+}
+
+// EmailRecipientAddresses returns the user-provided list of email addresess
+// to receive all outgoing email notifications from this application or the
+// default value if not provided. CLI flag values take precedence if provided.
+func (c Config) EmailRecipientAddresses() []string {
+	switch {
+	case c.cliConfig.Email.RecipientAddresses != nil:
+		return c.cliConfig.Email.RecipientAddresses
+	case c.fileConfig.Email.RecipientAddresses != nil:
+		return c.fileConfig.Email.RecipientAddresses
+	default:
+		// Validation should catch this and fail the start-up attempt IF the
+		// sysadmin opted to specify a SMTP mail server, but *not* provide one
+		// or more destination addresses. If the SMTP server is not specified,
+		// this method (and thus the value) should remain unused.
+		return make([]string, 0)
+	}
 }
 
 // EmailNotificationRetries returns the user-provided retry limit before
 // giving up on email message delivery or the default value if not provided.
 // CLI flag values take precedence if provided.
 func (c Config) EmailNotificationRetries() int {
-
-	log.Warn("Implement this as part of GH-3")
-
-	return 0
+	switch {
+	case c.cliConfig.Email.Retries != nil:
+		return *c.cliConfig.Email.Retries
+	case c.fileConfig.Email.Retries != nil:
+		return *c.fileConfig.Email.Retries
+	default:
+		return defaultSMTPRetries
+	}
 }
 
 // EmailNotificationRetryDelay returns the user-provided delay for email
 // notifications or the default value if not provided. CLI flag values take
-// precedence if provided.
+// precedence if provided. This delay is added regardless of whether a
+// previous notification delivery attempt has been made.
 func (c Config) EmailNotificationRetryDelay() int {
-
-	log.Warn("Implement this as part of GH-3")
-
-	return 0
+	switch {
+	case c.cliConfig.Email.RetryDelay != nil:
+		return *c.cliConfig.Email.RetryDelay
+	case c.fileConfig.Email.RetryDelay != nil:
+		return *c.fileConfig.Email.RetryDelay
+	default:
+		return defaultSMTPRetryDelay
+	}
 }
 
 // EZproxyExecutablePath returns the user-provided, fully-qualified path to

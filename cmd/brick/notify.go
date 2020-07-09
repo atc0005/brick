@@ -20,6 +20,8 @@ import (
 	"context"
 	"fmt"
 	"runtime"
+	"strings"
+	"text/template"
 	"time"
 
 	"github.com/apex/log"
@@ -441,8 +443,8 @@ func teamsNotifier(
 				retryDelay int,
 				resultQueue chan<- NotifyResult) {
 
-				ourMessage := createMessage(record)
-				resultQueue <- sendMessage(ctx, webhookURL, ourMessage, schedule, numRetries, retryDelay)
+				ourMessage := createTeamsMessage(record)
+				resultQueue <- sendTeamsMessage(ctx, webhookURL, ourMessage, schedule, numRetries, retryDelay)
 
 			}(ctx, webhookURL, record, nextScheduledNotification, retries, retriesDelay, ourResultQueue)
 
@@ -467,10 +469,7 @@ func teamsNotifier(
 // TODO: Refactor per GH-37
 func emailNotifier(
 	ctx context.Context,
-	sendTimeout time.Duration,
-	sendRateLimit time.Duration,
-	retries int,
-	retriesDelay int,
+	emailCfg emailConfig,
 	incoming <-chan events.Record,
 	notifyMgrResultQueue chan<- NotifyResult,
 	done chan<- struct{},
@@ -485,7 +484,7 @@ func emailNotifier(
 	// email notification attempts. This delay is added in order to rate limit
 	// our outgoing messages to comply with any destination email server
 	// limits.
-	notifyScheduler := newNotifyScheduler(sendRateLimit)
+	notifyScheduler := newNotifyScheduler(emailCfg.notificationRateLimit)
 
 	for {
 
@@ -525,10 +524,10 @@ func emailNotifier(
 			)
 
 			timeoutValue := config.GetNotificationTimeout(
-				sendTimeout,
+				emailCfg.timeout,
 				nextScheduledNotification,
-				retries,
-				retriesDelay,
+				emailCfg.notificationRetries,
+				emailCfg.notificationRetryDelay,
 			)
 
 			ctx, cancel := context.WithTimeout(ctx, timeoutValue)
@@ -560,16 +559,16 @@ func emailNotifier(
 			// launch task in separate goroutine, each with its own schedule
 			log.Debug("emailNotifier: Launching message creation/submission in separate goroutine")
 
-			// launch task in a separate goroutine
-			// FIXME: Implement most of the same parameters here as with the
-			// goroutine in teamsNotifier, pass ctx for email function to use.
-			go func(resultQueue chan<- NotifyResult) {
-				result := NotifyResult{
-					Err: fmt.Errorf("emailNotifier: Sending email is not currently supported"),
-				}
-				log.Error(result.Err.Error())
-				resultQueue <- result
-			}(ourResultQueue)
+			go func(
+				ctx context.Context,
+				record events.Record,
+				schedule time.Time,
+				emailCfg emailConfig,
+				resultQueue chan<- NotifyResult,
+			) {
+				ourMessage := createEmailMessage(record, emailCfg)
+				resultQueue <- sendEmailMessage(ctx, emailCfg, ourMessage, schedule)
+			}(ctx, record, nextScheduledNotification, emailCfg, ourResultQueue)
 
 		case result := <-ourResultQueue:
 
@@ -644,12 +643,45 @@ func NotifyMgr(ctx context.Context, cfg *config.Config, notifyWorkQueue <-chan e
 	if cfg.NotifyEmail() {
 		log.Info("NotifyMgr: Email notifications enabled")
 		log.Debug("NotifyMgr: Starting up emailNotifier")
+
+		// TODO: Replace with a more dynamic process that allows for use
+		// of user-specified, file-based templates. For now, this is the
+		// minimum necessary to complete a first pass at GH-3.
+
+		// TODO: Move these to external files
+		// activeTemplate := defaultEmailTemplate
+		// activeTemplate := textileEmailTemplate
+
+		// FIXME: Keep linter from complaining about this being unused for
+		// now.
+		_ = defaultEmailTemplate
+		activeTemplate := textileEmailTemplate
+
+		emailTemplate := template.Must(
+			template.New(
+				"emailTemplate",
+			).Funcs(template.FuncMap{
+				"trim": strings.TrimSpace,
+			}).Parse(activeTemplate))
+
+		// TODO: Refactor as fields for new email notifier (not sure of name
+		// yet) type as part of GH-22.
+		emailCfg := emailConfig{
+			server:                 cfg.EmailServer(),
+			serverPort:             cfg.EmailServerPort(),
+			senderAddress:          cfg.EmailSenderAddress(),
+			recipientAddresses:     cfg.EmailRecipientAddresses(),
+			clientIdentity:         cfg.EmailClientIdentity(),
+			timeout:                config.NotifyMgrEmailNotificationTimeout,
+			notificationRateLimit:  cfg.EmailNotificationRateLimit(),
+			notificationRetries:    cfg.EmailNotificationRetries(),
+			notificationRetryDelay: cfg.EmailNotificationRetryDelay(),
+			template:               emailTemplate,
+		}
+
 		go emailNotifier(
 			ctx,
-			config.NotifyMgrEmailNotificationTimeout,
-			cfg.EmailNotificationRateLimit(),
-			cfg.EmailNotificationRetries(),
-			cfg.EmailNotificationRetryDelay(),
+			emailCfg,
 			emailNotifyWorkQueue,
 			emailNotifyResultQueue,
 			emailNotifyDone,

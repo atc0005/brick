@@ -27,6 +27,68 @@ import (
 	send2teams "github.com/atc0005/send2teams/teams"
 )
 
+// validateEmailAddress receives a string representing an email address and
+// the intent or purpose for the email address (e.g., "sender", "recipient")
+// and validates the email address. A error message indicating the reason for
+// validation failure is returned or nil if no issues were found.
+func validateEmailAddress(emailAddr string, purpose string) error {
+
+	// https://golangcode.com/validate-an-email-address/
+	// https://www.w3.org/TR/2016/REC-html51-20161101/sec-forms.html#email-state-typeemail
+
+	switch {
+	case emailAddr == "":
+		notSpecifiedErr := fmt.Errorf(
+			"%s email address not specified",
+			purpose,
+		)
+		return notSpecifiedErr
+
+	case (len(emailAddr) < 3 && len(emailAddr) > 254):
+		invalidLengthErr := fmt.Errorf(
+			"%s email address %q has invalid length of %d",
+			purpose,
+			emailAddr,
+			len(emailAddr),
+		)
+		return invalidLengthErr
+
+	case !emailRegex.MatchString(emailAddr):
+		invalidRegexExMatch := fmt.Errorf(
+			"%s email address %q does not match expected W3C format",
+			purpose,
+			emailAddr,
+		)
+		return invalidRegexExMatch
+	}
+
+	return nil
+}
+
+// validateEmailAddresses receives a slice of email addresses and the
+// associated intent (e.g., "sender", "recipient") and validates each of them
+// returning the validation error if present or nil if no validation failures
+// occur.
+func validateEmailAddresses(emailAddresses []string, purpose string) error {
+
+	if len(emailAddresses) == 0 {
+
+		return fmt.Errorf(
+			"%s email address not specified",
+			purpose,
+		)
+	}
+
+	for _, emailAddr := range emailAddresses {
+		if err := validateEmailAddress(emailAddr, purpose); err != nil {
+			log.Debug(err.Error())
+			return err
+		}
+	}
+
+	return nil
+}
+
 // validate confirms that all config struct fields have reasonable values
 func validate(c Config) error {
 
@@ -175,6 +237,92 @@ func validate(c Config) error {
 			"invalid retries limit specified for MS Teams notifications: %d",
 			c.TeamsNotificationRetries(),
 		)
+	}
+
+	// Not specifying an email server is a valid choice. Perform validation of
+	// this and other related values if the server name is provided.
+	if c.EmailServer() != "" {
+
+		log.Debugf("Email server provided: %q", c.EmailServer())
+
+		// TODO: This needs more work to be truly useful
+		if len(c.EmailServer()) <= 1 {
+			log.Debugf(
+				"unsupported email server name of %d characters specified for email notifications: %q",
+				len(c.EmailServer()),
+				c.EmailServer(),
+			)
+			return fmt.Errorf(
+				"invalid server name specified for email notifications: %q",
+				c.EmailServer(),
+			)
+		}
+
+		if !(c.EmailServerPort() >= TCPSystemPortStart) && (c.EmailServerPort() <= TCPDynamicPrivatePortEnd) {
+			log.Debugf("invalid port %d specified", c.EmailServerPort())
+			return fmt.Errorf(
+				"port %d is not a valid TCP port for the destination SMTP server",
+				c.EmailServerPort(),
+			)
+		}
+
+		if err := validateEmailAddress(c.EmailSenderAddress(), "sender"); err != nil {
+			log.Debug(err.Error())
+			return err
+		}
+
+		if err := validateEmailAddresses(c.EmailRecipientAddresses(), "recipient"); err != nil {
+			log.Debug(err.Error())
+			return err
+		}
+
+		if c.EmailClientIdentity() != "" {
+			if len(c.EmailClientIdentity()) <= 1 {
+				log.Debugf(
+					"unsupported email client identity of %d characters specified for email server connection: %q",
+					len(c.EmailClientIdentity()),
+					c.EmailClientIdentity(),
+				)
+				return fmt.Errorf(
+					"unsupported email client identity specified for email server connection: %q",
+					c.EmailClientIdentity(),
+				)
+			}
+		}
+
+		if c.EmailNotificationRateLimit() < 0 {
+			log.Debugf(
+				"unsupported rate limit specified for email notifications: %d ",
+				c.EmailNotificationRateLimit(),
+			)
+			return fmt.Errorf(
+				"invalid rate limit specified for email notifications: %d",
+				c.EmailNotificationRateLimit(),
+			)
+		}
+
+		if c.EmailNotificationRetryDelay() < 0 {
+			log.Debugf(
+				"unsupported delay specified for email notifications: %d ",
+				c.EmailNotificationRetryDelay(),
+			)
+			return fmt.Errorf(
+				"invalid delay specified for email notifications: %d",
+				c.EmailNotificationRetryDelay(),
+			)
+		}
+
+		if c.EmailNotificationRetries() < 0 {
+			log.Debugf(
+				"unsupported retry limit specified for email notifications: %d",
+				c.EmailNotificationRetries(),
+			)
+			return fmt.Errorf(
+				"invalid retries limit specified for email notifications: %d",
+				c.EmailNotificationRetries(),
+			)
+		}
+
 	}
 
 	if c.EZproxyExecutablePath() == "" {

@@ -11,6 +11,7 @@
 - [Why brick was created](#why-brick-was-created)
 - [Preparation](#preparation)
   - [Environment](#environment)
+  - [Web browser / MailDev](#web-browser--maildev)
   - [Visual Studio Code](#visual-studio-code)
   - [brick](#brick)
   - [Terminal](#terminal)
@@ -18,12 +19,13 @@
   - [Slideshow](#slideshow)
   - [First payload with as-is demo settings](#first-payload-with-as-is-demo-settings)
   - [Simulate a repeat Splunk alert](#simulate-a-repeat-splunk-alert)
-  - [Enable Teams notifications](#enable-teams-notifications)
+  - [Enable Teams and email notifications](#enable-teams-and-email-notifications)
   - [Same test username, different IP Address](#same-test-username-different-ip-address)
   - [Ignored username, different IP Address](#ignored-username-different-ip-address)
   - [Ignored IP Address, different username](#ignored-ip-address-different-username)
 - [High-level overview](#high-level-overview)
 - [Improvements](#improvements)
+  - [Recent](#recent)
   - [Planned](#planned)
   - [Potential](#potential)
 - [Upstream feature requests](#upstream-feature-requests)
@@ -41,7 +43,8 @@ This demo is intended to answer that question by covering:
 
 ### Environment
 
-1. Boot throwaway Ubuntu Linux 16.04 LTS or 18.04 LTS desktop VM
+1. Boot throwaway Ubuntu Linux 18.04 LTS desktop VM
+   older or newer versions *may* work, but have not received as much testing
 1. Install `git`
    - `sudo apt-get update && sudo apt-get install -y git`
 1. Clone remote repo
@@ -66,6 +69,13 @@ This demo is intended to answer that question by covering:
      a consistent state throughout the demo
    - this does not modify existing copies of the config files in the
      `/usr/local/etc/brick/` directory
+
+### Web browser / MailDev
+
+1. Open a web browser directly within the demo VM or on the VM host
+1. Navigate to the IP Address of the VM + `:1080`
+   - e.g., `http://192.168.92.136:1080/` or `http://localhost:1080/`
+1. Enable automatic refresh of mailbox contents
 
 ### Visual Studio Code
 
@@ -106,8 +116,25 @@ Configure `brick`:
 1. Set `msteams.webhook_url` to the webhook URL retrieved from the test
    Microsoft Teams channel
 1. Comment out `msteams.webhook_url` line
+   - this disables Microsoft Teams notifications for now
 1. Set `ezproxy.terminate_sessions` to `true`
    - TODO: Decide if this will be enabled initially, or as a follow-up item
+1. Configure email settings
+   1. `email.server` to `localhost`
+   1. `email.port` to `25`
+   1. `email.client_identity` to `brick`
+      - a production system should set this to the fully-qualified hostname of
+        the sending system
+      - a production system should also have a [Forward-confirmed reverse DNS
+        (FCrDNS](https://en.wikipedia.org/wiki/Forward-confirmed_reverse_DNS)
+        configuration to enable the most reliable delivery possible
+   1. `email.sender_address` to `brick@example.org`
+   1. `email.recipient_addresses` to `["help@example.org"]`
+   1. `email.rate_limit` to `3`
+   1. `email.retries` to `2`
+   1. `email.retry_delay` to `2`
+1. Comment out `email.server`
+   - this disables email notifications for now
 
 ### Terminal
 
@@ -135,13 +162,15 @@ Configure `guake` for demo:
            @splunk-sanitized-payload-formatted.json
            http://localhost:8000/api/v1/users/disable`
    1. `syslog entries`
-      - `/var/log/brick/syslog.log`
+      - `clear && tail -f /var/log/brick/syslog.log | ccze -A`
    1. `disabled user entries`
-      - `/var/cache/brick/users.brick-disabled.txt`
+      - `clear && tail -f /var/cache/brick/users.brick-disabled.txt | ccze -A`
    1. `reported user entries`
-      - `/var/log/brick/users.brick-reported.log`
+      - `clear && tail -f /var/log/brick/users.brick-reported.log | ccze -A`
    1. `fail2ban log`
-      - `/var/log/fail2ban.log`
+      - `clear && tail -f /var/log/fail2ban.log | ccze -A`
+   1. `email log`
+      1. `clear && tail -f /var/log/mail.log | ccze -A`
 
 ## Presentation
 
@@ -247,7 +276,7 @@ Configure `guake` for demo:
       users from that IP Address will be allowed to connect to EZproxy again.
       The disabled account will stay disabled.
 
-### Enable Teams notifications
+### Enable Teams and email notifications
 
 Use the same test username as before.
 
@@ -268,6 +297,9 @@ Use the same test username as before.
    - Show familiar entries
 1. Switch to the `fail2ban log` tab
    - Show familiar entries
+1. Switch to the MailDev container
+   - Accessible within demo VM or externally on NAT network
+   - Step through all notifications
 
 ### Same test username, different IP Address
 
@@ -348,12 +380,16 @@ See [Overview](start-here.md) doc for additional details.
 
 ## Improvements
 
-### Planned
+### Recent
 
 - Email notifications directly from `brick`
-  - "coming soon"
   - analogue to Teams notifications
-    - potentially 1:1, but likely less
+
+- Support for automatic sessions termination
+  - using official `ezproxy` binary
+  - using unsupported `kill` subcommand of official `ezproxy` binary
+
+### Planned
 
 - Additional endpoints
   - list disabled user accounts
@@ -373,9 +409,6 @@ time/support from leadership.
   - Use LDAP package to add disabled users to a Library-specific AD group
   - Update EZproxy (test instance first) to deny login access to users in this
     AD group
-- Takeover fail2ban responsibilities to reduce outside dependencies
-  - I.e., manage host-level firewall rules directly without reliance on
-    fail2ban
 - Refactoring to allow `brick` to take general actions from Splunk, Graylog or
   another alert
   - restart a service
