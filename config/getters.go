@@ -18,6 +18,7 @@ package config
 
 import (
 	"os"
+	"time"
 
 	"github.com/apex/log"
 )
@@ -286,6 +287,24 @@ func (c Config) TeamsWebhookURL() string {
 	}
 }
 
+// TeamsNotificationRateLimit returns a time.Duration value based on the
+// user-provided rate limit in seconds between Microsoft Teams notifications
+// or the default value if not provided. CLI flag values take precedence if
+// provided.
+func (c Config) TeamsNotificationRateLimit() time.Duration {
+	var rateLimitSeconds int
+	switch {
+	case c.cliConfig.MSTeams.RateLimit != nil:
+		rateLimitSeconds = *c.cliConfig.MSTeams.RateLimit
+	case c.fileConfig.MSTeams.RateLimit != nil:
+		rateLimitSeconds = *c.fileConfig.MSTeams.RateLimit
+	default:
+		rateLimitSeconds = defaultMSTeamsRateLimit
+	}
+
+	return time.Duration(rateLimitSeconds) * time.Second
+}
+
 // TeamsNotificationRetries returns the user-provided retry limit before
 // giving up on message delivery or the default value if not provided. CLI
 // flag values take precedence if provided.
@@ -341,6 +360,26 @@ func (c Config) NotifyEmail() bool {
 	// written.
 	return false
 
+}
+
+// EmailNotificationRateLimit returns a time.Duration value based on the
+// user-provided rate limit in seconds between email notifications or the
+// default value if not provided. CLI flag values take precedence if provided.
+func (c Config) EmailNotificationRateLimit() time.Duration {
+	var rateLimitSeconds int
+	// switch {
+	// case c.cliConfig.Email.RateLimit != nil:
+	// 	rateLimitSeconds = *c.cliConfig.MSTeams.RateLimit
+	// case c.fileConfig.MSTeams.RateLimit != nil:
+	// 	rateLimitSeconds = *c.fileConfig.MSTeams.RateLimit
+	// default:
+	// 	rateLimitSeconds = defaultMSTeamsRateLimit
+	// }
+
+	log.Warn("FIXME: Placeholder value until GH-3 is implemented")
+	rateLimitSeconds = 5
+
+	return time.Duration(rateLimitSeconds) * time.Second
 }
 
 // EmailNotificationRetries returns the user-provided retry limit before

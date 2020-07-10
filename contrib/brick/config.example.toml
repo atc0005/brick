@@ -115,6 +115,12 @@ file_path = "/usr/local/etc/brick/ips.brick-ignored.txt"
 # using this application.
 webhook_url = ""
 
+# The number of seconds to wait between Microsoft Teams notification attempts.
+# This rate limit is intended to help prevent unintentional abuse of remote
+# services and is applied regardless of whether the last notification attempt
+# was initially successful or required one or more retry attempts.
+rate_limit = 5
+
 # The number of attempts that this application will make to deliver Microsoft
 # Teams messages before giving up.
 retries = 2

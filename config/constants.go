@@ -63,6 +63,13 @@ const (
 	// No assumptions can be safely made here; user has to supply this
 	defaultMSTeamsWebhookURL string = ""
 
+	// the number of seconds to wait between Microsoft Teams notification
+	// attempts. This rate limit is intended to help prevent unintentional
+	// abuse of remote services and is applied regardless of whether the last
+	// notification attempt was initially successful or required one or more
+	// retry attempts.
+	defaultMSTeamsRateLimit int = 5
+
 	// the number of attempts to deliver messages before giving up; applies to
 	// Microsoft Teams notifications only
 	defaultMSTeamsRetries int = 2
@@ -144,16 +151,6 @@ const (
 	// more often than this duration. This limiter is to keep from logging the
 	// details so often that the information simply becomes noise.
 	NotifyQueueMonitorDelay time.Duration = 15 * time.Second
-
-	// NotifyMgrTeamsNotificationRateLimit is the rate limit between Microsoft
-	// Teams notification attempts. This limit is intended to help prevent
-	// unintentional abuse of remote services.
-	NotifyMgrTeamsNotificationRateLimit time.Duration = 5 * time.Second
-
-	// NotifyMgrEmailNotificationRateLimit is the rate limit between email
-	// notification attempts. This limit is intended to help prevent
-	// unintentional abuse of remote services.
-	NotifyMgrEmailNotificationRateLimit time.Duration = 5 * time.Second
 )
 
 // NotifyMgrQueueDepth is the number of items allowed into the queue/channel
