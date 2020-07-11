@@ -26,6 +26,32 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.3.0] - 2020-07-11
+
+### Added
+
+- expose setting to configure Teams notifications rate limit
+  - via CLI flag, config file and environment variable
+
+### Changed
+
+- retry delay setting renamed to emphasize intent
+  - configuration file setting `delay` renamed to `retry_delay`
+  - CLI flag setting `--teams-notify-delay` renamed to
+    `--teams-notify-retry-delay`
+  - environment variable `BRICK_MSTEAMS_WEBHOOK_DELAY` renamed to
+    `BRICK_MSTEAMS_WEBHOOK_RETRY_DELAY`
+
+### Fixed
+
+- minor wording/grammatical tweaks in an effort to clarify intent
+  - e.g., `config-file` flag
+- invalid function call in validation function (oh the irony)
+- Update documentation for rate limit and retry delay
+  - prior code and documentation failed to properly communicate the difference
+    between the two goals
+- Add missing documentation comments to sample configuration file
+
 ## [v0.2.0] - 2020-07-03
 
 This release brings two notable features:
@@ -188,7 +214,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.3.0...HEAD
+[v0.3.0]: https://github.com/atc0005/brick/releases/tag/v0.3.0
 [v0.2.0]: https://github.com/atc0005/brick/releases/tag/v0.2.0
 [v0.1.2]: https://github.com/atc0005/brick/releases/tag/v0.1.2
 [v0.1.1]: https://github.com/atc0005/brick/releases/tag/v0.1.1
