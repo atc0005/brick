@@ -115,7 +115,7 @@ See also:
     - ignored IP Address
     - error occurred
   - configurable retries and delay between retries
-  - hard-coded notifications rate limit in order to respect remote API limits
+  - configurable notifications rate limit (used to respect remote API limits)
 
 - Logging
   - Payload receipt from monitoring system

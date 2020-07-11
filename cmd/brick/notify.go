@@ -630,7 +630,7 @@ func NotifyMgr(ctx context.Context, cfg *config.Config, notifyWorkQueue <-chan e
 			ctx,
 			cfg.TeamsWebhookURL(),
 			config.NotifyMgrTeamsNotificationTimeout,
-			config.NotifyMgrTeamsNotificationRateLimit,
+			cfg.TeamsNotificationRateLimit(),
 			cfg.TeamsNotificationRetries(),
 			cfg.TeamsNotificationRetryDelay(),
 			teamsNotifyWorkQueue,
@@ -647,7 +647,7 @@ func NotifyMgr(ctx context.Context, cfg *config.Config, notifyWorkQueue <-chan e
 		go emailNotifier(
 			ctx,
 			config.NotifyMgrEmailNotificationTimeout,
-			config.NotifyMgrEmailNotificationRateLimit,
+			cfg.EmailNotificationRateLimit(),
 			cfg.EmailNotificationRetries(),
 			cfg.EmailNotificationRetryDelay(),
 			emailNotifyWorkQueue,

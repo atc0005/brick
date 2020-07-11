@@ -153,6 +153,14 @@ func validate(c Config) error {
 
 	}
 
+	if c.TeamsNotificationRateLimit() < 0 {
+		log.Debugf("unsupported rate limit specified for MS Teams notifications: %d ", c.TeamsNotificationRateLimit())
+		return fmt.Errorf(
+			"invalid rate limit specified for MS Teams notifications: %d",
+			c.TeamsNotificationRateLimit(),
+		)
+	}
+
 	if c.TeamsNotificationRetryDelay() < 0 {
 		log.Debugf("unsupported retry delay specified for MS Teams notifications: %d ", c.TeamsNotificationRetryDelay())
 		return fmt.Errorf(

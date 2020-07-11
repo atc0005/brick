@@ -54,7 +54,7 @@ FEATURES
 
 • User configurable support for ignoring specific IP Addresses (i.e., prevent disabling associated account)
 
-• Microsoft Teams notifications generated for multiple events with configurable retries and notification retry delay
+• Microsoft Teams notifications generated for multiple events with configurable rate limit, notification retries, and retry delay
 
 • Logging of all events (e.g., payload receipt, action taken due to payload)
 
