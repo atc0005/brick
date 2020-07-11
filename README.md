@@ -114,8 +114,8 @@ See also:
     - ignored user
     - ignored IP Address
     - error occurred
-  - configurable retries
-  - configurable notifications delay in order to respect remote API limits
+  - configurable retries and delay between retries
+  - hard-coded notifications rate limit in order to respect remote API limits
 
 - Logging
   - Payload receipt from monitoring system

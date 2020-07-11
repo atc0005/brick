@@ -341,7 +341,7 @@ func teamsNotifier(
 	ctx context.Context,
 	webhookURL string,
 	sendTimeout time.Duration,
-	sendDelay time.Duration,
+	sendRateLimit time.Duration,
 	retries int,
 	retriesDelay int,
 	incoming <-chan events.Record,
@@ -355,9 +355,10 @@ func teamsNotifier(
 	ourResultQueue := make(chan NotifyResult)
 
 	// Setup new scheduler that we can use to add an intentional delay between
-	// Microsoft Teams notification attempts
+	// Microsoft Teams notification attempts. This delay is added in order to
+	// rate limit our outgoing messages to comply with remote API limits.
 	// https://docs.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/connectors-using
-	notifyScheduler := newNotifyScheduler(sendDelay)
+	notifyScheduler := newNotifyScheduler(sendRateLimit)
 
 	for {
 
@@ -388,7 +389,6 @@ func teamsNotifier(
 				time.Now(), record)
 
 			log.Debug("Calculating next scheduled notification")
-
 			nextScheduledNotification := notifyScheduler()
 
 			log.Debugf("Now: %v, Next scheduled notification: %v",
@@ -468,7 +468,7 @@ func teamsNotifier(
 func emailNotifier(
 	ctx context.Context,
 	sendTimeout time.Duration,
-	sendDelay time.Duration,
+	sendRateLimit time.Duration,
 	retries int,
 	retriesDelay int,
 	incoming <-chan events.Record,
@@ -482,8 +482,10 @@ func emailNotifier(
 	ourResultQueue := make(chan NotifyResult)
 
 	// Setup new scheduler that we can use to add an intentional delay between
-	// email notification attempts
-	notifyScheduler := newNotifyScheduler(sendDelay)
+	// email notification attempts. This delay is added in order to rate limit
+	// our outgoing messages to comply with any destination email server
+	// limits.
+	notifyScheduler := newNotifyScheduler(sendRateLimit)
 
 	for {
 
@@ -627,10 +629,10 @@ func NotifyMgr(ctx context.Context, cfg *config.Config, notifyWorkQueue <-chan e
 		go teamsNotifier(
 			ctx,
 			cfg.TeamsWebhookURL(),
-			config.NotifyMgrTeamsTimeout,
-			config.NotifyMgrTeamsNotificationDelay,
+			config.NotifyMgrTeamsNotificationTimeout,
+			config.NotifyMgrTeamsNotificationRateLimit,
 			cfg.TeamsNotificationRetries(),
-			cfg.TeamsNotificationDelay(),
+			cfg.TeamsNotificationRetryDelay(),
 			teamsNotifyWorkQueue,
 			teamsNotifyResultQueue,
 			teamsNotifyDone,
@@ -644,10 +646,10 @@ func NotifyMgr(ctx context.Context, cfg *config.Config, notifyWorkQueue <-chan e
 		log.Debug("NotifyMgr: Starting up emailNotifier")
 		go emailNotifier(
 			ctx,
-			config.NotifyMgrEmailTimeout,
-			config.NotifyMgrEmailNotificationDelay,
+			config.NotifyMgrEmailNotificationTimeout,
+			config.NotifyMgrEmailNotificationRateLimit,
 			cfg.EmailNotificationRetries(),
-			cfg.EmailNotificationDelay(),
+			cfg.EmailNotificationRetryDelay(),
 			emailNotifyWorkQueue,
 			emailNotifyResultQueue,
 			emailNotifyDone,

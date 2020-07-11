@@ -153,11 +153,11 @@ func validate(c Config) error {
 
 	}
 
-	if c.TeamsNotificationDelay() < 0 {
-		log.Debugf("unsupported delay specified for MS Teams notifications: %d ", c.TeamsNotificationDelay())
+	if c.TeamsNotificationRetryDelay() < 0 {
+		log.Debugf("unsupported retry delay specified for MS Teams notifications: %d ", c.TeamsNotificationRetryDelay())
 		return fmt.Errorf(
-			"invalid delay specified for MS Teams notifications: %d",
-			c.TeamsNotificationDelay(),
+			"invalid retry delay specified for MS Teams notifications: %d",
+			c.TeamsNotificationRetryDelay(),
 		)
 	}
 

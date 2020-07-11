@@ -301,19 +301,18 @@ func (c Config) TeamsNotificationRetries() int {
 	}
 }
 
-// TeamsNotificationDelay returns the user-provided delay for Microsoft Teams
-// notifications or the default value if not provided. CLI flag values take
-// precedence if provided. This delay is added regardless of whether a
-// previous notification delivery attempt has been made.
-func (c Config) TeamsNotificationDelay() int {
+// TeamsNotificationRetryDelay returns the user-provided delay between retry
+// attempts for Microsoft Teams notifications or the default value if not
+// provided. CLI flag values take precedence if provided.
+func (c Config) TeamsNotificationRetryDelay() int {
 
 	switch {
-	case c.cliConfig.MSTeams.Delay != nil:
-		return *c.cliConfig.MSTeams.Delay
-	case c.fileConfig.MSTeams.Delay != nil:
-		return *c.fileConfig.MSTeams.Delay
+	case c.cliConfig.MSTeams.RetryDelay != nil:
+		return *c.cliConfig.MSTeams.RetryDelay
+	case c.fileConfig.MSTeams.RetryDelay != nil:
+		return *c.fileConfig.MSTeams.RetryDelay
 	default:
-		return defaultMSTeamsDelay
+		return defaultMSTeamsRetryDelay
 	}
 }
 
@@ -356,9 +355,8 @@ func (c Config) EmailNotificationRetries() int {
 
 // EmailNotificationRetries returns the user-provided delay for email
 // notifications or the default value if not provided. CLI flag values take
-// precedence if provided. This delay is added regardless of whether a
-// previous notification delivery attempt has been made.
-func (c Config) EmailNotificationDelay() int {
+// precedence if provided.
+func (c Config) EmailNotificationRetryDelay() int {
 
 	log.Warn("Implement this as part of GH-3")
 

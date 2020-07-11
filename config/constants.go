@@ -69,7 +69,7 @@ const (
 
 	// the number of seconds to wait between retry attempts; applies to
 	// Microsoft Teams notifications only
-	defaultMSTeamsDelay int = 5
+	defaultMSTeamsRetryDelay int = 5
 
 	// this is based on the official installation instructions
 	defaultEZproxyExecutablePath string = "/usr/local/ezproxy/ezproxy"
@@ -119,21 +119,21 @@ const NotifyMgrServicesShutdownTimeout time.Duration = 2 * time.Second
 // and child goroutines to concurrently process notification requests.
 const (
 
-	// NotifyMgrTeamsTimeout is the timeout setting applied to each Microsoft
-	// Teams notification attempt. This value does NOT take into account the
-	// number of configured retries and retry delays. The final value timeout
-	// applied to each notification attempt should be based on those
-	// calculations. The GetTimeout method does just that.
-	NotifyMgrTeamsTimeout time.Duration = 10 * time.Second
+	// NotifyMgrTeamsNotificationTimeout is the timeout setting applied to
+	// each Microsoft Teams notification attempt. This value does NOT take
+	// into account the number of configured retries, retry delays or overall
+	// rate limit for Teams notifications. The final timeout value applied to
+	// each notification attempt should be based on those calculations and
+	// this value. The GetNotificationTimeout method does just that.
+	NotifyMgrTeamsNotificationTimeout time.Duration = 10 * time.Second
 
-	// NotifyMgrTeamsSendAttemptTimeout
-
-	// NotifyMgrEmailTimeout is the timeout setting applied to each email
-	// notification attempt. This value does NOT take into account the number
-	// of configured retries and retry delays. The final value timeout applied
-	// to each notification attempt should be based on those calculations. The
-	// GetTimeout method does just that.
-	NotifyMgrEmailTimeout time.Duration = 30 * time.Second
+	// NotifyMgrEmailNotificationTimeout is the timeout setting applied to
+	// each email notification attempt. This value does NOT take into account
+	// the number of configured retries, retry delays or overall rate limit
+	// for email notifications. The final timeout value applied to each
+	// notification attempt should be based on those calculations and this
+	// value. The GetNotificationTimeout method does just that.
+	NotifyMgrEmailNotificationTimeout time.Duration = 30 * time.Second
 
 	// NotifyStatsMonitorDelay limits notification stats logging to no more
 	// often than this duration. This limiter is to keep from logging the
@@ -145,15 +145,15 @@ const (
 	// details so often that the information simply becomes noise.
 	NotifyQueueMonitorDelay time.Duration = 15 * time.Second
 
-	// NotifyMgrTeamsNotificationDelay is the delay between Microsoft Teams
-	// notification attempts. This delay is intended to help prevent
+	// NotifyMgrTeamsNotificationRateLimit is the rate limit between Microsoft
+	// Teams notification attempts. This limit is intended to help prevent
 	// unintentional abuse of remote services.
-	NotifyMgrTeamsNotificationDelay time.Duration = 5 * time.Second
+	NotifyMgrTeamsNotificationRateLimit time.Duration = 5 * time.Second
 
-	// NotifyMgrEmailNotificationDelay is the delay between email notification
-	// attempts. This delay is intended to help prevent unintentional abuse of
-	// remote services.
-	NotifyMgrEmailNotificationDelay time.Duration = 5 * time.Second
+	// NotifyMgrEmailNotificationRateLimit is the rate limit between email
+	// notification attempts. This limit is intended to help prevent
+	// unintentional abuse of remote services.
+	NotifyMgrEmailNotificationRateLimit time.Duration = 5 * time.Second
 )
 
 // NotifyMgrQueueDepth is the number of items allowed into the queue/channel
