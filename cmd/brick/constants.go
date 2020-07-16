@@ -16,4 +16,5 @@
 
 package main
 
+// MB represents 1 Megabyte
 const MB int64 = 1048576

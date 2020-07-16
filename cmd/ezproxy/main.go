@@ -29,6 +29,8 @@ import (
 	"github.com/atc0005/go-ezproxy"
 )
 
+// Results is used to group together potential exit codes and output in a
+// slice to be chosen pseudo-randomly.
 type Results struct {
 	ExitOutput string
 	ExitCode   int

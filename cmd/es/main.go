@@ -35,6 +35,7 @@ import (
 const myAppName string = "es"
 const myAppURL string = "https://github.com/atc0005/brick"
 
+// AppConfig represents the configuration used by this application
 type AppConfig struct {
 
 	// Username is the name of the user account that we are searching for.
