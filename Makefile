@@ -81,6 +81,7 @@ lintinstall:
 	@export PATH="${PATH}:$(go env GOPATH)/bin"
 
 	@echo "Explicitly enabling Go modules mode per command"
+	(cd; GO111MODULE="on" go get golang.org/x/lint/golint)
 	(cd; GO111MODULE="on" go get honnef.co/go/tools/cmd/staticcheck)
 
 	@echo Installing golangci-lint ${GOLANGCI_LINT_VERSION} per official binary installation docs ...
@@ -99,6 +100,9 @@ linting:
 
 	@echo "Running golangci-lint ..."
 	@golangci-lint run
+
+	@echo "Running golint separately (temporarily; see atc0005/brick#92) ..."
+	@golint -set_exit_status $(shell go list -mod=vendor ./... | grep -v /vendor/)
 
 	@echo "Running staticcheck ..."
 	@staticcheck $(shell go list -mod=vendor ./... | grep -v /vendor/)

@@ -21,6 +21,8 @@ import (
 	"fmt"
 )
 
+// ValidatePayload is used to perform very basic validation on all expected
+// fields for the received payload.
 func ValidatePayload(payloadV2 SplunkAlertPayloadV2) error {
 
 	// The `SplunkAlertPayloadV2` type is currently composed of string fields

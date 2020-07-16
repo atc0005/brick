@@ -392,7 +392,7 @@ func (c Config) EmailNotificationRetries() int {
 	return 0
 }
 
-// EmailNotificationRetries returns the user-provided delay for email
+// EmailNotificationRetryDelay returns the user-provided delay for email
 // notifications or the default value if not provided. CLI flag values take
 // precedence if provided.
 func (c Config) EmailNotificationRetryDelay() int {
