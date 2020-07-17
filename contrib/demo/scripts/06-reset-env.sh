@@ -43,34 +43,34 @@ echo "Run scripts ${script_names} to reset other files also."
 # sudo touch /var/log/fail2ban.log
 # sudo touch /var/log/mail.log
 
-# Stop services
+echo "* Stop services"
 sudo systemctl stop fail2ban
 sudo systemctl stop postfix
 sudo systemctl stop rsyslog
 sudo systemctl stop brick
 
-# Truncate log files
+echo "* Truncate log files"
 sudo truncate -s 0 /var/cache/brick/users.brick-disabled.txt
 sudo truncate -s 0 /var/log/brick/users.brick-reported.log
 sudo truncate -s 0 /var/log/brick/syslog.log
 sudo truncate -s 0 /var/log/fail2ban.log
 sudo truncate -s 0 /var/log/mail.log
 
-# Fix permissions
+echo "* Fix permissions"
 sudo chown -Rv brick:syslog /var/log/brick
 sudo chmod -v 664 /var/log/brick/syslog.log
 sudo chmod -v 644 /var/log/brick/users.brick-reported.log
 sudo chown -Rv brick:brick /var/cache/brick
 sudo chmod -v 644 /var/cache/brick/users.brick-disabled.txt
 
-# Clear any stuck emails
+echo "* Clear any stuck emails"
 sudo postsuper -d ALL
 
-# Reset Docker container
+echo "* Reset Docker container"
 sudo docker container stop maildev
 sudo docker run --rm --detach --name maildev -p 1080:80 -p 1025:25 maildev/maildev
 
-# Reset fail2ban state
+echo "* Reset fail2ban state"
 # https://unix.stackexchange.com/questions/286119
 sudo systemctl stop fail2ban
 for lin in {200..1}; do
@@ -78,7 +78,7 @@ for lin in {200..1}; do
 done
 sudo rm -vf /var/lib/fail2ban/fail2ban.sqlite3
 
-# Restart affected services so that they'll start over fresh
+echo "* Restart affected services so that they'll start over fresh"
 sudo systemctl restart rsyslog
 sudo systemctl restart postfix
 sudo systemctl restart fail2ban

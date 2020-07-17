@@ -45,7 +45,7 @@ then
     # install Go toolchain
     echo "Downloading and installing Go toolchain"
     cd /tmp
-    export GO_VERSION="1.14.4"
+    export GO_VERSION="1.14.6"
     rm -f go1.*.linux-amd64.tar.gz
     curl -L -O https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz
     sudo tar zxf go${GO_VERSION}.linux-amd64.tar.gz -C /usr/local/
