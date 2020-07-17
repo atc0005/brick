@@ -37,20 +37,36 @@ var Version string = "x.y.z"
 func (c *Config) String() string {
 	return fmt.Sprintf(
 		"UnifiedConfig: { "+
-			"NetworkLocalTCPPort: %v "+
-			"NetworkLocalIPAddress: %v, "+
-			"LoggingLevel: %s, "+
-			"LoggingOutput: %s, "+
-			"LoggingFormat: %s, "+
-			"DisabledUsersFile: %s, "+
+			"Network.LocalTCPPort: %v "+
+			"Network.LocalIPAddress: %v, "+
+			"Logging.Level: %s, "+
+			"Logging.Output: %s, "+
+			"Logging.Format: %s, "+
+			"DisabledUsers.File: %s, "+
+			"DisabledUsers.EntrySuffix: %s, "+
 			"DisabledUsers.FilePermissions: %v, "+
-			"ReportedUsers.File: %q, "+
-			"ReportedUsersFilePermissions: %v, "+
-			"IgnoredUsersFile: [%q %t],"+
-			"IgnoredIPAddressesFile: [%q %t],"+
-			"TeamsWebhookURL: %q,"+
-			"TeamsNotificationRetries: %q,"+
-			"TeamsNotificationRetryDelay: %q,"+
+			"ReportedUsers.LogFile: %q, "+
+			"ReportedUsers.LogFilePermissions: %v, "+
+			"IgnoredUsers.File: %q,"+
+			"IsSetIgnoredUsersFile: %t,"+
+			"IgnoredIPAddresses.File: %q,"+
+			"IsSetIgnoredIPAddressesFile: %t,"+
+			"IgnoreLookupErrors: %t,"+
+			"MSTeams.WebhookURL: %q,"+
+			"MSTeams.RateLimit: %v,"+
+			"MSTeams.Retries: %v,"+
+			"MSTeams.RetryDelay: %v,"+
+			"NotifyTeams: %t,"+
+			"NotifyEmail: %t,"+
+			"Email.RateLimit: %v,"+
+			"Email.Retries: %v,"+
+			"Email.RetryDelay: %v,"+
+			"EZproxy.ExecutablePath: %v,"+
+			"EZproxy.ActiveFilePath: %v,"+
+			"EZproxy.AuditFileDirPath: %v,"+
+			"EZproxy.SearchRetries: %v,"+
+			"EZproxy.SearchDelay: %v,"+
+			"EZproxy.TerminateSessions: %t,"+
 			"ConfigFile: %q}",
 		c.LocalTCPPort(),
 		c.LocalIPAddress(),
@@ -58,6 +74,7 @@ func (c *Config) String() string {
 		c.LogOutput(),
 		c.LogFormat(),
 		c.DisabledUsersFile(),
+		c.DisabledUsersFileEntrySuffix(),
 		c.DisabledUsersFilePermissions(),
 		c.ReportedUsersLogFile(),
 		c.ReportedUsersLogFilePermissions(),
@@ -65,9 +82,22 @@ func (c *Config) String() string {
 		c.IsSetIgnoredUsersFile(),
 		c.IgnoredIPAddressesFile(),
 		c.IsSetIgnoredIPAddressesFile(),
+		c.IgnoreLookupErrors(),
 		c.TeamsWebhookURL(),
+		c.TeamsNotificationRateLimit(),
 		c.TeamsNotificationRetries(),
 		c.TeamsNotificationRetryDelay(),
+		c.NotifyTeams(),
+		c.NotifyEmail(),
+		c.EmailNotificationRateLimit(),
+		c.EmailNotificationRetries(),
+		c.EmailNotificationRetryDelay(),
+		c.EZproxyExecutablePath(),
+		c.EZproxyActiveFilePath(),
+		c.EZproxyAuditFileDirPath(),
+		c.EZproxySearchRetries(),
+		c.EZproxySearchDelay(),
+		c.EZproxyTerminateSessions(),
 		c.ConfigFile(),
 	)
 }
