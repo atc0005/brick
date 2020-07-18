@@ -130,17 +130,62 @@ retries = 2
 retry_delay = 5
 
 
-# TODO: Add this in later
+[email]
+
+# The SMTP server that this application should connect to for email message
+# delivery. Specify localhost if testing or sending mail via a local SMTP
+# server instance. Examples include running a Postfix null client which sends
+# all mail to a relayhost on the local network or a Maildev Docker container
+# for development purposes.
+# server = "localhost"
+server = ""
+
+# The TCP port that this application should connect to for email message
+# delivery. If using a Maildev Docker container for testing you may want to
+# try 1025 as the port.
+# port = 1025
+port = 25
+
+# Default SMTP connections are unauthenticated. The hope is to extend email
+# notification functionality in the future with support for standard
+# authentication mechanisms.
 #
-# [email]
-#
-# smtp_server_fqdn = ""
-# smtp_server_port = ""
-# smtp_server_username = ""
-# smtp_server_password = ""
-# smtp_server_secure = ""
-# retries = 2
-# delay = 2
+# username = ""
+# password = ""
+
+# The hostname provided with the HELO or EHLO greeting to the SMTP server. If
+# left blank, the default is used. Many SMTP servers will require that the
+# hostname be provided in a FQDN format. Those same SMTP servers may equally
+# require that both forward and reverse DNS lookups for this provided value
+# resolve properly.
+# client_identity = "localhost"
+# client_identity = "ezproxy.example.com"
+client_identity = "brick"
+
+# The email address to use as the sender on all outgoing emails.
+sender_address = "brick@example.org"
+
+# The list of email addresses (one or many) to receive notifications from this
+# application.
+# recipient_emails = [
+#     "help@example.org",
+#     "devteam@example.org",
+#     "sysadmins@example.org",
+# ]
+recipient_addresses = ["help@example.org"]
+
+# The number of seconds to wait between email notification attempts. This rate
+# limit is intended to help prevent unintentional abuse of remote services and
+# is applied regardless of whether the last notification attempt was initially
+# successful or required one or more retry attempts.
+rate_limit = 3
+
+# The number of attempts that this application will make to deliver email
+# messages before giving up.
+retries = 2
+
+# The number of seconds to wait between email message delivery attempts.
+retry_delay = 2
 
 
 [ezproxy]

@@ -107,7 +107,9 @@ See also:
   - levels, format and output (see [configuration settings
     doc](docs/configure.md))
 
-- Microsoft Teams notifications
+- Optional notifications
+  - Microsoft Teams
+  - Email
   - generated for multiple events
     - alert received
     - disabled user
@@ -153,7 +155,6 @@ Known issues:
 
 - Documentation
   - The docs are beginning to take overall shape, but still need a lot of work
-- Email notifications are not currently supported (see GH-3)
 - Payloads are accepted from any IP Address
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access (see GH-18)

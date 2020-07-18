@@ -1,5 +1,7 @@
 github.com/BurntSushi/toml v0.3.1 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
+github.com/Showmax/go-fqdn v0.0.0-20180501083314-6f60894d629f h1:JqQetNUOVIen9o9K9c+BHgYePFGXQmedq/A6F58Xu+w=
+github.com/Showmax/go-fqdn v0.0.0-20180501083314-6f60894d629f/go.mod h1:nxfWvpOWKx1oAU7G3U8UYWL/iY6EKdjjv1w/S8HDsvg=
 github.com/alexflint/go-arg v1.3.0 h1:UfldqSdFWeLtoOuVRosqofU4nmhI1pYEbT4ZFS34Bdo=
 github.com/alexflint/go-arg v1.3.0/go.mod h1:9iRbDxne7LcR/GSvEr7ma++GLpdIU1zrghf2y2768kM=
 github.com/alexflint/go-scalar v1.0.0 h1:NGupf1XV/Xb04wXskDFzS0KWOLH632W/EO4fAFi+A70=

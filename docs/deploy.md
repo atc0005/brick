@@ -182,6 +182,11 @@ version.
    [configuration](configure.md) guide for more information.
 1. Set a Microsoft Teams webhook URL to enable Teams channel notifications.
    - Skip this step if you don't use Microsoft Teams.
+1. Configure email notifications
+   - Skip this step if you don't want email notifications.
+   - **NOTE**: If your SMTP server applies [Forward-confirmed reverse DNS
+     (FCrDNS)](https://en.wikipedia.org/wiki/Forward-confirmed_reverse_DNS)
+     verification the `client_identity` setting will need to reflect this.
 1. Copy the starter/template "ignore" files and modify accordingly
    - `/usr/local/etc/brick/ips.brick-ignored.txt`
    - `/usr/local/etc/brick/users.brick-ignored.txt`

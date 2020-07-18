@@ -37,6 +37,7 @@ absolutely essential) while developing this application.
     - (upstream) <https://github.com/dasrick/go-teams-notify>
     - (fork) <https://github.com/atc0005/go-teams-notify>
   - <https://github.com/atc0005/go-ezproxy>
+  - <https://github.com/Showmax/go-fqdn>
 
 - External
   - [Splunk](https://www.splunk.com/​)
@@ -61,6 +62,7 @@ absolutely essential) while developing this application.
 
 - HTTP
   - <https://blog.simon-frey.eu/manual-flush-golang-http-responsewriter/>
+  - <https://golangcode.com/get-the-request-ip-addr/>
 
 - Splunk / JSON payload
   - [Splunk Enterprise (v8.0.1) > Alerting Manual > Use a webhook alert action](https://docs.splunk.com/Documentation/Splunk/8.0.1/Alert/Webhooks)
@@ -75,6 +77,10 @@ absolutely essential) while developing this application.
   - <https://vincent.bernat.ch/en/blog/2018-systemd-golang-socket-activation>
   - <https://vincent.bernat.ch/en/blog/2017-systemd-golang>
   - <https://fabianlee.org/2017/05/21/golang-running-a-go-binary-as-a-systemd-service-on-ubuntu-16-04/>
+
+- email
+  - <https://www.w3.org/TR/2016/REC-html51-20161101/sec-forms.html#email-state-typeemail>
+  - <https://golangcode.com/validate-an-email-address/>
 
 ### Related projects
 
