@@ -26,6 +26,47 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.4.0] - 2020-07-19
+
+### Added
+
+- Email notifications
+  - initial support
+
+### Changed
+
+- CI/Linting
+  - re-enable separate `golint` step to work around what appears to be a bug
+    in golangci-lint (golangci/golangci-lint#1249)
+
+- Dependencies
+  - upgrade `apex/log`
+    - `v1.4.0` to `v1.6.0`
+  - upgrade `atc0005/send2teams`
+    - `v0.4.4` to `v0.4.5`
+
+- Demo content
+  - upgrade Go version from `v1.14.5` to `v1.14.6`
+  - minor tweaks to output emitted by reset script
+
+- Documentation
+  - Cover new flags, environment variables and config file settings
+  - Misc fixes for existing rate limit, number of retries and retry delay
+  - Refresh existing setup/deploy steps to briefly cover email configuration
+
+- Configuration
+  - TOML config file
+    - extended with new settings
+    - rename some settings in an effort to better communicate intent
+
+### Fixed
+
+- golint reporting several "should have comment or be unexported" linting
+  issues
+
+- in-place modification of client/alert request headers for Teams message
+  formatting leads to unintentional "spillover" to email notifications
+
 ## [v0.3.0] - 2020-07-11
 
 ### Added
@@ -214,7 +255,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.0...HEAD
+[v0.4.0]: https://github.com/atc0005/brick/releases/tag/v0.4.0
 [v0.3.0]: https://github.com/atc0005/brick/releases/tag/v0.3.0
 [v0.2.0]: https://github.com/atc0005/brick/releases/tag/v0.2.0
 [v0.1.2]: https://github.com/atc0005/brick/releases/tag/v0.1.2
