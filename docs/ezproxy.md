@@ -14,6 +14,14 @@
 
 ## Overview
 
+Per the [EZproxy Wikipedia page](https://en.wikipedia.org/wiki/EZproxy):
+
+> EZproxy is a web proxy server used by libraries to give access from outside
+the library's computer network to restricted-access websites that authenticate
+users by IP address. This allows library patrons at home or elsewhere to log
+in through their library's EZproxy server and gain access to resources to
+which their library subscribes, such as bibliographic databases.
+
 EZproxy supports authenticating user accounts using a variety (and mix) of
 authentication methods. These methods include (among many others) flat-files,
 LDAP and external scripts. Because EZproxy supports having multiple methods to
