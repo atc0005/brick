@@ -3,7 +3,8 @@
 
 ![brick project logo][brick-logo]
 
-Automatically disable EZproxy user accounts via incoming webhook requests.
+Automatically disable [EZproxy](docs/ezproxy.md) user accounts via incoming
+webhook requests.
 
 [![Latest Release](https://img.shields.io/github/release/atc0005/brick.svg?style=flat-square)](https://github.com/atc0005/brick/releases/latest)
 [![GoDoc](https://godoc.org/github.com/atc0005/brick?status.svg)](https://godoc.org/github.com/atc0005/brick)
@@ -44,30 +45,31 @@ audience are still missing.
 ## Overview
 
 This application is intended to be used as a HTTP endpoint that runs alongside
-an EZproxy instance. This endpoint receives webhook requests from a monitoring
-system (Splunk as of this writing), disables the user account identified by
-the rules enabled on the monitoring system and generates one or more
-notifications listing the action taken. At this point, the associated user
-sessions can be optionally (and automatically) terminated using two
-approaches:
+an [EZproxy](docs/ezproxy.md) instance. This endpoint receives webhook
+requests from a monitoring system (Splunk as of this writing), disables the
+user account identified by the rules enabled on the monitoring system and
+generates one or more notifications listing the action taken. At this point,
+the associated user sessions can be optionally (and automatically) terminated
+using two approaches:
 
-1. using (not officially documented) EZproxy binary subcommand
+1. using (not officially documented) `ezproxy` binary subcommand
 1. using the provided fail2ban config files
 
 If using native termination support, all active user sessions associated with
 the reported username will be terminated using the kill subcommand provided by
-the official ezproxy binary. The sysadmin will need to provide the path to the
-ezproxy and the associated Active Users and Hosts "state" file where sessions
-are tracked.
+the official `ezproxy` binary. The sysadmin will need to provide the path to
+the `ezproxy` and the associated Active Users and Hosts "state" file where
+sessions are tracked.
 
 If installed and configured appropriately, fail2ban can be used to to monitor
 the reported users log file and ban the associated IP address for
-`MaxLifetime` minutes (EZproxy setting) + a small buffer to force active
-sessions associated with the disabled user account to timeout and terminate.
+`MaxLifetime` minutes ([EZproxy](docs/ezproxy.md) setting) + a small buffer to
+force active sessions associated with the disabled user account to timeout and
+terminate.
 
 The net effect is that reported user accounts are immediately disabled and
-compromised accounts can no longer be used with EZproxy until manually removed
-from the disabled users file.
+compromised accounts can no longer be used with [EZproxy](docs/ezproxy.md)
+until manually removed from the disabled users file.
 
 **NOTE:** This application has not been designed to identify user accounts
 directly, but rather relies on other systems (currently limited to Splunk) to
@@ -85,7 +87,7 @@ See also:
 - Highly configurable (with more configuration choices to be exposed in the future)
 
 - Optional automatic (but not officially documented) termination of user
-  sessions via official EZproxy binary
+  sessions via official `ezproxy` binary
 
 - `es` CLI application
   - small CLI app to list and optionally terminate user sessions for a
@@ -192,7 +194,7 @@ official release is also provided for further review.
    1. deploy config files (including systemd unit file, logrotate conf, ...)
 1. Build `brick`
 1. Deploy `brick`
-1. Configure EZproxy to use new disabled users file
+1. Configure [EZproxy](docs/ezproxy.md) to use new disabled users file
 1. Configure Splunk alerts
 1. Test!
 
