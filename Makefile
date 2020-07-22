@@ -101,9 +101,6 @@ linting:
 	@echo "Running golangci-lint ..."
 	@golangci-lint run
 
-	@echo "Running golint separately (temporarily; see atc0005/brick#92) ..."
-	@golint -set_exit_status $(shell go list -mod=vendor ./... | grep -v /vendor/)
-
 	@echo "Running staticcheck ..."
 	@staticcheck $(shell go list -mod=vendor ./... | grep -v /vendor/)
 
