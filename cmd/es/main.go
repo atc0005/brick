@@ -218,7 +218,10 @@ func main() {
 			)
 		}
 		fmt.Fprintln(writer)
-		writer.Flush()
+
+		if err := writer.Flush(); err != nil {
+			log.Errorf("error flushing tabwriter: %w", err.Error())
+		}
 
 	}
 }
