@@ -20,6 +20,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/apex/log"
@@ -35,12 +36,14 @@ func HasLine(searchTerm string, ignorePrefix string, filename string) (bool, err
 
 	myFuncName := caller.GetFuncName()
 
-	log.Debugf("%s: Attempting to open %q", myFuncName, filename)
+	log.Debugf("%s: Request to open %q received", myFuncName, filename)
+	log.Debugf("%s: Attempting to open sanitized version of file %q",
+		myFuncName, filepath.Clean(filename))
 
 	// TODO: How do we handle the situation where the file does not exist
 	// ahead of time? Since this application will manage the file, it should
 	// be able to create it with the desired permissions?
-	f, err := os.Open(filename)
+	f, err := os.Open(filepath.Clean(filename))
 	if err != nil {
 		return false, fmt.Errorf(
 			"%s: error encountered opening file %q: %w",
