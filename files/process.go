@@ -568,12 +568,17 @@ func appendToFile(entry fileEntry, tmpl *template.Template, filename string, per
 
 	var mutex = &sync.Mutex{}
 
-	log.Debugf("Attempting to open %q", filename)
+	log.Debugf("%s: Attempting to open %q", myFuncName, filename)
 
 	// If the file doesn't exist, create it, or append to the file
-	f, err := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, perms)
-	if err != nil {
-		return fmt.Errorf("error encountered opening file %q: %w", filename, err)
+	f, opErr := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, perms)
+	if opErr != nil {
+		return fmt.Errorf(
+			"%s: error encountered opening file %q: %w",
+			myFuncName,
+			filename,
+			opErr,
+		)
 	}
 	defer func() {
 		if err := f.Close(); err != nil {
@@ -584,18 +589,18 @@ func appendToFile(entry fileEntry, tmpl *template.Template, filename string, per
 			)
 		}
 	}()
-	log.Debugf("Successfully opened %q", filename)
+	log.Debugf("%s: Successfully opened %q", myFuncName, filename)
 
-	log.Debug("Locking mutex")
+	log.Debugf("%s: Locking mutex", myFuncName)
 	mutex.Lock()
 	defer func() {
-		log.Debug("Unlocking mutex from deferred anonymous func")
+		log.Debugf("%s: Unlocking mutex from deferred anonymous func", myFuncName)
 		mutex.Unlock()
 	}()
 
-	log.Debugf("Executing template to update %q", filename)
-	if err := tmpl.Execute(f, entry); err != nil {
-		if fileCloseErr := f.Close(); err != nil {
+	log.Debugf("%s: Executing template to update %q", myFuncName, filename)
+	if tmplErr := tmpl.Execute(f, entry); tmplErr != nil {
+		if fileCloseErr := f.Close(); tmplErr != nil {
 			// log this error, return Write error as it takes precedence
 			log.Errorf(
 				"%s: failed to close file %q: %s",
@@ -604,25 +609,44 @@ func appendToFile(entry fileEntry, tmpl *template.Template, filename string, per
 			)
 		}
 
-		return fmt.Errorf("error writing to file %q: %w", filename, err)
+		return fmt.Errorf(
+			"%s: error writing to file %q: %w",
+			myFuncName,
+			filename,
+			tmplErr,
+		)
 	}
-	log.Debugf("Successfully executed template to update %q", filename)
+	log.Debugf(
+		"%s: Successfully executed template to update %q",
+		myFuncName,
+		filename,
+	)
 
-	log.Debug("Syncing file modifications")
+	log.Debugf("%s: Syncing file modifications", myFuncName)
 	if err := f.Sync(); err != nil {
 		return fmt.Errorf(
-			"failed to explicitly sync file %q after writing: %s",
+			"%s: failed to explicitly sync file %q after writing: %s",
+			myFuncName,
 			filename,
 			err,
 		)
 	}
-	log.Debugf("Successfully synced modifications to %q", filename)
+	log.Debugf(
+		"%s: Successfully synced modifications to %q",
+		myFuncName,
+		filename,
+	)
 
-	log.Debugf("Closing %q", filename)
+	log.Debugf("%s: Closing %q", myFuncName, filename)
 	if err := f.Close(); err != nil {
-		return fmt.Errorf("error closing file %q: %w", filename, err)
+		return fmt.Errorf(
+			"%s: error closing file %q: %w",
+			myFuncName,
+			filename,
+			err,
+		)
 	}
-	log.Debugf("Successfully closed %q", filename)
+	log.Debugf("%s: Successfully closed %q", myFuncName, filename)
 
 	return nil
 }
