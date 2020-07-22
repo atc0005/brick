@@ -564,6 +564,8 @@ func disableUser(alert events.SplunkAlertEvent, disabledUsers *DisabledUsers) er
 // and one trailing newline appended.
 func appendToFile(entry fileEntry, tmpl *template.Template, filename string, perms os.FileMode) error {
 
+	myFuncName := caller.GetFuncName()
+
 	var mutex = &sync.Mutex{}
 
 	log.Debugf("Attempting to open %q", filename)
@@ -573,7 +575,15 @@ func appendToFile(entry fileEntry, tmpl *template.Template, filename string, per
 	if err != nil {
 		return fmt.Errorf("error encountered opening file %q: %w", filename, err)
 	}
-	defer f.Close()
+	defer func() {
+		if err := f.Close(); err != nil {
+			log.Errorf(
+				"%s: failed to close file %q: %s",
+				myFuncName,
+				err.Error(),
+			)
+		}
+	}()
 	log.Debugf("Successfully opened %q", filename)
 
 	log.Debug("Locking mutex")
@@ -585,7 +595,15 @@ func appendToFile(entry fileEntry, tmpl *template.Template, filename string, per
 
 	log.Debugf("Executing template to update %q", filename)
 	if err := tmpl.Execute(f, entry); err != nil {
-		f.Close() // ignore error; Write error takes precedence
+		if fileCloseErr := f.Close(); err != nil {
+			// log this error, return Write error as it takes precedence
+			log.Errorf(
+				"%s: failed to close file %q: %s",
+				myFuncName,
+				fileCloseErr.Error(),
+			)
+		}
+
 		return fmt.Errorf("error writing to file %q: %w", filename, err)
 	}
 	log.Debugf("Successfully executed template to update %q", filename)
