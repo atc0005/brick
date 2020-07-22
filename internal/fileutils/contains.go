@@ -35,14 +35,19 @@ func HasLine(searchTerm string, ignorePrefix string, filename string) (bool, err
 
 	myFuncName := caller.GetFuncName()
 
-	log.Debugf("Attempting to open %q", filename)
+	log.Debugf("%s: Attempting to open %q", myFuncName, filename)
 
 	// TODO: How do we handle the situation where the file does not exist
 	// ahead of time? Since this application will manage the file, it should
 	// be able to create it with the desired permissions?
 	f, err := os.Open(filename)
 	if err != nil {
-		return false, fmt.Errorf("error encountered opening file %q: %w", filename, err)
+		return false, fmt.Errorf(
+			"%s: error encountered opening file %q: %w",
+			myFuncName,
+			filename,
+			err,
+		)
 	}
 	defer func() {
 		if err := f.Close(); err != nil {
@@ -54,7 +59,7 @@ func HasLine(searchTerm string, ignorePrefix string, filename string) (bool, err
 		}
 	}()
 
-	log.Debugf("Searching for: %q", searchTerm)
+	log.Debugf("%s: Searching for: %q", myFuncName, searchTerm)
 
 	s := bufio.NewScanner(f)
 	var lineno int
@@ -63,32 +68,56 @@ func HasLine(searchTerm string, ignorePrefix string, filename string) (bool, err
 	for s.Scan() {
 		lineno++
 		currentLine := s.Text()
-		log.Debugf("Scanned line %d from %q: %q\n", lineno, filename, currentLine)
+		log.Debugf(
+			"%s: Scanned line %d from %q: %q",
+			myFuncName,
+			lineno,
+			filename,
+			currentLine,
+		)
 
 		currentLine = strings.TrimSpace(currentLine)
-		log.Debugf("Line %d from %q after lowercasing and whitespace removal: %q\n",
-			lineno, filename, currentLine)
+		log.Debugf(
+			"%s: Line %d from %q after lowercasing and whitespace removal: %q",
+			myFuncName,
+			lineno,
+			filename,
+			currentLine,
+		)
 
 		// explicitly ignore lines beginning with specified pattern, if
 		// provided
 		if ignorePrefix != "" {
 			if strings.HasPrefix(currentLine, ignorePrefix) {
-				log.Debugf("Ignoring line %d due to leading %q",
-					lineno, ignorePrefix)
+				log.Debugf(
+					"%s: Ignoring line %d due to leading %q",
+					myFuncName,
+					lineno,
+					ignorePrefix,
+				)
 				continue
 			}
 		}
 
-		log.Debugf("Checking whether line %d is a match for %q: %q",
-			lineno, searchTerm, currentLine)
+		log.Debugf(
+			"%s: Checking whether line %d is a match for %q: %q",
+			myFuncName,
+			lineno,
+			searchTerm,
+			currentLine,
+		)
 		if strings.EqualFold(currentLine, searchTerm) {
-			log.Debugf("Match found on line %d, returning true to indicate this", lineno)
+			log.Debugf(
+				"%s: Match found on line %d, returning true to indicate this",
+				myFuncName,
+				lineno,
+			)
 			return true, nil
 		}
 
 	}
 
-	log.Debug("Exited s.Scan() loop")
+	log.Debugf("%s: Exited s.Scan() loop", myFuncName)
 
 	// report any errors encountered while scanning the input file
 	if err := s.Err(); err != nil {
