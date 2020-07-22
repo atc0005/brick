@@ -25,6 +25,7 @@ import (
 
 	"github.com/alexflint/go-arg"
 	"github.com/apex/log"
+	"github.com/atc0005/brick/internal/caller"
 	"github.com/pelletier/go-toml"
 )
 
@@ -180,6 +181,8 @@ func MessageTrailer(format BrandingFormat) string {
 // one or more configuration sources.
 func NewConfig() (*Config, error) {
 
+	myFuncName := caller.GetFuncName()
+
 	config := Config{}
 
 	// Bundle the returned `*.arg.Parser` for later use One potential use:
@@ -204,7 +207,15 @@ func NewConfig() (*Config, error) {
 		if err != nil {
 			return nil, fmt.Errorf("unable to open config file: %v", err)
 		}
-		defer fh.Close()
+		defer func() {
+			if err := fh.Close(); err != nil {
+				log.Errorf(
+					"%s: failed to close file %q: %s",
+					myFuncName,
+					err.Error(),
+				)
+			}
+		}()
 		log.Debugf("Config file %q opened", config.ConfigFile())
 
 		log.Debugf("Attempting to load config file %q", config.ConfigFile())
@@ -213,6 +224,16 @@ func NewConfig() (*Config, error) {
 				"error loading config file %q: %v", config.ConfigFile(), err)
 		}
 		log.Debugf("Config file %q successfully loaded", config.ConfigFile())
+
+		// explicitly close file, bail if failure occurs
+		if err := fh.Close(); err != nil {
+			return nil, fmt.Errorf(
+				"%s: failed to close file %q: %w",
+				myFuncName,
+				config.ConfigFile(),
+				err,
+			)
+		}
 	}
 
 	// Apply initial logging settings based on user-supplied settings
