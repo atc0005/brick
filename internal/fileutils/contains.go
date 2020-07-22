@@ -23,6 +23,7 @@ import (
 	"strings"
 
 	"github.com/apex/log"
+	"github.com/atc0005/brick/internal/caller"
 )
 
 // HasLine accepts a search string, an optional pattern to ignore and a
@@ -31,6 +32,8 @@ import (
 // with the optional ignore pattern (e.g., a `#` character) are ignored.
 // Leading and trailing whitespace per line is ignored.
 func HasLine(searchTerm string, ignorePrefix string, filename string) (bool, error) {
+
+	myFuncName := caller.GetFuncName()
 
 	log.Debugf("Attempting to open %q", filename)
 
@@ -41,7 +44,15 @@ func HasLine(searchTerm string, ignorePrefix string, filename string) (bool, err
 	if err != nil {
 		return false, fmt.Errorf("error encountered opening file %q: %w", filename, err)
 	}
-	defer f.Close()
+	defer func() {
+		if err := f.Close(); err != nil {
+			log.Errorf(
+				"%s: failed to close file %q: %s",
+				myFuncName,
+				err.Error(),
+			)
+		}
+	}()
 
 	log.Debugf("Searching for: %q", searchTerm)
 
