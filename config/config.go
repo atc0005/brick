@@ -17,6 +17,7 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -242,11 +243,14 @@ func NewConfig() (*Config, error) {
 		}
 		defer func() {
 			if err := fh.Close(); err != nil {
-				log.Errorf(
-					"%s: failed to close file %q: %s",
-					myFuncName,
-					err.Error(),
-				)
+				// Ignore "file already closed" errors
+				if !errors.Is(err, os.ErrClosed) {
+					log.Errorf(
+						"%s: failed to close file %q: %s",
+						myFuncName,
+						err.Error(),
+					)
+				}
 			}
 		}()
 		log.Debugf("%s: Config file %q opened", myFuncName, sanitizedFilePath)
