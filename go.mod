@@ -24,7 +24,7 @@ require (
 	github.com/Showmax/go-fqdn v0.0.0-20180501083314-6f60894d629f
 	github.com/alexflint/go-arg v1.3.0
 	github.com/apex/log v1.6.0
-	github.com/atc0005/go-ezproxy v0.1.3
+	github.com/atc0005/go-ezproxy v0.1.4
 	// temporarily use our fork; waiting on changes to be accepted upstream
 	github.com/atc0005/go-teams-notify v1.3.1-0.20200419155834-55cca556e726
 	github.com/atc0005/send2teams v0.4.5

@@ -74,10 +74,12 @@ func TerminateUserSession(executable string, sessions ...UserSession) TerminateU
 			session.Username,
 		)
 
-		// cmd := exec.Command(
-		// 	"echo",
-		// 	"hello",
-		// )
+		// Accepting variables here is intentional; we need to provide the
+		// flexibility for client code to pass-in site-specific values. This
+		// allows for custom EZproxy installations which may place the
+		// application and associated files in a non-default location.
+		//
+		// nolint:gosec
 		cmd := exec.Command(
 			executable,
 			SubCmdNameSessionTerminate,

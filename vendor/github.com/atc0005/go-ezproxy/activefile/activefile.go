@@ -21,6 +21,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -28,17 +29,20 @@ import (
 )
 
 const (
-	// All lines containing a session ID (among other details) begin with this
-	// single letter prefix
+	// SessionLinePrefix is a single letter prefix found at the start of all
+	// lines containing a session ID (among other details).
 	SessionLinePrefix string = "S"
 
-	// Indicate that this line should be found on even numbered lines
+	// SessionLineEvenNumbered indicates that this line should be found on
+	// even numbered lines.
 	SessionLineEvenNumbered bool = true
 
-	// All lines containing a username begin with this single letter prefix
+	// UsernameLinePrefix is a single letter prefix found at the start of all
+	// lines containing a username.
 	UsernameLinePrefix string = "L"
 
-	// Indicate that this line should be found on odd numbered lines
+	// UsernameLineEvenNumbered indicates that this line should be found on
+	// odd numbered lines.
 	UsernameLineEvenNumbered bool = false
 )
 
@@ -121,13 +125,28 @@ func NewReader(username string, filename string) (ezproxy.SessionsReader, error)
 // handle converting these entries to UserSession values.
 func (afr activeFileReader) filterEntries(validPrefixes []string) ([]ezproxy.FileEntry, error) {
 
-	ezproxy.Logger.Printf("filterEntries: Attempting to open %q\n", afr.Filename)
+	ezproxy.Logger.Printf(
+		"filterEntries: Request to open %q received\n",
+		afr.Filename,
+	)
+	ezproxy.Logger.Printf(
+		"filterEntries: Attempting to open sanitized version of file %q\n",
+		filepath.Clean(afr.Filename),
+	)
 
-	f, err := os.Open(afr.Filename)
+	f, err := os.Open(filepath.Clean(afr.Filename))
 	if err != nil {
 		return nil, fmt.Errorf("func filterEntries: error encountered opening file %q: %w", afr.Filename, err)
 	}
-	defer f.Close()
+	defer func() {
+		if err := f.Close(); err != nil {
+			ezproxy.Logger.Printf(
+				"filterEntries: failed to close file %q: %s",
+				afr.Filename,
+				err.Error(),
+			)
+		}
+	}()
 
 	s := bufio.NewScanner(f)
 
