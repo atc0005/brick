@@ -140,11 +140,14 @@ func (afr activeFileReader) filterEntries(validPrefixes []string) ([]ezproxy.Fil
 	}
 	defer func() {
 		if err := f.Close(); err != nil {
-			ezproxy.Logger.Printf(
-				"filterEntries: failed to close file %q: %s",
-				afr.Filename,
-				err.Error(),
-			)
+			// Ignore "file already closed" errors
+			if !errors.Is(err, os.ErrClosed) {
+				ezproxy.Logger.Printf(
+					"filterEntries: failed to close file %q: %s",
+					afr.Filename,
+					err.Error(),
+				)
+			}
 		}
 	}()
 
@@ -181,6 +184,15 @@ func (afr activeFileReader) filterEntries(validPrefixes []string) ([]ezproxy.Fil
 	// report any errors encountered while scanning the input file
 	if err := s.Err(); err != nil {
 		return nil, fmt.Errorf("func filterEntries: errors encountered while scanning the input file: %w", err)
+	}
+
+	// explicitly close file, bail if failure occurs
+	if err := f.Close(); err != nil {
+		return nil, fmt.Errorf(
+			"func filterEntries: failed to close file %q: %w",
+			afr.Filename,
+			err,
+		)
 	}
 
 	return validLines, nil
