@@ -17,6 +17,7 @@
 package files
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -585,11 +586,14 @@ func appendToFile(entry fileEntry, tmpl *template.Template, filename string, per
 	}
 	defer func() {
 		if err := f.Close(); err != nil {
-			log.Errorf(
-				"%s: failed to close file %q: %s",
-				myFuncName,
-				err.Error(),
-			)
+			// Ignore "file already closed" errors
+			if !errors.Is(err, os.ErrClosed) {
+				log.Errorf(
+					"%s: failed to close file %q: %s",
+					myFuncName,
+					err.Error(),
+				)
+			}
 		}
 	}()
 	log.Debugf("%s: Successfully opened %q", myFuncName, filename)
@@ -603,7 +607,11 @@ func appendToFile(entry fileEntry, tmpl *template.Template, filename string, per
 
 	log.Debugf("%s: Executing template to update %q", myFuncName, filename)
 	if tmplErr := tmpl.Execute(f, entry); tmplErr != nil {
+
+		// if there were template execution errors, go ahead and try to close
+		// the file before returning the template write error
 		if fileCloseErr := f.Close(); tmplErr != nil {
+
 			// log this error, return Write error as it takes precedence
 			log.Errorf(
 				"%s: failed to close file %q: %s",

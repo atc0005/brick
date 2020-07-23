@@ -18,6 +18,7 @@ package fileutils
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -54,11 +55,14 @@ func HasLine(searchTerm string, ignorePrefix string, filename string) (bool, err
 	}
 	defer func() {
 		if err := f.Close(); err != nil {
-			log.Errorf(
-				"%s: failed to close file %q: %s",
-				myFuncName,
-				err.Error(),
-			)
+			// Ignore "file already closed" errors
+			if !errors.Is(err, os.ErrClosed) {
+				log.Errorf(
+					"%s: failed to close file %q: %s",
+					myFuncName,
+					err.Error(),
+				)
+			}
 		}
 	}()
 
@@ -125,6 +129,16 @@ func HasLine(searchTerm string, ignorePrefix string, filename string) (bool, err
 	// report any errors encountered while scanning the input file
 	if err := s.Err(); err != nil {
 		return false, err
+	}
+
+	// explicitly close file, bail if failure occurs
+	if err := f.Close(); err != nil {
+		return false, fmt.Errorf(
+			"%s: failed to close file %q: %w",
+			myFuncName,
+			filepath.Clean(filename),
+			err,
+		)
 	}
 
 	// otherwise, report that the requested searchTerm was not found
