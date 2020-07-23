@@ -26,6 +26,29 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.4.2] - 2020-7-23
+
+### Changed
+
+- Alert sender: Replace "received by" phrasing in file templates
+
+- Dependencies
+  - updated `atc0005/go-ezproxy`
+    - `v0.1.4` to `v0.1.5`
+
+### Fixed
+
+- Documentation
+  - Further work on EZproxy purpose
+  - Add further information on integration with EZproxy, Splunk
+
+- Reporting (monitoring) system referred to with "received by" phrasing
+  instead of "received from"
+
+- Deferred file close operations report "file already closed" error messages
+  - note: the `atc0005/go-ezproxy` `v0.1.5` release includes the same type of
+    changes
+
 ## [v0.4.1] - 2020-07-23
 
 ### Changed
@@ -294,7 +317,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.1...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.2...HEAD
+[v0.4.2]: https://github.com/atc0005/brick/releases/tag/v0.4.2
 [v0.4.1]: https://github.com/atc0005/brick/releases/tag/v0.4.1
 [v0.4.0]: https://github.com/atc0005/brick/releases/tag/v0.4.0
 [v0.3.0]: https://github.com/atc0005/brick/releases/tag/v0.3.0
