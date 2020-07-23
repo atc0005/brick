@@ -19,6 +19,7 @@ package files
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 	"sync"
 	"text/template"
@@ -568,10 +569,12 @@ func appendToFile(entry fileEntry, tmpl *template.Template, filename string, per
 
 	var mutex = &sync.Mutex{}
 
-	log.Debugf("%s: Attempting to open %q", myFuncName, filename)
+	log.Debugf("%s: Request to open %q received", myFuncName, filename)
+	log.Debugf("%s: Attempting to open sanitized version of file %q",
+		myFuncName, filepath.Clean(filename))
 
 	// If the file doesn't exist, create it, or append to the file
-	f, opErr := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, perms)
+	f, opErr := os.OpenFile(filepath.Clean(filename), os.O_APPEND|os.O_CREATE|os.O_WRONLY, perms)
 	if opErr != nil {
 		return fmt.Errorf(
 			"%s: error encountered opening file %q: %w",

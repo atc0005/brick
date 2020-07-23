@@ -21,6 +21,7 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/alexflint/go-arg"
@@ -195,15 +196,33 @@ func NewConfig() (*Config, error) {
 	log.Debug("Checking whether config file has been specified")
 	if config.ConfigFile() != "" {
 
-		log.Debugf("Config file %q specified, confirming file exists", config.ConfigFile())
+		log.Debugf("Config file %q specified", config.ConfigFile())
+
+		// Used to help reduce the number of filepath.Clean() in locations
+		// where it is considered "safe" to do so. Using this variable with
+		// os.Open (in particular) upsets the gosec linter.
+		sanitizedFilePath := filepath.Clean(config.ConfigFile())
+
+		log.Debugf(
+			"Confirming sanitized version of %q file exists",
+			sanitizedFilePath,
+		)
 
 		// path not found
-		if _, err := os.Stat(config.ConfigFile()); os.IsNotExist(err) {
-			return nil, fmt.Errorf("requested config file not found: %v", err)
+		if _, err := os.Stat(filepath.Clean(config.ConfigFile())); os.IsNotExist(err) {
+			return nil, fmt.Errorf(
+				"sanitized version of requested config file not found: %v",
+				err,
+			)
 		}
 
-		log.Debugf("Config file %q exists, attempting to open it", config.ConfigFile())
-		fh, err := os.Open(config.ConfigFile())
+		log.Debugf(
+			"Config file %q exists, attempting to open it",
+			sanitizedFilePath,
+		)
+		// use direct function call here instead of our variable to comply
+		// with gosec linting rules
+		fh, err := os.Open(filepath.Clean(config.ConfigFile()))
 		if err != nil {
 			return nil, fmt.Errorf("unable to open config file: %v", err)
 		}
@@ -216,21 +235,21 @@ func NewConfig() (*Config, error) {
 				)
 			}
 		}()
-		log.Debugf("Config file %q opened", config.ConfigFile())
+		log.Debugf("Config file %q opened", sanitizedFilePath)
 
-		log.Debugf("Attempting to load config file %q", config.ConfigFile())
+		log.Debugf("Attempting to load config file %q", sanitizedFilePath)
 		if err := config.LoadConfigFile(fh); err != nil {
 			return nil, fmt.Errorf(
-				"error loading config file %q: %v", config.ConfigFile(), err)
+				"error loading config file %q: %v", sanitizedFilePath, err)
 		}
-		log.Debugf("Config file %q successfully loaded", config.ConfigFile())
+		log.Debugf("Config file %q successfully loaded", sanitizedFilePath)
 
 		// explicitly close file, bail if failure occurs
 		if err := fh.Close(); err != nil {
 			return nil, fmt.Errorf(
 				"%s: failed to close file %q: %w",
 				myFuncName,
-				config.ConfigFile(),
+				sanitizedFilePath,
 				err,
 			)
 		}
