@@ -17,6 +17,10 @@ webhook requests.
 - [Project home](#project-home)
 - [Status](#status)
 - [Overview](#overview)
+  - [EZproxy's purpose](#ezproxys-purpose)
+  - [brick's purpose](#bricks-purpose)
+  - [brick in action](#brick-in-action)
+  - [The end result](#the-end-result)
 - [Features](#features)
   - [Current](#current)
   - [Missing](#missing)
@@ -44,13 +48,32 @@ audience are still missing.
 
 ## Overview
 
-This application is intended to be used as a HTTP endpoint that runs alongside
-an [EZproxy](docs/ezproxy.md) instance. This endpoint receives webhook
-requests from a monitoring system (Splunk as of this writing), disables the
-user account identified by the rules enabled on the monitoring system and
-generates one or more notifications listing the action taken. At this point,
-the associated user sessions can be optionally (and automatically) terminated
-using two approaches:
+### EZproxy's purpose
+
+Per the [EZproxy Wikipedia page](https://en.wikipedia.org/wiki/EZproxy):
+
+> EZproxy is a web proxy server used by libraries to give access from outside
+the library's computer network to restricted-access websites that authenticate
+users by IP address. This allows library patrons at home or elsewhere to log
+in through their library's EZproxy server and gain access to resources to
+which their library subscribes, such as bibliographic databases.
+
+### brick's purpose
+
+`brick` is an application that is intended to run alongside an existing
+[EZproxy](docs/ezproxy.md) instance and a Splunk monitoring system in order to
+disable (suspected) compromised user accounts.
+
+### brick in action
+
+When Splunk, identifies suspect account behavior (based on sysadmin-specified
+thresholds), it delivers a webhook payload to a HTTP endpoint on `brick` for
+processing. `brick` then disables the suspect user account and (optionally)
+generates one or more notifications listing the action(s) taken. All actions
+are logged.
+
+At this point, the associated user sessions can be optionally (and
+automatically) terminated using two approaches:
 
 1. using (not officially documented) `ezproxy` binary subcommand
 1. using the provided fail2ban config files
@@ -58,22 +81,28 @@ using two approaches:
 If using native termination support, all active user sessions associated with
 the reported username will be terminated using the kill subcommand provided by
 the official `ezproxy` binary. The sysadmin will need to provide the path to
-the `ezproxy` and the associated Active Users and Hosts "state" file where
-sessions are tracked.
+the `ezproxy` binary and the associated Active Users and Hosts "state" file
+where sessions are tracked.
 
 If installed and configured appropriately, fail2ban can be used to to monitor
-the reported users log file and ban the associated IP address for
-`MaxLifetime` minutes ([EZproxy](docs/ezproxy.md) setting) + a small buffer to
-force active sessions associated with the disabled user account to timeout and
-terminate.
+the reported users log file and ban the associated IP address. This ban should
+be for `MaxLifetime` minutes ([EZproxy](docs/ezproxy.md) setting) + a small
+buffer to force active sessions associated with the disabled user account to
+timeout and terminate.
+
+### The end result
 
 The net effect is that reported user accounts are immediately disabled and
 compromised accounts can no longer be used with [EZproxy](docs/ezproxy.md)
 until manually removed from the disabled users file.
 
-**NOTE:** This application has not been designed to identify user accounts
-directly, but rather relies on other systems (currently limited to Splunk) to
-make the decision as to which accounts should be disabled.
+**NOTE:** `brick` has not been designed to identify user accounts directly.
+Instead, this application but rather relies on other systems (currently
+limited to Splunk) to make the decision as to which accounts should be
+disabled.
+
+The hope is to extend payload format support to include Graylog and other
+popular log monitoring systems in the future.
 
 See also:
 
