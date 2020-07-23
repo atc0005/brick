@@ -49,7 +49,7 @@ const (
 
 // Record is a collection of details that is saved to log files, sent by
 // Microsoft Teams or email; this is a superset of types. This type contains
-// the core details received by the alert payload and select annotations
+// the core details provided by the alert payload and select annotations
 // associated with processing the alert payload.
 type Record struct {
 

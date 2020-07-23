@@ -27,7 +27,7 @@
 
 [Definition]
 
-# {{ .ArrivalTime }} [DISABLED] Username "{{ .Username }}" from source IP "{{ .UserIP }}" disabled due to alert "{{ .AlertName }}" received by "{{ .PayloadSenderIP }}" (SearchID: "{{ .SearchID }}")
+# {{ .ArrivalTime }} [DISABLED] Username "{{ .Username }}" from source IP "{{ .UserIP }}" disabled due to alert "{{ .AlertName }}" received from "{{ .PayloadSenderIP }}" (SearchID: "{{ .SearchID }}")
 failregex = \[DISABLED\] Username \"[a-zA-Z0-9]+\" from source IP \"<HOST>\"
 
 # Option:  ignoreregex
