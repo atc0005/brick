@@ -189,14 +189,21 @@ func NewConfig() (*Config, error) {
 	// Bundle the returned `*.arg.Parser` for later use One potential use:
 	// from `main()` so that we can explicitly display usage or help details
 	// should the user-provided settings fail validation.
-	log.Debug("Parsing flags")
+	log.Debugf("%s: Parsing flags", myFuncName)
 	config.flagParser = arg.MustParse(&config.cliConfig)
 
 	// If user specified a config file, try to use it, fail if not found
-	log.Debug("Checking whether config file has been specified")
+	log.Debugf(
+		"%s: Checking whether config file has been specified",
+		myFuncName,
+	)
 	if config.ConfigFile() != "" {
 
-		log.Debugf("Config file %q specified", config.ConfigFile())
+		log.Debugf(
+			"%s: Config file %q specified",
+			myFuncName,
+			config.ConfigFile(),
+		)
 
 		// Used to help reduce the number of filepath.Clean() in locations
 		// where it is considered "safe" to do so. Using this variable with
@@ -204,27 +211,34 @@ func NewConfig() (*Config, error) {
 		sanitizedFilePath := filepath.Clean(config.ConfigFile())
 
 		log.Debugf(
-			"Confirming sanitized version of %q file exists",
+			"%s: Confirming sanitized version of %q file exists",
+			myFuncName,
 			sanitizedFilePath,
 		)
 
 		// path not found
 		if _, err := os.Stat(filepath.Clean(config.ConfigFile())); os.IsNotExist(err) {
 			return nil, fmt.Errorf(
-				"sanitized version of requested config file not found: %v",
+				"%s: sanitized version of requested config file not found: %v",
+				myFuncName,
 				err,
 			)
 		}
 
 		log.Debugf(
-			"Config file %q exists, attempting to open it",
+			"%s: Config file %q exists, attempting to open it",
+			myFuncName,
 			sanitizedFilePath,
 		)
 		// use direct function call here instead of our variable to comply
 		// with gosec linting rules
 		fh, err := os.Open(filepath.Clean(config.ConfigFile()))
 		if err != nil {
-			return nil, fmt.Errorf("unable to open config file: %v", err)
+			return nil, fmt.Errorf(
+				"%s: unable to open config file: %v",
+				myFuncName,
+				err,
+			)
 		}
 		defer func() {
 			if err := fh.Close(); err != nil {
@@ -235,14 +249,26 @@ func NewConfig() (*Config, error) {
 				)
 			}
 		}()
-		log.Debugf("Config file %q opened", sanitizedFilePath)
+		log.Debugf("%s: Config file %q opened", myFuncName, sanitizedFilePath)
 
-		log.Debugf("Attempting to load config file %q", sanitizedFilePath)
+		log.Debugf(
+			"%s: Attempting to load config file %q",
+			myFuncName,
+			sanitizedFilePath,
+		)
 		if err := config.LoadConfigFile(fh); err != nil {
 			return nil, fmt.Errorf(
-				"error loading config file %q: %v", sanitizedFilePath, err)
+				"%s: error loading config file %q: %v",
+				myFuncName,
+				sanitizedFilePath,
+				err,
+			)
 		}
-		log.Debugf("Config file %q successfully loaded", sanitizedFilePath)
+		log.Debugf(
+			"%s: Config file %q successfully loaded",
+			myFuncName,
+			sanitizedFilePath,
+		)
 
 		// explicitly close file, bail if failure occurs
 		if err := fh.Close(); err != nil {
