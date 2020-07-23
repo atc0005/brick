@@ -20,20 +20,20 @@ package files
 // order to increase fail2ban parsing reliability
 
 const disabledUsersFileTemplateText string = `
-# Username "{{ .Alert.Username }}" from source IP "{{ .Alert.UserIP }}" disabled at "{{ .Alert.ArrivalTime }}" per alert "{{ .Alert.AlertName }}" received by "{{ .Alert.PayloadSenderIP }}" (SearchID: "{{ .Alert.SearchID }}")
+# Username "{{ .Alert.Username }}" from source IP "{{ .Alert.UserIP }}" disabled at "{{ .Alert.ArrivalTime }}" per alert "{{ .Alert.AlertName }}" received from "{{ .Alert.PayloadSenderIP }}" (SearchID: "{{ .Alert.SearchID }}")
 {{ ToLower .Alert.Username }}{{ .EntrySuffix }}
 `
 
 // This is a standard message and only indicates that a report was received,
 // not that a user was disabled. This message should be followed by another
 // message indicating whether the user was disabled or ignored
-const reportedUserEventTemplateText string = `{{ .Alert.ArrivalTime }} [REPORTED] Username "{{ .Alert.Username }}" from source IP "{{ .Alert.UserIP }}" reported via alert "{{ .Alert.AlertName }}" received by "{{ .Alert.PayloadSenderIP }}" (SearchID: "{{ .Alert.SearchID }}")
+const reportedUserEventTemplateText string = `{{ .Alert.ArrivalTime }} [REPORTED] Username "{{ .Alert.Username }}" from source IP "{{ .Alert.UserIP }}" reported via alert "{{ .Alert.AlertName }}" received from "{{ .Alert.PayloadSenderIP }}" (SearchID: "{{ .Alert.SearchID }}")
 `
 
-const disabledUserFirstEventTemplateText string = `{{ .Alert.ArrivalTime }} [DISABLED] Username "{{ .Alert.Username }}" from source IP "{{ .Alert.UserIP }}" disabled due to alert "{{ .Alert.AlertName }}" received by "{{ .Alert.PayloadSenderIP }}" (SearchID: "{{ .Alert.SearchID }}")
+const disabledUserFirstEventTemplateText string = `{{ .Alert.ArrivalTime }} [DISABLED] Username "{{ .Alert.Username }}" from source IP "{{ .Alert.UserIP }}" disabled due to alert "{{ .Alert.AlertName }}" received from "{{ .Alert.PayloadSenderIP }}" (SearchID: "{{ .Alert.SearchID }}")
 `
 
-const disabledUserRepeatEventTemplateText string = `{{ .Alert.ArrivalTime }} [DISABLED] Username "{{ .Alert.Username }}" from source IP "{{ .Alert.UserIP }}" already disabled, but would be again due to alert "{{ .Alert.AlertName }}" received by "{{ .Alert.PayloadSenderIP }}" (SearchID: "{{ .Alert.SearchID }}")
+const disabledUserRepeatEventTemplateText string = `{{ .Alert.ArrivalTime }} [DISABLED] Username "{{ .Alert.Username }}" from source IP "{{ .Alert.UserIP }}" already disabled, but would be again due to alert "{{ .Alert.AlertName }}" received from "{{ .Alert.PayloadSenderIP }}" (SearchID: "{{ .Alert.SearchID }}")
 `
 
 // NOTE: This template is used for ignored users and IP Addresses based on
@@ -44,5 +44,5 @@ const ignoredUserEventTemplateText string = `{{ .Alert.ArrivalTime }} [IGNORED] 
 // This template is used to write out the results of each session termination
 // attempt; this template is not used to generate a bulk summary for multiple
 // sessions
-const terminatedUserEventTemplateText string = `{{ .Alert.ArrivalTime }} [TERMINATED] Session "{{ .UserSession.SessionID }}" associated with {{ .UserSession.IPAddress }} for username "{{ .Alert.Username }}" from source IP "{{ .Alert.UserIP }}" terminated due to alert "{{ .Alert.AlertName }}" received by "{{ .Alert.PayloadSenderIP }}" (SearchID: "{{ .Alert.SearchID }}")
+const terminatedUserEventTemplateText string = `{{ .Alert.ArrivalTime }} [TERMINATED] Session "{{ .UserSession.SessionID }}" associated with {{ .UserSession.IPAddress }} for username "{{ .Alert.Username }}" from source IP "{{ .Alert.UserIP }}" terminated due to alert "{{ .Alert.AlertName }}" received from "{{ .Alert.PayloadSenderIP }}" (SearchID: "{{ .Alert.SearchID }}")
 `
