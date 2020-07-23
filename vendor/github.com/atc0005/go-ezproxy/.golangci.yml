@@ -14,6 +14,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+issues:
+  # equivalent CLI flag: --exclude-use-default
+  #
+  # see:
+  #   atc0005/brick#92
+  #   atc0005/go-ezproxy#28
+  #   golangci-lint/golangci-lint#1249
+  #   golangci-lint/golangci-lint#413
+  exclude-use-default: false
+
 linters:
   enable:
     - depguard
