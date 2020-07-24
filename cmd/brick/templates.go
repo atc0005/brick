@@ -22,7 +22,7 @@ package main
 
 		Top-level Title
 
-		Introduction block (e.g., msgCard.Text)
+		Introduction / Summary block (e.g., msgCard.Text)
 
 		Errors Section
 
@@ -42,8 +42,8 @@ const defaultEmailTemplate string = `
 
 **Summary**
 
-{{ if ne .Record.Note "" -}}
-{{ .Record.Note }}
+{{ if ne .EmailSummary "" -}}
+{{ .EmailSummary }}
 {{- else -}}
 {{ $missingValue }}
 {{- end }}
@@ -93,8 +93,8 @@ const textileEmailTemplate string = `
 **Summary**
 
 <pre>
-{{ if ne .Record.Note "" -}}
-{{ .Record.Note }}
+{{ if ne .EmailSummary "" -}}
+{{ .EmailSummary }}
 {{- else -}}
 {{ $missingValue }}
 {{- end }}
