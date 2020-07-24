@@ -26,6 +26,17 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.4.3] - 2020-07-24
+
+### Changed
+
+- Explicitly note notifications state
+
+### Fixed
+
+- Email templates: `MISSING VALUE - Please file a bug report!`; use generated
+  email summary instead of `Record.Note`
+
 ## [v0.4.2] - 2020-7-23
 
 ### Changed
@@ -317,7 +328,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.2...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.3...HEAD
+[v0.4.3]: https://github.com/atc0005/brick/releases/tag/v0.4.3
 [v0.4.2]: https://github.com/atc0005/brick/releases/tag/v0.4.2
 [v0.4.1]: https://github.com/atc0005/brick/releases/tag/v0.4.1
 [v0.4.0]: https://github.com/atc0005/brick/releases/tag/v0.4.0
