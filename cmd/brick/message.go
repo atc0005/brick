@@ -132,10 +132,10 @@ func getTerminationResultsList(sTermResults []ezproxy.TerminateUserSessionResult
 
 // getMsgSummaryText evaluates the provided event Record and builds a message
 // suitable for display as the main or summary notification text. This message
-// is generated first from the Note field if available, or from the Error
-// field. This precedence allows for using a provided Note as a brief summary
-// while still using the Error field in a dedicated section of the
-// notification.
+// is generated first from the Note field if available, second from the Error
+// field and finally if neither are set a fallback message is used. This
+// precedence allows for using a provided Note as a brief summary while still
+// using the Error field in a dedicated section of the notification.
 func getMsgSummaryText(record events.Record) string {
 
 	// This part of the message is valuable "real estate" for eyeballs; we
@@ -155,7 +155,7 @@ func getMsgSummaryText(record events.Record) string {
 	// those requirements. This "guard rail" is also useful for ensuring that
 	// email notifications are similarly provided a fallback message.
 	default:
-		msgSummaryText = "FIXME: Missing Note for this event record!"
+		msgSummaryText = "FIXME: Missing Note and Error for this event record!"
 	}
 
 	return msgSummaryText
@@ -518,22 +518,24 @@ func createEmailMessage(record events.Record, emailCfg emailConfig) string {
 
 	emailSubjectPrefix := config.MyAppName + ": "
 
-	// use getMsgTitle() func used for email and Teams messages
+	// getMsgTitle() func is used for both email and Teams messages
 	emailSubject := getMsgTitle(emailSubjectPrefix, record)
 
-	// main message section
-	emailIntroText := getMsgSummaryText(record)
+	// Use this function to generate the summary instead of directly
+	// referencing the Record.Note field; the Record.Note field may not always
+	// have a value (GH-134).
+	emailSummary := getMsgSummaryText(record)
 
 	data := struct {
-		Record         events.Record
-		EmailSubject   string
-		EmailIntroText string
-		Branding       string
+		Record       events.Record
+		EmailSubject string
+		EmailSummary string
+		Branding     string
 	}{
-		Record:         record,
-		EmailSubject:   emailSubject,
-		EmailIntroText: emailIntroText,
-		Branding:       config.MessageTrailer(config.BrandingTextileFormat),
+		Record:       record,
+		EmailSubject: emailSubject,
+		EmailSummary: emailSummary,
+		Branding:     config.MessageTrailer(config.BrandingTextileFormat),
 	}
 
 	var renderedTmpl bytes.Buffer

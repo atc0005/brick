@@ -501,6 +501,9 @@ func terminateUserSessions(
 		return events.NewRecord(
 			alert,
 			activeSessionsCountErr,
+			// Not going to set a Note here as the error message explains the
+			// problem well enough already and will be used as the
+			// notification summary if/when generated (GH-134).
 			"",
 			events.ActionFailureTerminatedUserSession,
 			nil,
