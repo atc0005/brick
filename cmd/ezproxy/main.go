@@ -17,12 +17,12 @@
 package main
 
 import (
+	"crypto/rand"
 	"fmt"
-	"math/rand"
+	"math/big"
 	"os"
 	"regexp"
 	"strings"
-	"time"
 
 	"github.com/apex/log"
 
@@ -122,9 +122,13 @@ func main() {
 		}
 
 		// randomly return one of the result codes from the list above
-		seed := rand.NewSource(time.Now().UnixNano())
-		rng := rand.New(seed)
-		randomResultIdx := rng.Intn(len(resultCodes))
+		maxRandomNumber := big.NewInt(int64(len(resultCodes)))
+		nBig, rngErr := rand.Int(rand.Reader, maxRandomNumber)
+		if rngErr != nil {
+			fmt.Printf("unable to generate random number: %v", rngErr)
+			os.Exit(1)
+		}
+		randomResultIdx := nBig.Int64()
 		fmt.Println(resultCodes[randomResultIdx].ExitOutput)
 		os.Exit(resultCodes[randomResultIdx].ExitCode)
 

@@ -82,6 +82,11 @@ absolutely essential) while developing this application.
   - <https://www.w3.org/TR/2016/REC-html51-20161101/sec-forms.html#email-state-typeemail>
   - <https://golangcode.com/validate-an-email-address/>
 
+- random numbers
+  - <https://gobyexample.com/random-numbers>
+  - <https://stackoverflow.com/questions/32349807/how-can-i-generate-a-random-int-using-the-crypto-rand-package>
+  - <https://github.com/securego/gosec>
+
 ### Related projects
 
 - <https://github.com/atc0005/bounce>
