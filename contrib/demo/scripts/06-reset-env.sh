@@ -68,7 +68,8 @@ sudo postsuper -d ALL
 
 echo "* Reset Docker container"
 sudo docker container stop maildev
-sudo docker run --rm --detach --name maildev -p 1080:80 -p 1025:25 maildev/maildev
+# Use a specific version that has proven stable during earlier demos
+sudo docker run --rm --detach --name maildev -p 1080:80 -p 1025:25 maildev/maildev:1.1.0
 
 echo "* Reset fail2ban state"
 # https://unix.stackexchange.com/questions/286119
