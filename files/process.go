@@ -577,7 +577,13 @@ func appendToFile(entry fileEntry, tmpl *template.Template, filename string, per
 	log.Debugf("%s: Attempting to open sanitized version of file %q",
 		myFuncName, filepath.Clean(filename))
 
-	// If the file doesn't exist, create it, or append to the file
+	// If the file doesn't exist, create it, or append to the file. Opening
+	// this file via variable is intentional; we need to provide the
+	// flexibility for sysadmins to provide site-specific values. This allows
+	// for custom installations which may place the application and associated
+	// files in a non-default location.
+	//
+	// #nosec G304
 	f, opErr := os.OpenFile(filepath.Clean(filename), os.O_APPEND|os.O_CREATE|os.O_WRONLY, perms)
 	if opErr != nil {
 		return fmt.Errorf(
