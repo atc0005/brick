@@ -58,6 +58,23 @@ None
 {{- end }}
 
 
+{{ if .Record.SessionTerminationResults -}}
+**Session Termination Results**
+
+{{ range $index, $element := .Record.SessionTerminationResults -}}
+
+Session {{ inc $index }}:
+
+* SessionID: {{ .SessionID }}
+* IPAddress: {{ .IPAddress }}
+* ExitCode: {{ .ExitCode }}
+* StdOut: {{ .StdOut }}
+* StdErr: {{ .StdErr }}
+* Error: {{ .Error }}
+
+{{ end }}
+{{- end }}
+
 **Disable User Request Details**
 
 * Username: {{ if .Record.Alert.Username }}{{ .Record.Alert.Username }}{{ else }}{{ $missingValue }}{{ end }}
@@ -109,6 +126,17 @@ const textileEmailTemplate string = `
 </pre>
 {{- else -}}
 * None
+{{- end }}
+
+
+{{ if .Record.SessionTerminationResults -}}
+**Session Termination Results**
+
+| SessionID | IPAddress | ExitCode | StdOut | StdErr| Error |
+{{ range .Record.SessionTerminationResults -}}
+| {{ .SessionID }} | {{ .IPAddress }} | {{ .ExitCode }} | {{ .StdOut }} | {{ .StdErr }} | {{ .Error }} |
+{{ end }}
+{{- else -}}
 {{- end }}
 
 
