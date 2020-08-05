@@ -26,6 +26,81 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.4.4] - 2020-08-05
+
+### Added
+
+- Docker-based GitHub Actions Workflows
+  - Replace native GitHub Actions with containers created and managed through
+    the `atc0005/go-ci` project.
+
+  - New, primary workflow
+    - with parallel linting, testing and building tasks
+    - with three Go environments
+      - "old stable" - currently `Go 1.13.14`
+      - "stable" - currently `Go 1.14.6`
+      - "unstable" - currently `Go 1.15rc1`
+    - Makefile is *not* used in this workflow
+    - staticcheck linting using latest stable version provided by the
+      `atc0005/go-ci` containers
+
+  - Separate Makefile-based linting and building workflow
+    - intended to help ensure that local Makefile-based builds that are
+      referenced in project README files continue to work as advertised until
+      a better local tool can be discovered/explored further
+    - use `golang:latest` container to allow for Makefile-based linting
+      tooling installation testing since the `atc0005/go-ci` project provides
+      containers with those tools already pre-installed
+      - linting tasks use container-provided `golangci-lint` config file
+        *except* for the Makefile-driven linting task which continues to use
+        the repo-provided copy of the `golangci-lint` configuration file
+
+  - Add Quick Validation workflow
+    - run on every push, everything else on pull request updates
+    - linting via `golangci-lint` only
+    - testing
+    - no builds
+
+### Changed
+
+- README
+  - Link badges to applicable GitHub Actions workflows results
+
+- Linting
+  - Local
+    - `Makefile`
+      - install latest stable `golangci-lint` binary instead of using a fixed
+          version
+  - CI
+    - remove repo-provided copy of `golangci-lint` config file at start of
+      linting task in order to force use of Docker container-provided config
+      file
+
+- Dependencies
+  - upgrade `apex/log`
+    - `v1.6.0` to `v1.7.0`
+
+### Fixed
+
+- gosec linting errors
+  - G404: Use of weak random number generator (`math/rand` instead of
+    `crypto/rand`)
+    - fixed this, though our use of `math/rand` wasn't for cryptographic
+      purposes and was likely OK as-is
+  - G304: Potential file inclusion via variable
+    - marked this as ignored due to the variable being one we are
+      intentionally allowing the sysadmin to set
+
+- Lock MailDev container to specific, *proven* stable version used previously
+  in demos
+  - intent: reduce "gotchas" in future demo sessions if a drastically
+    different/newer version were to get pulled in while resetting the demo
+    environment
+
+- Email notifications do not include `Session Termination Results` section
+  - this was included with existing Microsoft Teams notifications, but not
+    email notifications
+
 ## [v0.4.3] - 2020-07-24
 
 ### Changed
@@ -328,7 +403,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.3...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.4...HEAD
+[v0.4.4]: https://github.com/atc0005/brick/releases/tag/v0.4.4
 [v0.4.3]: https://github.com/atc0005/brick/releases/tag/v0.4.3
 [v0.4.2]: https://github.com/atc0005/brick/releases/tag/v0.4.2
 [v0.4.1]: https://github.com/atc0005/brick/releases/tag/v0.4.1
