@@ -87,6 +87,13 @@ absolutely essential) while developing this application.
   - <https://stackoverflow.com/questions/32349807/how-can-i-generate-a-random-int-using-the-crypto-rand-package>
   - <https://github.com/securego/gosec>
 
+- templates
+  - <https://golang.org/pkg/text/template/>
+  - <https://curtisvermeeren.github.io/2017/09/14/Golang-Templates-Cheatsheet>
+  - <https://stackoverflow.com/questions/54156119/range-over-string-slice-in-golang-template>
+  - <https://stackoverflow.com/questions/25689829/arithmetic-in-go-templates>
+    - <https://stackoverflow.com/a/25690905/903870>
+
 ### Related projects
 
 - <https://github.com/atc0005/bounce>

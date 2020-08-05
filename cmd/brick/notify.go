@@ -667,6 +667,12 @@ func NotifyMgr(ctx context.Context, cfg *config.Config, notifyWorkQueue <-chan e
 			template.New(
 				"emailTemplate",
 			).Funcs(template.FuncMap{
+				// The name "inc" is what the function will be called in the
+				// template text.
+				// https://stackoverflow.com/a/25690905/903870
+				"inc": func(i int) int {
+					return i + 1
+				},
 				"trim": strings.TrimSpace,
 			}).Parse(activeTemplate))
 
