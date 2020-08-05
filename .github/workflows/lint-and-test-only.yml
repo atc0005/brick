@@ -14,19 +14,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: Validate Codebase
+name: Quick Validation
 
 # Run builds for Pull Requests (new, updated)
 # `synchronized` seems to equate to pushing new commits to a linked branch
 # (whether force-pushed or not)
 on:
-  #push:
-  pull_request:
-    types: [opened, synchronize]
+  push:
 
 jobs:
-  lint_code:
-    name: Lint codebase
+  lint_and_test_code:
+    name: Lint and test using latest stable container
     runs-on: ubuntu-latest
     timeout-minutes: 10
     container:
@@ -46,51 +44,5 @@ jobs:
       - name: Run golangci-lint using container-provided config file settings
         run: golangci-lint run -v
 
-      # This is the very latest stable version of staticcheck provided by the
-      # atc0005/go-ci container. The version included with golangci-lint often
-      # lags behind the official stable releases.
-      - name: Run staticcheck
-        run: staticcheck $(go list -mod=vendor ./... | grep -v /vendor/)
-
-  test_code:
-    name: Run tests
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    strategy:
-      matrix:
-        container-image: ["go-ci-oldstable", "go-ci-stable", "go-ci-unstable"]
-
-    container:
-      image: "index.docker.io/atc0005/go-ci:${{ matrix.container-image}}"
-
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v2.3.1
-
       - name: Run all tests
         run: go test -mod=vendor -v ./...
-
-  build_code:
-    name: Build codebase
-    runs-on: ubuntu-latest
-    # Default: 360 minutes
-    timeout-minutes: 10
-    strategy:
-      matrix:
-        container-image: ["go-ci-oldstable", "go-ci-stable", "go-ci-unstable"]
-
-    container:
-      image: "index.docker.io/atc0005/go-ci:${{ matrix.container-image}}"
-
-    steps:
-      - name: Print go version
-        run: go version
-
-      - name: Check out code
-        uses: actions/checkout@v2.3.1
-
-      - name: Build using vendored dependencies
-        run: |
-          go build -v -mod=vendor ./cmd/brick
-          go build -v -mod=vendor ./cmd/es
-          go build -v -mod=vendor ./cmd/ezproxy
