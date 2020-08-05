@@ -36,9 +36,10 @@ sudo chmod -Rv g+rwX /var/log/brick
 sudo mkdir -vp /var/cache/brick
 sudo chown -Rv brick:brick /var/cache/brick
 
-# Setup Docker container
+# Setup Docker container using a specific version that has proven stable
+# during earlier demos
 sudo docker container stop maildev
-sudo docker run --rm --detach --name maildev -p 1080:80 -p 1025:25 maildev/maildev
+sudo docker run --rm --detach --name maildev -p 1080:80 -p 1025:25 maildev/maildev:1.1.0
 
 # Deploy Postfix configuration files
 sudo cp -vf ../../postfix/main.cf /etc/postfix/
