@@ -4,7 +4,7 @@ github.com/Showmax/go-fqdn
 github.com/alexflint/go-arg
 # github.com/alexflint/go-scalar v1.0.0
 github.com/alexflint/go-scalar
-# github.com/apex/log v1.7.0
+# github.com/apex/log v1.8.0
 github.com/apex/log
 github.com/apex/log/handlers/cli
 github.com/apex/log/handlers/discard
