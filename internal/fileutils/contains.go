@@ -60,6 +60,7 @@ func HasLine(searchTerm string, ignorePrefix string, filename string) (bool, err
 				log.Errorf(
 					"%s: failed to close file %q: %s",
 					myFuncName,
+					filename,
 					err.Error(),
 				)
 			}
