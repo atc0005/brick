@@ -1,10 +1,13 @@
 # github.com/Showmax/go-fqdn v0.0.0-20180501083314-6f60894d629f
+## explicit
 github.com/Showmax/go-fqdn
 # github.com/alexflint/go-arg v1.3.0
+## explicit
 github.com/alexflint/go-arg
 # github.com/alexflint/go-scalar v1.0.0
 github.com/alexflint/go-scalar
 # github.com/apex/log v1.9.0
+## explicit
 github.com/apex/log
 github.com/apex/log/handlers/cli
 github.com/apex/log/handlers/discard
@@ -12,11 +15,14 @@ github.com/apex/log/handlers/json
 github.com/apex/log/handlers/logfmt
 github.com/apex/log/handlers/text
 # github.com/atc0005/go-ezproxy v0.1.5
+## explicit
 github.com/atc0005/go-ezproxy
 github.com/atc0005/go-ezproxy/activefile
 # github.com/atc0005/go-teams-notify v1.3.1-0.20200419155834-55cca556e726
+## explicit
 github.com/atc0005/go-teams-notify
 # github.com/atc0005/send2teams v0.4.5
+## explicit
 github.com/atc0005/send2teams/teams
 # github.com/fatih/color v1.7.0
 github.com/fatih/color
@@ -29,6 +35,7 @@ github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.8
 github.com/mattn/go-isatty
 # github.com/pelletier/go-toml v1.8.0
+## explicit
 github.com/pelletier/go-toml
 # github.com/pkg/errors v0.8.1
 github.com/pkg/errors
