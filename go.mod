@@ -27,6 +27,6 @@ require (
 	github.com/atc0005/go-ezproxy v0.1.5
 	// temporarily use our fork; waiting on changes to be accepted upstream
 	github.com/atc0005/go-teams-notify v1.3.1-0.20200419155834-55cca556e726
-	github.com/atc0005/send2teams v0.4.5
+	github.com/atc0005/send2teams v0.4.6
 	github.com/pelletier/go-toml v1.8.0
 )
