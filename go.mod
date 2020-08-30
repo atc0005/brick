@@ -21,7 +21,7 @@ module github.com/atc0005/brick
 go 1.14
 
 require (
-	github.com/Showmax/go-fqdn v0.0.0-20180501083314-6f60894d629f
+	github.com/Showmax/go-fqdn v1.0.0
 	github.com/alexflint/go-arg v1.3.0
 	github.com/apex/log v1.9.0
 	github.com/atc0005/go-ezproxy v0.1.6
