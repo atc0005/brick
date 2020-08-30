@@ -26,6 +26,34 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.4.5] - 2020-08-30
+
+### Changed
+
+- Dependencies
+  - upgrade `go.mod` Go version
+    - `1.13` to `1.14`
+  - upgrade `atc0005/go-ezproxy`
+    - `v0.1.5` to `v0.1.6`
+  - upgrade `atc0005/go-teams-notify`
+    - `v1.3.1-0.20200419155834-55cca556e726` to `v2.3.0`
+      - NOTE: This is a significant change reflecting a merge of required
+        functionality from the `atc0005/send2teams` project to the
+        `atc0005/go-teams-notify` project
+  - upgrade `Showmax/go-fqdn`
+    - `v0.0.0-20180501083314-6f60894d629f` to `v1.0.0`
+  - upgrade `apex/log`
+    - `v1.7.0` to `v1.9.0`
+  - upgrade `actions/checkout`
+    - `v2.3.1` to `v2.3.2`
+  - upgrade `atc0005/send2teams`
+    - `v0.4.5` to `v0.4.6`
+      - since removed
+
+### Fixed
+
+- Add missing filename reference in error message
+
 ## [v0.4.4] - 2020-08-05
 
 ### Added
@@ -403,7 +431,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.4...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.5...HEAD
+[v0.4.5]: https://github.com/atc0005/brick/releases/tag/v0.4.5
 [v0.4.4]: https://github.com/atc0005/brick/releases/tag/v0.4.4
 [v0.4.3]: https://github.com/atc0005/brick/releases/tag/v0.4.3
 [v0.4.2]: https://github.com/atc0005/brick/releases/tag/v0.4.2
