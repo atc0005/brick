@@ -33,11 +33,7 @@ import (
 	"github.com/atc0005/brick/internal/caller"
 	"github.com/atc0005/go-ezproxy"
 
-	// use our fork for now until recent work can be submitted for inclusion
-	// in the upstream project
-	goteamsnotify "github.com/atc0005/go-teams-notify"
-
-	send2teams "github.com/atc0005/send2teams/teams"
+	goteamsnotify "github.com/atc0005/go-teams-notify/v2"
 )
 
 // addFactPair accepts a MessageCard, MessageCardSection, a key and one or
@@ -52,7 +48,7 @@ import (
 func addFactPair(msg *goteamsnotify.MessageCard, section *goteamsnotify.MessageCardSection, key string, values ...string) {
 
 	for idx := range values {
-		values[idx] = send2teams.TryToFormatAsCodeSnippet(values[idx])
+		values[idx] = goteamsnotify.TryToFormatAsCodeSnippet(values[idx])
 	}
 
 	if err := section.AddFactFromKeyValue(
@@ -62,7 +58,7 @@ func addFactPair(msg *goteamsnotify.MessageCard, section *goteamsnotify.MessageC
 		from := caller.GetFuncFileLineInfo()
 		errMsg := fmt.Sprintf("%s error returned from attempt to add fact from key/value pair: %v", from, err)
 		log.Errorf("%s %s", from, errMsg)
-		msg.Text = msg.Text + "\n\n" + send2teams.TryToFormatAsCodeSnippet(errMsg)
+		msg.Text = msg.Text + "\n\n" + goteamsnotify.TryToFormatAsCodeSnippet(errMsg)
 	}
 }
 
@@ -243,7 +239,7 @@ func createTeamsMessage(record events.Record) goteamsnotify.MessageCard {
 	if err := msgCard.AddSection(disableUserRequestErrors); err != nil {
 		errMsg := fmt.Sprintf("Error returned from attempt to add disableUserRequestErrors: %v", err)
 		log.Errorf("%s: %v", myFuncName, errMsg)
-		msgCard.Text = msgCard.Text + "\n\n" + send2teams.TryToFormatAsCodeSnippet(errMsg)
+		msgCard.Text = msgCard.Text + "\n\n" + goteamsnotify.TryToFormatAsCodeSnippet(errMsg)
 	}
 
 	// If Session Termination is enabled, create Termination Results section
@@ -258,7 +254,7 @@ func createTeamsMessage(record events.Record) goteamsnotify.MessageCard {
 		if err := msgCard.AddSection(sessionTerminationResultsSection); err != nil {
 			errMsg := fmt.Sprintf("Error returned from attempt to add sessionTerminationResultsSection: %v", err)
 			log.Errorf("%s: %v", myFuncName, errMsg)
-			msgCard.Text = msgCard.Text + "\n\n" + send2teams.TryToFormatAsCodeSnippet(errMsg)
+			msgCard.Text = msgCard.Text + "\n\n" + goteamsnotify.TryToFormatAsCodeSnippet(errMsg)
 		}
 
 	}
@@ -279,7 +275,7 @@ func createTeamsMessage(record events.Record) goteamsnotify.MessageCard {
 	if err := msgCard.AddSection(disableUserRequestDetailsSection); err != nil {
 		errMsg := fmt.Sprintf("Error returned from attempt to add disableUserRequestDetailsSection: %v", err)
 		log.Errorf("%s: %v", myFuncName, errMsg)
-		msgCard.Text = msgCard.Text + "\n\n" + send2teams.TryToFormatAsCodeSnippet(errMsg)
+		msgCard.Text = msgCard.Text + "\n\n" + goteamsnotify.TryToFormatAsCodeSnippet(errMsg)
 	}
 
 	/*
@@ -298,7 +294,7 @@ func createTeamsMessage(record events.Record) goteamsnotify.MessageCard {
 	if err := msgCard.AddSection(alertRequestSummarySection); err != nil {
 		errMsg := fmt.Sprintf("Error returned from attempt to add alertRequestSummarySection: %v", err)
 		log.Errorf("%s: %v", myFuncName, errMsg)
-		msgCard.Text = msgCard.Text + "\n\n" + send2teams.TryToFormatAsCodeSnippet(errMsg)
+		msgCard.Text = msgCard.Text + "\n\n" + goteamsnotify.TryToFormatAsCodeSnippet(errMsg)
 	}
 
 	/*
@@ -335,7 +331,7 @@ func createTeamsMessage(record events.Record) goteamsnotify.MessageCard {
 		for index, value := range headerValuesCopy {
 			// update value with code snippet formatting, assign back using
 			// the available index value
-			headerValuesCopy[index] = send2teams.TryToFormatAsCodeSnippet(value)
+			headerValuesCopy[index] = goteamsnotify.TryToFormatAsCodeSnippet(value)
 		}
 		addFactPair(&msgCard, alertRequestHeadersSection, header, headerValuesCopy...)
 	}
@@ -343,7 +339,7 @@ func createTeamsMessage(record events.Record) goteamsnotify.MessageCard {
 	if err := msgCard.AddSection(alertRequestHeadersSection); err != nil {
 		errMsg := fmt.Sprintf("Error returned from attempt to add alertRequestHeadersSection: %v", err)
 		log.Errorf("%s: %v", myFuncName, errMsg)
-		msgCard.Text = msgCard.Text + "\n\n" + send2teams.TryToFormatAsCodeSnippet(errMsg)
+		msgCard.Text = msgCard.Text + "\n\n" + goteamsnotify.TryToFormatAsCodeSnippet(errMsg)
 	}
 
 	/*
@@ -352,11 +348,11 @@ func createTeamsMessage(record events.Record) goteamsnotify.MessageCard {
 
 	trailerSection := goteamsnotify.NewMessageCardSection()
 	trailerSection.StartGroup = true
-	trailerSection.Text = send2teams.ConvertEOLToBreak(config.MessageTrailer(config.BrandingMarkdownFormat))
+	trailerSection.Text = goteamsnotify.ConvertEOLToBreak(config.MessageTrailer(config.BrandingMarkdownFormat))
 	if err := msgCard.AddSection(trailerSection); err != nil {
 		errMsg := fmt.Sprintf("Error returned from attempt to add trailerSection: %v", err)
 		log.Errorf("%s: %v", myFuncName, errMsg)
-		msgCard.Text = msgCard.Text + "\n\n" + send2teams.TryToFormatAsCodeSnippet(errMsg)
+		msgCard.Text = msgCard.Text + "\n\n" + goteamsnotify.TryToFormatAsCodeSnippet(errMsg)
 	}
 
 	return msgCard
@@ -460,9 +456,12 @@ func sendTeamsMessage(
 			return msg
 		}
 
-		// Submit message card, retry submission if needed up to specified number
-		// of retry attempts.
-		if err := send2teams.SendMessage(ctx, webhookURL, msgCard, retries, retriesDelay); err != nil {
+		// Create Microsoft Teams client
+		mstClient := goteamsnotify.NewClient()
+
+		// Submit message card using Microsoft Teams client, retry submission
+		// if needed up to specified number of retry attempts.
+		if err := mstClient.SendWithRetry(ctx, webhookURL, msgCard, retries, retriesDelay); err != nil {
 			errMsg := NotifyResult{
 				Err: fmt.Errorf(
 					"%s: ERROR: Failed to submit message to Microsoft Teams at %v: %v",
@@ -572,7 +571,7 @@ func createEmailMessage(record events.Record, emailCfg emailConfig) string {
 }
 
 // sendEmail is an analogue of the abstraction/functionality provided by
-// send2teams.SendMessage(...). The plan is to refactor this function as part
+// goteamsnotify.SendMessage(...). The plan is to refactor this function as part
 // of the work for GH-22.
 func sendEmail(
 	ctx context.Context,

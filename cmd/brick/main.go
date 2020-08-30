@@ -28,8 +28,7 @@ import (
 	"github.com/atc0005/brick/config"
 	"github.com/atc0005/brick/events"
 	"github.com/atc0005/brick/files"
-	goteamsnotify "github.com/atc0005/go-teams-notify"
-	send2teams "github.com/atc0005/send2teams/teams"
+	goteamsnotify "github.com/atc0005/go-teams-notify/v2"
 
 	"github.com/apex/log"
 )
@@ -41,7 +40,6 @@ func main() {
 	// Toggle debug logging from library packages as needed to troubleshoot
 	// implementation work
 	goteamsnotify.DisableLogging()
-	send2teams.DisableLogging()
 
 	// This will use default logging settings (level filter, destination)
 	// as the application hasn't "booted up" far enough to apply custom

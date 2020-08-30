@@ -21,10 +21,7 @@ import (
 
 	"github.com/apex/log"
 
-	// use our fork for now until recent work can be submitted for inclusion
-	// in the upstream project
-	goteamsnotify "github.com/atc0005/go-teams-notify"
-	send2teams "github.com/atc0005/send2teams/teams"
+	goteamsnotify "github.com/atc0005/go-teams-notify/v2"
 )
 
 // validateEmailAddress receives a string representing an email address and
@@ -201,18 +198,11 @@ func validate(c Config) error {
 	// Not having a webhook URL is a valid choice. Perform validation if value
 	// is provided.
 	if c.TeamsWebhookURL() != "" {
-
 		log.Debugf("Microsoft Teams WebhookURL provided: %v", c.TeamsWebhookURL())
 
-		// TODO: Do we really need both of these?
 		if ok, err := goteamsnotify.IsValidWebhookURL(c.TeamsWebhookURL()); !ok {
 			return err
 		}
-
-		if err := send2teams.ValidateWebhook(c.TeamsWebhookURL()); err != nil {
-			return err
-		}
-
 	}
 
 	if c.TeamsNotificationRateLimit() < 0 {
