@@ -18,12 +18,9 @@ github.com/apex/log/handlers/text
 ## explicit
 github.com/atc0005/go-ezproxy
 github.com/atc0005/go-ezproxy/activefile
-# github.com/atc0005/go-teams-notify v1.3.1-0.20200419155834-55cca556e726
+# github.com/atc0005/go-teams-notify/v2 v2.3.0
 ## explicit
-github.com/atc0005/go-teams-notify
-# github.com/atc0005/send2teams v0.4.6
-## explicit
-github.com/atc0005/send2teams/teams
+github.com/atc0005/go-teams-notify/v2
 # github.com/fatih/color v1.7.0
 github.com/fatih/color
 # github.com/go-logfmt/logfmt v0.4.0
