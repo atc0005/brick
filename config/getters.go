@@ -426,8 +426,8 @@ func (c Config) EmailClientIdentity() string {
 		// fully-qualified domain name for the system where this application
 		// is running. If there are issues resolving the fqdn use our fallback
 		// value.
-		hostname := fqdn.Get()
-		if hostname == "unknown" {
+		hostname, err := fqdn.FqdnHostname()
+		if err != nil {
 			hostname = defaultSMTPClientIdentity
 		}
 
