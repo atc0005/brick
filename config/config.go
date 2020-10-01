@@ -190,8 +190,13 @@ func NewConfig() (*Config, error) {
 	// Bundle the returned `*.arg.Parser` for later use One potential use:
 	// from `main()` so that we can explicitly display usage or help details
 	// should the user-provided settings fail validation.
-	log.Debugf("%s: Parsing flags", myFuncName)
 	config.flagParser = arg.MustParse(&config.cliConfig)
+
+	// Apply initial logging configuration based on flag-supplied settings,
+	// rely on default values if user did not specify via command-line. We'll
+	// reapply logging settings later once the configuration file has been
+	// parsed and those settings available for evaluation.
+	config.configureLogging()
 
 	// If user specified a config file, try to use it, fail if not found
 	log.Debugf(
@@ -283,10 +288,13 @@ func NewConfig() (*Config, error) {
 				err,
 			)
 		}
-	}
 
-	// Apply initial logging settings based on user-supplied settings
-	config.configureLogging()
+		// Reapply logging configuration based on available configuration file
+		// settings; any CLI-specified logging settings still have precedence,
+		// so we will not be undoing any logging configuration settings
+		// already applied based on provided flag values.
+		config.configureLogging()
+	}
 
 	// If no errors were encountered during parsing, proceed to validation of
 	// configuration settings (both user-specified and defaults)
