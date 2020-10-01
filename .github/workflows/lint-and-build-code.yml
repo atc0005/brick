@@ -34,7 +34,7 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v2.3.2
+        uses: actions/checkout@v2.3.3
 
       - name: Remove repo-provided golangci-lint config file
         run: |
@@ -65,7 +65,7 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v2.3.2
+        uses: actions/checkout@v2.3.3
 
       - name: Run all tests
         run: go test -mod=vendor -v ./...
@@ -87,7 +87,7 @@ jobs:
         run: go version
 
       - name: Check out code
-        uses: actions/checkout@v2.3.2
+        uses: actions/checkout@v2.3.3
 
       - name: Build using vendored dependencies
         run: |
