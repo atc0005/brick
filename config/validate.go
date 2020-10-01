@@ -32,6 +32,8 @@ func validateEmailAddress(emailAddr string, purpose string) error {
 
 	// https://golangcode.com/validate-an-email-address/
 	// https://www.w3.org/TR/2016/REC-html51-20161101/sec-forms.html#email-state-typeemail
+	// https://stackoverflow.com/a/574698
+	// https://www.rfc-editor.org/errata_search.php?rfc=3696
 
 	switch {
 	case emailAddr == "":
@@ -41,7 +43,7 @@ func validateEmailAddress(emailAddr string, purpose string) error {
 		)
 		return notSpecifiedErr
 
-	case (len(emailAddr) < 3 && len(emailAddr) > 254):
+	case (len(emailAddr) < 3 || len(emailAddr) > 254):
 		invalidLengthErr := fmt.Errorf(
 			"%s email address %q has invalid length of %d",
 			purpose,

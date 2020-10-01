@@ -185,7 +185,7 @@ func (c Config) IgnoredUsersFile() string {
 // IsSetIgnoredUsersFile indicates whether a user-provided path to the file
 // containing a list of user accounts which should not be disabled and whose
 // associated IP should not be banned by this application was provided.
-// DEPRECATED: See GH-46
+// Deprecated: See GH-46
 func (c Config) IsSetIgnoredUsersFile() bool {
 	switch {
 	case c.cliConfig.IgnoredUsers.File != nil:
@@ -214,7 +214,7 @@ func (c Config) IgnoredIPAddressesFile() string {
 // IsSetIgnoredIPAddressesFile indicates whether a user-provided path to the
 // file containing a list of individual IP Addresses which should not be
 // banned by this application was provided.
-// DEPRECATED: See GH-46
+// Deprecated: See GH-46
 func (c Config) IsSetIgnoredIPAddressesFile() bool {
 	switch {
 	case c.cliConfig.IgnoredIPAddresses.File != nil:
