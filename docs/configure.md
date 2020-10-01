@@ -126,7 +126,7 @@ settings.
 | `ip-address`                    | `local_ip_address`       | `network`            |                                                                          |
 | `log-level`                     | `level`                  | `logging`            |                                                                          |
 | `log-format`                    | `format`                 | `logging`            |                                                                          |
-| `log-out`                       | `output`                 | `logging`            |                                                                          |
+| `log-output`                    | `output`                 | `logging`            |                                                                          |
 | `disabled-users-file`           | `file_path`              | `disabledusers`      |                                                                          |
 | `disabled-users-file-perms`     | `file_permissions`       | `disabledusers`      |                                                                          |
 | `disabled-users-entry-suffix`   | `entry_suffix`           | `disabledusers`      |                                                                          |
