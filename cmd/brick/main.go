@@ -175,7 +175,7 @@ func main() {
 		// any other error message.
 		if !errors.Is(err, http.ErrServerClosed) {
 			log.Errorf("error occurred while running httpServer: %v", err)
-			os.Exit(1)
+			return
 		}
 	}
 
