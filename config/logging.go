@@ -44,15 +44,26 @@ func (c Config) configureLogging() {
 		log.SetLevel(log.DebugLevel)
 	}
 
+	// Apply user-specified logging output target
+	var outputTarget *os.File
+	switch c.LogOutput() {
+	case LogOutputStdout:
+		outputTarget = os.Stdout
+	case LogOutputStderr:
+		outputTarget = os.Stderr
+	default:
+		outputTarget = os.Stdout
+	}
+
 	switch c.LogFormat() {
 	case LogFormatText:
-		log.SetHandler(text.New(os.Stdout))
+		log.SetHandler(text.New(outputTarget))
 	case LogFormatCLI:
-		log.SetHandler(cli.New(os.Stdout))
+		log.SetHandler(cli.New(outputTarget))
 	case LogFormatLogFmt:
-		log.SetHandler(logfmt.New(os.Stdout))
+		log.SetHandler(logfmt.New(outputTarget))
 	case LogFormatJSON:
-		log.SetHandler(json.New(os.Stdout))
+		log.SetHandler(json.New(outputTarget))
 	case LogFormatDiscard:
 		log.SetHandler(discard.New())
 	}
