@@ -41,15 +41,11 @@ func main() {
 	// implementation work
 	goteamsnotify.DisableLogging()
 
-	// This will use default logging settings (level filter, destination)
-	// as the application hasn't "booted up" far enough to apply custom
-	// choices yet.
-	log.Debug("Initializing application")
-
 	appConfig, err := config.NewConfig()
 	if err != nil {
 		log.Fatalf("Failed to initialize application: %s", err)
 	}
+	log.Debug("Initializing application")
 
 	log.Debugf("AppConfig: %+v", appConfig)
 
@@ -161,8 +157,12 @@ func main() {
 	)
 
 	// listen on specified port and IP Address, block until app is terminated
-	log.Infof("%s is listening on %s port %d",
-		config.MyAppName, appConfig.LocalIPAddress(), appConfig.LocalTCPPort())
+	log.Infof("%s %s is listening on %s port %d",
+		config.MyAppName,
+		config.Version,
+		appConfig.LocalIPAddress(),
+		appConfig.LocalTCPPort(),
+	)
 
 	// TODO: This can be handled in a cleaner fashion?
 	if err := httpServer.ListenAndServe(); err != nil {
