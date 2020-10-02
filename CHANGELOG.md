@@ -26,6 +26,52 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.4.6] - 2020-10-02
+
+### Added
+
+- Binary release
+  - Built using Go 1.15.2
+  - Windows
+    - x86
+    - x64
+  - Linux
+    - x86
+    - x64
+
+Note: Windows builds are provided, but have not been tested. The current
+developer does not have access to a Windows + EZproxy test environment. Please
+[open an issue](https://github.com/atc0005/brick/issues) to share your
+experiences deploying tools from this project on a Windows EZproxy server.
+
+### Changed
+
+- Emit version number as part of startup message
+
+- Move subpackages into `internal` directory
+
+- Dependencies
+  - upgrade `pelletier/go-toml`
+    - `v1.8.0` to `v1.8.1`
+  - upgrade `actions/checkout`
+    - `v2.3.2` to `v2.3.3`
+  - upgrade `actions/setup-node`
+    - `v2.1.1` to `v2.1.2`
+
+### Fixed
+
+- Misc linting errors raised by latest `gocritic` release included with
+  `golangci-lint` `v1.31.0`
+
+- Flag for setting desired log output does not appear to work
+
+- Documentation mistake: log-output CLI flag incorrectly listed as log-out
+
+- Makefile generates checksums with qualified path
+
+- Debug messages are emitted before logging settings are applied which would
+  (potentially) allow them to be emitted
+
 ## [v0.4.5] - 2020-08-30
 
 ### Changed
@@ -431,7 +477,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.5...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.6...HEAD
+[v0.4.6]: https://github.com/atc0005/brick/releases/tag/v0.4.6
 [v0.4.5]: https://github.com/atc0005/brick/releases/tag/v0.4.5
 [v0.4.4]: https://github.com/atc0005/brick/releases/tag/v0.4.4
 [v0.4.3]: https://github.com/atc0005/brick/releases/tag/v0.4.3
