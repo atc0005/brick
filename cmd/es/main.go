@@ -26,7 +26,7 @@ import (
 	"github.com/apex/log"
 	"github.com/apex/log/handlers/cli"
 
-	"github.com/atc0005/brick/config"
+	"github.com/atc0005/brick/internal/config"
 	"github.com/atc0005/go-ezproxy"
 	"github.com/atc0005/go-ezproxy/activefile"
 )

@@ -23,7 +23,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/atc0005/brick/events"
+	"github.com/atc0005/brick/internal/events"
 	"github.com/atc0005/go-ezproxy"
 )
 

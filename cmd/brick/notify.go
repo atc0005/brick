@@ -25,8 +25,8 @@ import (
 	"time"
 
 	"github.com/apex/log"
-	"github.com/atc0005/brick/config"
-	"github.com/atc0005/brick/events"
+	"github.com/atc0005/brick/internal/config"
+	"github.com/atc0005/brick/internal/events"
 )
 
 // NotifyResult wraps the results of notification operations to make it easier
