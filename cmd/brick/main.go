@@ -25,9 +25,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/atc0005/brick/config"
-	"github.com/atc0005/brick/events"
-	"github.com/atc0005/brick/files"
+	"github.com/atc0005/brick/internal/config"
+	"github.com/atc0005/brick/internal/events"
+	"github.com/atc0005/brick/internal/files"
 	goteamsnotify "github.com/atc0005/go-teams-notify/v2"
 
 	"github.com/apex/log"

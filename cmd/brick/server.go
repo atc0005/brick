@@ -23,7 +23,7 @@ import (
 	"time"
 
 	"github.com/apex/log"
-	"github.com/atc0005/brick/config"
+	"github.com/atc0005/brick/internal/config"
 )
 
 // shutdownListener listens for an os.Signal on the provided quit channel.

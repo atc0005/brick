@@ -28,9 +28,9 @@ import (
 	"time"
 
 	"github.com/apex/log"
-	"github.com/atc0005/brick/config"
-	"github.com/atc0005/brick/events"
 	"github.com/atc0005/brick/internal/caller"
+	"github.com/atc0005/brick/internal/config"
+	"github.com/atc0005/brick/internal/events"
 	"github.com/atc0005/go-ezproxy"
 
 	goteamsnotify "github.com/atc0005/go-teams-notify/v2"

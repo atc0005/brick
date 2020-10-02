@@ -27,8 +27,8 @@ import (
 
 	"github.com/apex/log"
 
-	"github.com/atc0005/brick/events"
-	"github.com/atc0005/brick/files"
+	"github.com/atc0005/brick/internal/events"
+	"github.com/atc0005/brick/internal/files"
 )
 
 // API endpoint patterns supported by this application
