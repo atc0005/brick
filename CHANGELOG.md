@@ -26,6 +26,34 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.4.7] - 2020-10-11
+
+### Added
+
+- Binary release
+  - Built using Go 1.15.2
+  - **Statically linked** (GH-193)
+  - Windows
+    - x86
+    - x64
+  - Linux
+    - x86
+    - x64
+
+Note: Windows builds are provided, but have not been tested. The current
+developer does not have access to a Windows + EZproxy test environment. Please
+[open an issue](https://github.com/atc0005/brick/issues) to share your
+experiences deploying tools from this project on a Windows EZproxy server.
+
+### Changed
+
+- Add `-trimpath` build flag
+- Restore explicit exit code handling (GH-179)
+
+### Fixed
+
+- Makefile build options do not generate static binaries (GH-189)
+
 ## [v0.4.6] - 2020-10-02
 
 ### Added
@@ -477,7 +505,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.6...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.7...HEAD
+[v0.4.7]: https://github.com/atc0005/brick/releases/tag/v0.4.7
 [v0.4.6]: https://github.com/atc0005/brick/releases/tag/v0.4.6
 [v0.4.5]: https://github.com/atc0005/brick/releases/tag/v0.4.5
 [v0.4.4]: https://github.com/atc0005/brick/releases/tag/v0.4.4
