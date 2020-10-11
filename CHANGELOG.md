@@ -24,7 +24,7 @@ The following types of changes will be recorded in this file:
 
 ## [Unreleased]
 
-- placeholder
+- Fix GitHub issue reference in v0.4.7 release entry
 
 ## [v0.4.7] - 2020-10-11
 
@@ -48,7 +48,7 @@ experiences deploying tools from this project on a Windows EZproxy server.
 ### Changed
 
 - Add `-trimpath` build flag
-- Restore explicit exit code handling (GH-179)
+- Restore explicit exit code handling (GH-191)
 
 ### Fixed
 
