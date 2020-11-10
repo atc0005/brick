@@ -48,6 +48,12 @@ type Network struct {
 	// LocalIPAddress is the IP Address that this application should listen on
 	// for incoming requests
 	LocalIPAddress *string `toml:"local_ip_address" arg:"--ip-address,env:BRICK_LOCAL_IP_ADDRESS" help:"Local IP Address that this application should listen on for incoming HTTP requests."`
+
+	// TrustedIPAddresses is the collection of single IP Addresses which are
+	// trusted for payload submission. If this is defined, all other sender
+	// IPs are ignored. If this is not defined, payloads are accepted from all
+	// IP Addresses not otherwise rejected by local/remote firewall rules.
+	TrustedIPAddresses []string `toml:"trusted_ip_addresses" arg:"--trusted-ip-addresses,env:BRICK_TRUSTED_IP_ADDRESSES" help:"One or many single IP Addresses which are trusted for payload submission. If this is defined, all other sender IPs are ignored. If this is not defined, payloads are accepted from all IP Addresses not otherwise rejected by local/remote firewall rules."`
 }
 
 // Logging is a collection of logging-related settings provided via CLI and

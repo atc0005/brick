@@ -150,6 +150,14 @@ func main() {
 		appConfig.IgnoreLookupErrors(),
 	)
 
+	// log this to help troubleshoot why payloads are (or are not) filtered
+	switch {
+	case appConfig.RequireTrustedPayloadSender():
+		log.Info("OK: Restricting payload sender IP Addresses enabled")
+	default:
+		log.Warn("CAUTION: Restricting payload sender IP Addresses disabled")
+	}
+
 	// GET requests
 	mux.HandleFunc(frontpageEndpointPattern, frontPageHandler)
 	mux.HandleFunc(apiV1ViewDisabledUsersEndpointPattern, viewDisabledUsersHandler)
@@ -159,6 +167,8 @@ func main() {
 	mux.HandleFunc(
 		apiV1DisableUserEndpointPattern,
 		disableUserHandler(
+			appConfig.RequireTrustedPayloadSender(),
+			appConfig.TrustedIPAddresses(),
 			reportedUserEventsLog,
 			disabledUsers,
 			ignoredSources,

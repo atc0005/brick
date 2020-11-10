@@ -18,6 +18,7 @@ package config
 
 import (
 	"fmt"
+	"net"
 
 	"github.com/apex/log"
 
@@ -140,6 +141,23 @@ func validate(c Config) error {
 
 	if c.LocalIPAddress() == "" {
 		return fmt.Errorf("local IP Address not provided")
+	}
+
+	// true if sysadmin specified a value via CLI or config file
+	if c.RequireTrustedPayloadSender() {
+		switch {
+		case len(c.TrustedIPAddresses()) < 1:
+			return fmt.Errorf("empty list of trusted IP Addresses provided")
+		default:
+			for _, ipAddr := range c.TrustedIPAddresses() {
+				if net.ParseIP(ipAddr) == nil {
+					return fmt.Errorf(
+						"invalid IP Address %q provided for trusted IPs list",
+						ipAddr,
+					)
+				}
+			}
+		}
 	}
 
 	switch c.LogLevel() {

@@ -177,6 +177,13 @@ version.
 1. Copy the starter/template configuration file from
    `contrib/brick/config.example.toml` and modify accordingly using the
    [configuration](configure.md) guide.
+1. Configure one or more trusted IP Addresses
+   - Per the default setting in the config file, only payload submissions from
+     `127.0.0.1` will be accepted. You need to enter the IP Address of the
+     Splunk system which is responsible for delivering JSON payloads to this
+     application.
+   - **CAUTION**: If you do not define a value for this setting, or comment it
+     out, payload submissions from all sender IP Addresses will be accepted.
 1. Decide whether you will enable automatic sessions termination or use
    `fail2ban`. See the [fail2ban](fail2ban.md) doc and the
    [configuration](configure.md) guide for more information.

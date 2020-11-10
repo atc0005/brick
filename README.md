@@ -120,6 +120,12 @@ See also:
 - Optional automatic (but not officially documented) termination of user
   sessions via official `ezproxy` binary
 
+- Optional filtering of JSON payload sender IP Addresses
+  - default setting is to accept payloads from any IP Address, relying on
+    host-level firewall rules to prevent receipt from rouge systems
+  - if a list of trusted IP Addresses is provided, those IP Addresses will be
+    the only ones allowed to submit JSON payloads
+
 - `es` CLI application
   - small CLI app to list and optionally terminate user sessions for a
     specific username
@@ -154,6 +160,8 @@ See also:
 
 - Logging
   - Payload receipt from monitoring system
+    - logging of rejected payloads
+    - logging of accepted payloads
   - Action taken due to payload
     - username ignored
       - due to username inclusion in ignore file for usernames
@@ -188,9 +196,6 @@ Known issues:
 
 - Documentation
   - The docs are beginning to take overall shape, but still need a lot of work
-- Payloads are accepted from any IP Address
-  - the expectation is that host-level firewall rules will be used to protect
-    against this until a feature can be added to filter access (see GH-18)
 
 ### Future
 
