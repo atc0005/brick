@@ -97,6 +97,27 @@ func (c Config) LocalIPAddress() string {
 	}
 }
 
+// RequireTrustedPayloadSender indicates whether the sysadmin specified a list
+// of IP Addresses to trust for payload submission.
+func (c Config) RequireTrustedPayloadSender() bool {
+	return c.cliConfig.Network.TrustedIPAddresses != nil ||
+		c.fileConfig.Network.TrustedIPAddresses != nil
+}
+
+// TrustedIPAddresses returns the user-provided list of IP Addresses that
+// should be trusted to receive payloads or the the default value if not
+// provided. CLI flag values take precedence if provided.
+func (c Config) TrustedIPAddresses() []string {
+	switch {
+	case c.cliConfig.Network.TrustedIPAddresses != nil:
+		return c.cliConfig.Network.TrustedIPAddresses
+	case c.fileConfig.Network.TrustedIPAddresses != nil:
+		return c.fileConfig.Network.TrustedIPAddresses
+	default:
+		return []string{}
+	}
+}
+
 // DisabledUsersFile returns the user-provided path to the EZproxy include
 // file where this application should write disabled user accounts or the
 // default value if not provided. CLI flag values take precedence if provided.

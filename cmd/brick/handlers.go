@@ -22,13 +22,16 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"net"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/apex/log"
 
 	"github.com/atc0005/brick/internal/events"
 	"github.com/atc0005/brick/internal/files"
+	"github.com/atc0005/brick/internal/textutils"
 )
 
 // API endpoint patterns supported by this application
@@ -87,6 +90,8 @@ func frontPageHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func disableUserHandler(
+	requireTrustedPayloadSender bool,
+	trustedPayloadSenders []string,
 	reportedUserEventsLog *files.ReportedUserEventsLog,
 	disabledUsers *files.DisabledUsers,
 	ignoredSources files.IgnoredSources,
@@ -102,6 +107,52 @@ func disableUserHandler(
 
 		// fmt.Fprintf(mw, "disableUserHandler endpoint hit\n")
 		log.Debug("disableUserHandler handler hit")
+
+		// If a list of trusted IPs is not provided by the sysadmin, the
+		// default behavior is to accept payloads from all IP Addresses. This
+		// behavior/logic is balanced by configuring the trusted IP Addresses
+		// list to include only 127.0.0.1 by default in the starter config
+		// file.
+		if requireTrustedPayloadSender {
+			// get bare sender IP
+			remoteIPAddr, _, ipHostSplitErr := net.SplitHostPort(events.GetIP(r))
+			if ipHostSplitErr != nil {
+				errMsg := fmt.Sprintf(
+					"remote IP %q is not in IP:port format: %v",
+					remoteIPAddr,
+					ipHostSplitErr,
+				)
+				http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+				fmt.Fprint(w, errMsg)
+				return
+			}
+
+			// confirm that sender IP is in the trusted senders list
+			switch {
+			case !textutils.InList(remoteIPAddr, trustedPayloadSenders):
+				errMsg := fmt.Sprintf(
+					"rejecting payload; remote IP %q is not in the trusted payload senders list: %v",
+					remoteIPAddr,
+					trustedPayloadSenders,
+				)
+				log.WithFields(log.Fields{
+					"url_path":                r.URL.Path,
+					"http_method":             r.Method,
+					"remote_ip_addr":          remoteIPAddr,
+					"trusted_payload_senders": strings.Join(trustedPayloadSenders, ", "),
+				}).Error(errMsg)
+				http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
+				fmt.Fprint(w, errMsg)
+				return
+
+			default:
+				log.Infof(
+					"payload accepted; remote IP %q is in the trusted payload senders list: %v",
+					remoteIPAddr,
+					trustedPayloadSenders,
+				)
+			}
+		}
 
 		if r.Method != http.MethodPost {
 

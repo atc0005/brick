@@ -30,6 +30,12 @@ local_tcp_port = 8000
 # Local IP Address that this application should listen on for incoming HTTP requests.
 local_ip_address = "localhost"
 
+# One or many single IP Addresses which are trusted for payload submission. If
+# this is defined, all other sender IPs are ignored. If this is not defined,
+# payloads are accepted from all IP Addresses not otherwise rejected by
+# local/remote firewall rules.
+trusted_ip_addresses = ["127.0.0.1"]
+
 
 [logging]
 

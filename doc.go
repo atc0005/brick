@@ -62,6 +62,8 @@ FEATURES
 
 • Optional automatic (but not officially documented) termination of user sessions via official EZproxy binary
 
+• Optional filtering of JSON payload sender IP Addresses
+
 USAGE
 
 See the README for examples.
