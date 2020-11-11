@@ -26,6 +26,32 @@ The following types of changes will be recorded in this file:
 
 - Fix GitHub issue reference in v0.4.7 release entry
 
+## [v0.4.8] - 2020-11-11
+
+### Added
+
+- Add support for limiting payloads to specific IPs
+
+### Changed
+
+- Statically linked binary release
+  - Built using Go 1.15.3
+  - Windows
+    - x86
+    - x64
+  - Linux
+    - x86
+    - x64
+
+- Dependencies
+  - `actions/checkout`
+    - `v2.3.3` to `v2.3.4`
+
+Note: Windows builds are provided, but have not been tested. The current
+developer does not have access to a Windows + EZproxy test environment. Please
+[open an issue](https://github.com/atc0005/brick/issues) to share your
+experiences deploying tools from this project on a Windows EZproxy server.
+
 ## [v0.4.7] - 2020-10-11
 
 ### Added
@@ -505,7 +531,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.7...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.8...HEAD
+[v0.4.8]: https://github.com/atc0005/brick/releases/tag/v0.4.8
 [v0.4.7]: https://github.com/atc0005/brick/releases/tag/v0.4.7
 [v0.4.6]: https://github.com/atc0005/brick/releases/tag/v0.4.6
 [v0.4.5]: https://github.com/atc0005/brick/releases/tag/v0.4.5
