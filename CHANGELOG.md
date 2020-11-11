@@ -24,7 +24,7 @@ The following types of changes will be recorded in this file:
 
 ## [Unreleased]
 
-- Fix GitHub issue reference in v0.4.7 release entry
+- placeholder
 
 ## [v0.4.8] - 2020-11-11
 
@@ -47,10 +47,18 @@ The following types of changes will be recorded in this file:
   - `actions/checkout`
     - `v2.3.3` to `v2.3.4`
 
-Note: Windows builds are provided, but have not been tested. The current
-developer does not have access to a Windows + EZproxy test environment. Please
-[open an issue](https://github.com/atc0005/brick/issues) to share your
-experiences deploying tools from this project on a Windows EZproxy server.
+### Fixed
+
+- Fix GitHub issue reference in v0.4.7 release entry
+
+### Notes
+
+- Windows builds
+  - Windows builds are provided, but have not been tested. The current
+    developer does not have access to a Windows + EZproxy test environment.
+    Please [open an issue](https://github.com/atc0005/brick/issues) to share
+    your experiences deploying tools from this project on a Windows EZproxy
+    server.
 
 ## [v0.4.7] - 2020-10-11
 
