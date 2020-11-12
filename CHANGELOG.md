@@ -35,7 +35,7 @@ The following types of changes will be recorded in this file:
 ### Changed
 
 - Statically linked binary release
-  - Built using Go 1.15.3
+  - Built using Go 1.15.4
   - Windows
     - x86
     - x64
