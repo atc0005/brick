@@ -161,7 +161,7 @@ func (afr activeFileReader) filterEntries(validPrefixes []string) ([]ezproxy.Fil
 	for s.Scan() {
 		lineno++
 		currentLine := s.Text()
-		//ezproxy.Logger.Printf("Scanned line %d from %q: %q\n", lineno, filename, currentLine)
+		// ezproxy.Logger.Printf("Scanned line %d from %q: %q\n", lineno, filename, currentLine)
 
 		currentLine = strings.TrimSpace(currentLine)
 		// ezproxy.Logger.Printf("Line %d from %q after whitespace removal: %q\n",

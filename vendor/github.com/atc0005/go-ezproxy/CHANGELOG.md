@@ -26,7 +26,22 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
-## [v0.1.6] - 2020-8-23
+## [v0.1.7] - 2020-11-16
+
+### Changed
+
+- Dependencies
+  - `actions/checkout`
+    - `v2.3.2` to `v2.3.4`
+  - `actions/setup-node`
+    - `v2.1.1` to `v2.1.2`
+
+### Fixed
+
+- Date format for `v0.1.6` CHANGELOG entry
+- gocritic `commentFormatting` linting errors
+
+## [v0.1.6] - 2020-08-23
 
 ### Added
 
@@ -235,7 +250,8 @@ application is released (currently pending review).
 
 <!-- Version header ref links here  -->
 
-[Unreleased]: https://github.com/atc0005/go-ezproxy/compare/v0.1.6...HEAD
+[Unreleased]: https://github.com/atc0005/go-ezproxy/compare/v0.1.7...HEAD
+[v0.1.7]: https://github.com/atc0005/go-ezproxy/releases/tag/v0.1.7
 [v0.1.6]: https://github.com/atc0005/go-ezproxy/releases/tag/v0.1.6
 [v0.1.5]: https://github.com/atc0005/go-ezproxy/releases/tag/v0.1.5
 [v0.1.4]: https://github.com/atc0005/go-ezproxy/releases/tag/v0.1.4

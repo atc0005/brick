@@ -96,7 +96,7 @@ func TerminateUserSession(executable string, sessions ...UserSession) TerminateU
 		var cmdStdOut bytes.Buffer
 		cmd.Stdout = &cmdStdOut
 
-		//setup buffer to capture stderr
+		// setup buffer to capture stderr
 		var cmdStdErr bytes.Buffer
 		cmd.Stderr = &cmdStdErr
 
