@@ -26,6 +26,27 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.4.9] - 2020-11-16
+
+### Changed
+
+- Dependencies
+  - built using Go 1.15.5
+    - **Statically linked**
+    - Windows
+      - x86
+      - x64
+    - Linux
+      - x86
+      - x64
+  - `atc0005/go-ezproxy`
+    - `v0.1.6` to `v0.1.7`
+
+### Fixed
+
+- Fix CHANGELOG entries from v0.4.8 release
+- Correct the version of Go noted for v0.4.8 release
+
 ## [v0.4.8] - 2020-11-11
 
 ### Added
@@ -539,7 +560,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.8...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.9...HEAD
+[v0.4.9]: https://github.com/atc0005/brick/releases/tag/v0.4.9
 [v0.4.8]: https://github.com/atc0005/brick/releases/tag/v0.4.8
 [v0.4.7]: https://github.com/atc0005/brick/releases/tag/v0.4.7
 [v0.4.6]: https://github.com/atc0005/brick/releases/tag/v0.4.6
