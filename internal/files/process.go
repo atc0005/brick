@@ -593,18 +593,19 @@ func appendToFile(entry fileEntry, tmpl *template.Template, filename string, per
 			opErr,
 		)
 	}
-	defer func() {
+	defer func(filename string) {
 		if err := f.Close(); err != nil {
 			// Ignore "file already closed" errors
 			if !errors.Is(err, os.ErrClosed) {
 				log.Errorf(
 					"%s: failed to close file %q: %s",
 					myFuncName,
+					filename,
 					err.Error(),
 				)
 			}
 		}
-	}()
+	}(filename)
 	log.Debugf("%s: Successfully opened %q", myFuncName, filename)
 
 	log.Debugf("%s: Locking mutex", myFuncName)
