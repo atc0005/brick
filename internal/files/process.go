@@ -620,7 +620,7 @@ func appendToFile(entry fileEntry, tmpl *template.Template, filename string, per
 
 		// if there were template execution errors, go ahead and try to close
 		// the file before returning the template write error
-		if fileCloseErr := f.Close(); tmplErr != nil {
+		if fileCloseErr := f.Close(); fileCloseErr != nil {
 
 			// log this error, return Write error as it takes precedence
 			log.Errorf(
