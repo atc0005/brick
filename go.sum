@@ -11,8 +11,8 @@ github.com/aphistic/golf v0.0.0-20180712155816-02c07f170c5a/go.mod h1:3NqKYiepwy
 github.com/aphistic/sweet v0.2.0/go.mod h1:fWDlIh/isSE9n6EPsRmC0det+whmX6dJid3stzu0Xys=
 github.com/atc0005/go-ezproxy v0.1.7 h1:EJCaDkCMxsPPmh6s86yeZNloADhxNQFqOm+w2bHacOM=
 github.com/atc0005/go-ezproxy v0.1.7/go.mod h1:78u+NMVBnzVh0JPtsOJ+huDhyKZlqC3eCkEDN/ujxlI=
-github.com/atc0005/go-teams-notify/v2 v2.4.1 h1:hDP7J3Ged0U4dyb2toBdRW4jb0cRtUXA2s16SFhcZMQ=
-github.com/atc0005/go-teams-notify/v2 v2.4.1/go.mod h1:BSlh1HBcgWcGoNM3Abm36WMPcj+k8Wf0ZLZx6lBx2qk=
+github.com/atc0005/go-teams-notify/v2 v2.4.2 h1:3KQ8e8LN4kwuWWHpnCNTXA15JdLRaNWcCS1VS0a4SO0=
+github.com/atc0005/go-teams-notify/v2 v2.4.2/go.mod h1:BSlh1HBcgWcGoNM3Abm36WMPcj+k8Wf0ZLZx6lBx2qk=
 github.com/aws/aws-sdk-go v1.20.6/go.mod h1:KmX6BPdI08NWTb3/sm4ZGu5ShLoqVDhKgpiN924inxo=
 github.com/aybabtme/rgbterm v0.0.0-20170906152045-cc83f3b3ce59/go.mod h1:q/89r3U2H7sSsE2t6Kca0lfwTK8JdoNGS/yzM/4iH5I=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
