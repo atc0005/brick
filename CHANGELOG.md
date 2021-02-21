@@ -26,6 +26,28 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.4.10] - 2021-02-21
+
+### Changed
+
+- dependencies
+  - `go.mod` Go version
+    - updated from `1.14` to `1.15`
+  - built using Go 1.15.8
+    - **Statically linked**
+    - Windows (x86, x64)
+    - Linux (x86, x64)
+  - `atc0005/go-teams-notify`
+    - `v2.3.0` to `v2.4.2`
+  - `actions/setup-node`
+    - `v2.1.2` to `v2.1.4`
+
+### Fixed
+
+- `files.appendToFile`: Fix invalid error var reference
+- Fix deferred log call formatting
+- Fix explicit exit code handling
+
 ## [v0.4.9] - 2020-11-16
 
 ### Changed
@@ -560,7 +582,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.9...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.10...HEAD
+[v0.4.10]: https://github.com/atc0005/brick/releases/tag/v0.4.10
 [v0.4.9]: https://github.com/atc0005/brick/releases/tag/v0.4.9
 [v0.4.8]: https://github.com/atc0005/brick/releases/tag/v0.4.8
 [v0.4.7]: https://github.com/atc0005/brick/releases/tag/v0.4.7
