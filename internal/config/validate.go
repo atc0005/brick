@@ -220,8 +220,11 @@ func validate(c Config) error {
 	if c.TeamsWebhookURL() != "" {
 		log.Debugf("Microsoft Teams WebhookURL provided: %v", c.TeamsWebhookURL())
 
-		if ok, err := goteamsnotify.IsValidWebhookURL(c.TeamsWebhookURL()); !ok {
-			return err
+		// Create Microsoft Teams client
+		mstClient := goteamsnotify.NewClient()
+
+		if err := mstClient.ValidateWebhook(c.TeamsWebhookURL()); err != nil {
+			return fmt.Errorf("webhook URL validation failed: %w", err)
 		}
 	}
 
