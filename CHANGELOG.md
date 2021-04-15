@@ -26,6 +26,35 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.4.11] - 2021-04-15
+
+### Overview
+
+- Misc linting related fixes
+- Dependency updates
+- built using Go 1.16.3
+
+### Changed
+
+- dependencies
+  - built using Go 1.16.3
+    - **Statically linked**
+    - Windows (x86, x64)
+    - Linux (x86, x64)
+  - `atc0005/go-teams-notify`
+    - `v2.4.2` to `v2.5.0`
+  - `pelletier/go-toml`
+    - `v1.8.1` to `v1.9.0`
+  - `actions/setup-node`
+    - `v2.1.4` to `v2.1.5`
+
+### Fixed
+
+- Linting
+  - Replace deprecated linter: scopelint
+  - SA1019: goteamsnotify.IsValidWebhookURL is deprecated: use
+    API.ValidateWebhook() method instead. (staticcheck)
+
 ## [v0.4.10] - 2021-02-21
 
 ### Changed
@@ -582,7 +611,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.10...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.11...HEAD
+[v0.4.11]: https://github.com/atc0005/brick/releases/tag/v0.4.11
 [v0.4.10]: https://github.com/atc0005/brick/releases/tag/v0.4.10
 [v0.4.9]: https://github.com/atc0005/brick/releases/tag/v0.4.9
 [v0.4.8]: https://github.com/atc0005/brick/releases/tag/v0.4.8
