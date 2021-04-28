@@ -26,6 +26,29 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.4.12] - 2021-04-28
+
+### Overview
+
+- Misc fixes
+- Dependency update
+- built using Go 1.16.3
+
+### Added
+
+- Add `version` flag for `es` binary
+
+### Changed
+
+- dependencies
+  - `alexflint/go-arg`
+    - `v1.3.0` to `v1.4.1`
+
+### Fixed
+
+- version string placeholder displayed in help/version output instead of
+  expected version tag / commit hash
+
 ## [v0.4.11] - 2021-04-15
 
 ### Overview
@@ -611,7 +634,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.11...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.12...HEAD
+[v0.4.12]: https://github.com/atc0005/brick/releases/tag/v0.4.12
 [v0.4.11]: https://github.com/atc0005/brick/releases/tag/v0.4.11
 [v0.4.10]: https://github.com/atc0005/brick/releases/tag/v0.4.10
 [v0.4.9]: https://github.com/atc0005/brick/releases/tag/v0.4.9
