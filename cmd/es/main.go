@@ -55,6 +55,10 @@ type AppConfig struct {
 	// enabled.
 	TerminateSessions bool
 
+	// ShowVersion is a flag indicating whether the user opted to display only
+	// the version string and then immediately exit the application.
+	ShowVersion bool
+
 	// SearchDelay is the delay in seconds between searches of the audit log
 	// or active file for a specified username. This is an attempt to work
 	// around race conditions between EZproxy updating its state file (which
@@ -117,6 +121,7 @@ func main() {
 
 	flag.StringVar(&config.Username, "username", "", "The name of the username to use when searching for active sessions")
 
+	flag.BoolVar(&config.ShowVersion, "version", false, "Whether to display application version and then immediately exit application.")
 	flag.BoolVar(&config.TerminateSessions, "terminate", false, "Whether active sessions for specified user should be terminated")
 	flag.BoolVar(&config.TerminateSessions, "kill", false, "Whether active sessions for specified user should be terminated")
 
@@ -130,6 +135,11 @@ func main() {
 
 	flag.Usage = flagsUsage()
 	flag.Parse()
+
+	if config.ShowVersion {
+		Branding()
+		os.Exit(0)
+	}
 
 	handleError := func(err error) {
 		if err != nil {
