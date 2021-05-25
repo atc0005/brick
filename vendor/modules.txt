@@ -1,7 +1,7 @@
 # github.com/Showmax/go-fqdn v1.0.0
 ## explicit
 github.com/Showmax/go-fqdn
-# github.com/alexflint/go-arg v1.4.1
+# github.com/alexflint/go-arg v1.4.2
 ## explicit
 github.com/alexflint/go-arg
 # github.com/alexflint/go-scalar v1.0.0

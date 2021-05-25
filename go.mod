@@ -22,7 +22,7 @@ go 1.15
 
 require (
 	github.com/Showmax/go-fqdn v1.0.0
-	github.com/alexflint/go-arg v1.4.1
+	github.com/alexflint/go-arg v1.4.2
 	github.com/apex/log v1.9.0
 	github.com/atc0005/go-ezproxy v0.1.7
 	github.com/atc0005/go-teams-notify/v2 v2.5.0
