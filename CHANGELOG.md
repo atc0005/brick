@@ -28,6 +28,8 @@ The following types of changes will be recorded in this file:
 
 ## [v0.4.13] - 2021-07-20
 
+### Overview
+
 - Dependency updates
 - built using Go 1.16.6
 
