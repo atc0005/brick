@@ -26,6 +26,32 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.4.13] - 2021-07-20
+
+- Dependency updates
+- built using Go 1.16.6
+
+### Added
+
+- Add "canary" Dockerfile to track stable Go releases, serve as a reminder to
+  generate fresh binaries
+
+### Changed
+
+- dependencies
+  - `Go`
+    - `1.16.3` to `1.16.6`
+  - `atc0005/go-teams-notify`
+    - `v2.5.0` to `v2.6.0`
+  - `alexflint/go-arg`
+    - `v1.4.1` to `v1.4.2`
+  - `pelletier/go-toml`
+    - `v1.9.0` to `v1.9.3`
+  - `actions/setup-node`
+    - `v2.1.5` to `v2.2.0`
+    - update `node-version` value to always use latest LTS version instead of
+      hard-coded version
+
 ## [v0.4.12] - 2021-04-28
 
 ### Overview
@@ -634,7 +660,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.12...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.13...HEAD
+[v0.4.13]: https://github.com/atc0005/brick/releases/tag/v0.4.13
 [v0.4.12]: https://github.com/atc0005/brick/releases/tag/v0.4.12
 [v0.4.11]: https://github.com/atc0005/brick/releases/tag/v0.4.11
 [v0.4.10]: https://github.com/atc0005/brick/releases/tag/v0.4.10
