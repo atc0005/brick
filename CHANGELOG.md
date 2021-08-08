@@ -26,6 +26,29 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.4.14] - 2021-08-08
+
+### Overview
+
+- Dependency updates
+- built using Go 1.16.7
+  - Statically linked
+  - Windows (x86, x64)
+  - Linux (x86, x64)
+
+### Changed
+
+- Dependencies
+  - `Go`
+    - `1.16.6` to `1.16.7`
+  - `actions/setup-node`
+    - updated from `v2.2.0` to `v2.4.0`
+
+### Fixed
+
+- CHANGELOG
+  - add missing Overview section for `v0.4.13` release
+
 ## [v0.4.13] - 2021-07-20
 
 ### Overview
@@ -662,7 +685,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.13...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.14...HEAD
+[v0.4.14]: https://github.com/atc0005/brick/releases/tag/v0.4.14
 [v0.4.13]: https://github.com/atc0005/brick/releases/tag/v0.4.13
 [v0.4.12]: https://github.com/atc0005/brick/releases/tag/v0.4.12
 [v0.4.11]: https://github.com/atc0005/brick/releases/tag/v0.4.11
