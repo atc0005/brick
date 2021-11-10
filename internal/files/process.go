@@ -593,6 +593,10 @@ func appendToFile(entry fileEntry, tmpl *template.Template, filename string, per
 			opErr,
 		)
 	}
+
+	// #nosec G307
+	// Believed to be a false-positive from recent gosec release
+	// https://github.com/securego/gosec/issues/714
 	defer func(filename string) {
 		if err := f.Close(); err != nil {
 			// Ignore "file already closed" errors
