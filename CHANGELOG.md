@@ -26,6 +26,29 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.4.16] - 2021-11-10
+
+### Overview
+
+- Dependency updates
+- built using Go 1.16.10
+  - Statically linked
+  - Windows (x86, x64)
+  - Linux (x86, x64)
+
+### Changed
+
+- Dependencies
+  - `Go`
+    - `1.16.8` to `1.16.10`
+  - `actions/checkout`
+    - `v2.3.4` to `v2.4.0`
+
+### Fixed
+
+- (GH-261) False positive `G307: Deferring unsafe method "Close" on type
+  "*os.File" (gosec)` linting error
+
 ## [v0.4.15] - 2021-09-30
 
 ### Overview
@@ -705,7 +728,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.15...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.16...HEAD
+[v0.4.16]: https://github.com/atc0005/brick/releases/tag/v0.4.16
 [v0.4.15]: https://github.com/atc0005/brick/releases/tag/v0.4.15
 [v0.4.14]: https://github.com/atc0005/brick/releases/tag/v0.4.14
 [v0.4.13]: https://github.com/atc0005/brick/releases/tag/v0.4.13
