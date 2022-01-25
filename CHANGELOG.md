@@ -26,6 +26,24 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.4.18] - 2022-01-25
+
+### Overview
+
+- Dependency updates
+- built using Go 1.17.6
+  - Statically linked
+  - Windows (x86, x64)
+  - Linux (x86, x64)
+
+### Changed
+
+- Dependencies
+  - `Go`
+    - `1.16.12` to `1.17.6`
+    - (GH-270) Update go.mod file, canary Dockerfile to reflect current
+      dependencies
+
 ## [v0.4.17] - 2021-12-29
 
 ### Overview
@@ -746,7 +764,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.17...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.18...HEAD
+[v0.4.18]: https://github.com/atc0005/brick/releases/tag/v0.4.18
 [v0.4.17]: https://github.com/atc0005/brick/releases/tag/v0.4.17
 [v0.4.16]: https://github.com/atc0005/brick/releases/tag/v0.4.16
 [v0.4.15]: https://github.com/atc0005/brick/releases/tag/v0.4.15
