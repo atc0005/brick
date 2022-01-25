@@ -13,9 +13,18 @@
 
 ## Requirements
 
+The following is a loose guideline. Other combinations of Go and operating
+systems for building and running tools from this repo may work, but have not
+been tested.
+
 ### Building source code
 
-- Go 1.13+
+- Go
+  - see this project's `go.mod` file for *preferred* version
+  - this project tests against [officially supported Go
+    releases][go-supported-releases]
+    - the most recent stable release (aka, "stable")
+    - the prior, but still supported release (aka, "oldstable")
 - GCC
   - if building with custom options (as the provided `Makefile` does)
 - `make`
@@ -23,15 +32,12 @@
 
 ### Running
 
-The `brick` application has been tested with:
-
-- Go 1.13+
-- Ubuntu Linux 16.04, 18.04
+- Ubuntu Linux 18.04+
 
 ## Instructions
 
-1. [Download](https://golang.org/dl/) Go
-1. [Install](https://golang.org/doc/install) Go
+1. [Download][go-docs-download] Go
+1. [Install][go-docs-install] Go
    - NOTE: Pay special attention to the remarks about `$HOME/.profile`
 1. Clone the repo
    1. `cd /tmp`
@@ -80,3 +86,11 @@ The `brick` application has been tested with:
      - `/tmp/brick/release_assets/ezproxy/`
    - if using separate `go build` invocations
      - `/tmp/brick/`
+
+<!-- Footnotes here  -->
+
+[go-docs-download]: <https://golang.org/dl>  "Download Go"
+
+[go-docs-install]: <https://golang.org/doc/install>  "Install Go"
+
+[go-supported-releases]: <https://go.dev/doc/devel/release#policy> "Go Release Policy"

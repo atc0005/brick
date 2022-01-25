@@ -37,9 +37,8 @@ webhook requests.
 
 ## Project home
 
-See [our GitHub repo](https://github.com/atc0005/brick) for the latest code,
-to file an issue or submit improvements for review and potential inclusion
-into the project.
+See [our GitHub repo][repo-url] for the latest code, to file an issue or
+submit improvements for review and potential inclusion into the project.
 
 ## Status
 
@@ -293,4 +292,10 @@ specific language governing permissions and limitations under the License.
 Various references used when developing this project can be found in our
 [references](docs/references.md) doc.
 
+<!-- Footnotes here  -->
+
+[repo-url]: <https://github.com/atc0005/brick>  "This project's GitHub repo"
+
 [brick-logo]: media/brick-logo-rounded.png "brick project logo"
+
+<!-- []: PLACEHOLDER "DESCRIPTION_HERE" -->
