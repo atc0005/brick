@@ -18,7 +18,7 @@ module github.com/atc0005/brick
 
 // replace github.com/atc0005/go-ezproxy => ../go-ezproxy
 
-go 1.15
+go 1.17
 
 require (
 	github.com/Showmax/go-fqdn v1.0.0
@@ -27,4 +27,15 @@ require (
 	github.com/atc0005/go-ezproxy v0.1.7
 	github.com/atc0005/go-teams-notify/v2 v2.6.0
 	github.com/pelletier/go-toml v1.9.4
+)
+
+require (
+	github.com/alexflint/go-scalar v1.0.0 // indirect
+	github.com/fatih/color v1.7.0 // indirect
+	github.com/go-logfmt/logfmt v0.4.0 // indirect
+	github.com/kr/logfmt v0.0.0-20140226030751-b84e30acd515 // indirect
+	github.com/mattn/go-colorable v0.1.2 // indirect
+	github.com/mattn/go-isatty v0.0.8 // indirect
+	github.com/pkg/errors v0.8.1 // indirect
+	golang.org/x/sys v0.0.0-20190412213103-97732733099d // indirect
 )

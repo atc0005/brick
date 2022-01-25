@@ -1,13 +1,14 @@
 # github.com/Showmax/go-fqdn v1.0.0
-## explicit
+## explicit; go 1.15
 github.com/Showmax/go-fqdn
 # github.com/alexflint/go-arg v1.4.2
-## explicit
+## explicit; go 1.13
 github.com/alexflint/go-arg
 # github.com/alexflint/go-scalar v1.0.0
+## explicit
 github.com/alexflint/go-scalar
 # github.com/apex/log v1.9.0
-## explicit
+## explicit; go 1.12
 github.com/apex/log
 github.com/apex/log/handlers/cli
 github.com/apex/log/handlers/discard
@@ -15,26 +16,33 @@ github.com/apex/log/handlers/json
 github.com/apex/log/handlers/logfmt
 github.com/apex/log/handlers/text
 # github.com/atc0005/go-ezproxy v0.1.7
-## explicit
+## explicit; go 1.14
 github.com/atc0005/go-ezproxy
 github.com/atc0005/go-ezproxy/activefile
 # github.com/atc0005/go-teams-notify/v2 v2.6.0
-## explicit
+## explicit; go 1.14
 github.com/atc0005/go-teams-notify/v2
 # github.com/fatih/color v1.7.0
+## explicit
 github.com/fatih/color
 # github.com/go-logfmt/logfmt v0.4.0
+## explicit
 github.com/go-logfmt/logfmt
 # github.com/kr/logfmt v0.0.0-20140226030751-b84e30acd515
+## explicit
 github.com/kr/logfmt
 # github.com/mattn/go-colorable v0.1.2
+## explicit
 github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.8
+## explicit
 github.com/mattn/go-isatty
 # github.com/pelletier/go-toml v1.9.4
-## explicit
+## explicit; go 1.12
 github.com/pelletier/go-toml
 # github.com/pkg/errors v0.8.1
+## explicit
 github.com/pkg/errors
 # golang.org/x/sys v0.0.0-20190412213103-97732733099d
+## explicit; go 1.12
 golang.org/x/sys/unix
