@@ -35,7 +35,7 @@ import (
 // path to this variable, including the package. We set a placeholder value so
 // that something resembling a version string will be provided for
 // non-Makefile builds.
-var Version string = "x.y.z"
+var Version = "x.y.z"
 
 func (c *Config) String() string {
 	return fmt.Sprintf(
