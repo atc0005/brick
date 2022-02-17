@@ -22,7 +22,7 @@ go 1.17
 
 require (
 	github.com/Showmax/go-fqdn v1.0.0
-	github.com/alexflint/go-arg v1.4.2
+	github.com/alexflint/go-arg v1.4.3
 	github.com/apex/log v1.9.0
 	github.com/atc0005/go-ezproxy v0.1.7
 	github.com/atc0005/go-teams-notify/v2 v2.6.0
@@ -30,7 +30,7 @@ require (
 )
 
 require (
-	github.com/alexflint/go-scalar v1.0.0 // indirect
+	github.com/alexflint/go-scalar v1.1.0 // indirect
 	github.com/fatih/color v1.7.0 // indirect
 	github.com/go-logfmt/logfmt v0.4.0 // indirect
 	github.com/kr/logfmt v0.0.0-20140226030751-b84e30acd515 // indirect
