@@ -26,6 +26,41 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.4.19] - 2022-03-03
+
+### Overview
+
+- Dependency updates
+- CI / linting improvements
+- built using Go 1.17.7
+  - Statically linked
+  - Windows (x86, x64)
+  - Linux (x86, x64)
+
+### Changed
+
+- Dependencies
+  - `Go`
+    - `1.17.6` to `1.17.7`
+  - `atc0005/go-teams-notify`
+    - `v2.6.0` to `v2.6.1`
+  - `alexflint/go-arg`
+    - `v1.4.2` to `v1.4.3`
+  - `actions/checkout`
+    - `v2.4.0` to `v3`
+  - `actions/setup-node`
+    - `v2.5.1` to `v3`
+
+- (GH-275) Expand linting GitHub Actions Workflow to include `oldstable`,
+  `unstable` container images
+- (GH-274) Switch Docker image source from Docker Hub to GitHub Container
+  Registry (GHCR)
+
+### Fixed
+
+- (GH-277) var-declaration: should omit type string from declaration of var
+  (revive)
+
 ## [v0.4.18] - 2022-01-25
 
 ### Overview
@@ -764,7 +799,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.18...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.19...HEAD
+[v0.4.19]: https://github.com/atc0005/brick/releases/tag/v0.4.19
 [v0.4.18]: https://github.com/atc0005/brick/releases/tag/v0.4.18
 [v0.4.17]: https://github.com/atc0005/brick/releases/tag/v0.4.17
 [v0.4.16]: https://github.com/atc0005/brick/releases/tag/v0.4.16
