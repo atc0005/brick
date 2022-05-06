@@ -28,7 +28,7 @@ import (
 	"github.com/alexflint/go-arg"
 	"github.com/apex/log"
 	"github.com/atc0005/brick/internal/caller"
-	"github.com/pelletier/go-toml"
+	"github.com/pelletier/go-toml/v2"
 )
 
 // Version is updated via Makefile builds by referencing the fully-qualified
