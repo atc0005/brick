@@ -26,6 +26,28 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.4.20] - 2022-05-06
+
+### Overview
+
+- Dependency updates
+- built using Go 1.17.9
+  - Statically linked
+  - Windows (x86, x64)
+  - Linux (x86, x64)
+
+### Changed
+
+- Dependencies
+  - `Go`
+    - `1.17.7` to `1.17.9`
+  - `pelletier/go-toml`
+    - `v1.9.4` to `v2.0.0`
+
+### Fixed
+
+- (GH-289) Replace pelletier/go-toml v1.x with v2
+
 ## [v0.4.19] - 2022-03-03
 
 ### Overview
@@ -799,7 +821,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.19...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.20...HEAD
+[v0.4.20]: https://github.com/atc0005/brick/releases/tag/v0.4.20
 [v0.4.19]: https://github.com/atc0005/brick/releases/tag/v0.4.19
 [v0.4.18]: https://github.com/atc0005/brick/releases/tag/v0.4.18
 [v0.4.17]: https://github.com/atc0005/brick/releases/tag/v0.4.17
