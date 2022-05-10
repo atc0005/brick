@@ -270,16 +270,18 @@ type configTemplate struct {
 
 	// Embed other structs referenced directly by TOML config file here.
 	// Provide an explicit name in an effort to setup "namespacing" as a
-	// logical arrangement.
-	Network
-	Logging
-	DisabledUsers
-	ReportedUsers
-	IgnoredUsers
-	IgnoredIPAddresses
-	MSTeams
-	Email
-	EZproxy
+	// logical arrangement. This also complies with pelletier/go-toml v2
+	// changes which more closely mirror the encoding/json standard library
+	// behavior.
+	Network            `toml:"network"`
+	Logging            `toml:"logging"`
+	DisabledUsers      `toml:"disabledusers"`
+	ReportedUsers      `toml:"reportedusers"`
+	IgnoredUsers       `toml:"ignoredusers"`
+	IgnoredIPAddresses `toml:"ignoredipaddresses"`
+	MSTeams            `toml:"msteams"`
+	Email              `toml:"email"`
+	EZproxy            `toml:"ezproxy"`
 
 	IgnoreLookupErrors *bool `toml:"ignore_lookup_errors" arg:"--ignore-lookup-errors,env:BRICK_IGNORE_LOOKUP_ERRORS" help:"Whether application should continue if attempts to lookup existing disabled or ignored status for a username or IP Address fail."`
 
