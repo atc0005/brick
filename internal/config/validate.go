@@ -21,7 +21,6 @@ import (
 	"net"
 
 	"github.com/apex/log"
-
 	goteamsnotify "github.com/atc0005/go-teams-notify/v2"
 )
 
@@ -221,7 +220,7 @@ func validate(c Config) error {
 		log.Debugf("Microsoft Teams WebhookURL provided: %v", c.TeamsWebhookURL())
 
 		// Create Microsoft Teams client
-		mstClient := goteamsnotify.NewClient()
+		mstClient := goteamsnotify.NewTeamsClient()
 
 		if err := mstClient.ValidateWebhook(c.TeamsWebhookURL()); err != nil {
 			return fmt.Errorf("webhook URL validation failed: %w", err)
