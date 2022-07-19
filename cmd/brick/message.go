@@ -34,6 +34,7 @@ import (
 	"github.com/atc0005/go-ezproxy"
 
 	goteamsnotify "github.com/atc0005/go-teams-notify/v2"
+	"github.com/atc0005/go-teams-notify/v2/messagecard"
 )
 
 // addFactPair accepts a MessageCard, MessageCardSection, a key and one or
@@ -45,10 +46,10 @@ import (
 // untouched.
 //
 // FIXME: Rework and offer upstream?
-func addFactPair(msg *goteamsnotify.MessageCard, section *goteamsnotify.MessageCardSection, key string, values ...string) {
+func addFactPair(msg *messagecard.MessageCard, section *messagecard.Section, key string, values ...string) {
 
 	for idx := range values {
-		values[idx] = goteamsnotify.TryToFormatAsCodeSnippet(values[idx])
+		values[idx] = messagecard.TryToFormatAsCodeSnippet(values[idx])
 	}
 
 	if err := section.AddFactFromKeyValue(
@@ -58,7 +59,7 @@ func addFactPair(msg *goteamsnotify.MessageCard, section *goteamsnotify.MessageC
 		from := caller.GetFuncFileLineInfo()
 		errMsg := fmt.Sprintf("%s error returned from attempt to add fact from key/value pair: %v", from, err)
 		log.Errorf("%s %s", from, errMsg)
-		msg.Text = msg.Text + "\n\n" + goteamsnotify.TryToFormatAsCodeSnippet(errMsg)
+		msg.Text = msg.Text + "\n\n" + messagecard.TryToFormatAsCodeSnippet(errMsg)
 	}
 }
 
@@ -205,14 +206,14 @@ func getMsgTitle(msgTitlePrefix string, record events.Record) string {
 
 // createTeamsMessage receives an event Record and generates a MessageCard
 // which is used to generate a Microsoft Teams message.
-func createTeamsMessage(record events.Record) goteamsnotify.MessageCard {
+func createTeamsMessage(record events.Record) *messagecard.MessageCard {
 
 	myFuncName := caller.GetFuncName()
 
 	log.Debugf("%s: alert received: %#v", myFuncName, record)
 
 	// build MessageCard for submission
-	msgCard := goteamsnotify.NewMessageCard()
+	msgCard := messagecard.NewMessageCard()
 
 	msgCardTitlePrefix := config.MyAppName + ": "
 
@@ -225,13 +226,13 @@ func createTeamsMessage(record events.Record) goteamsnotify.MessageCard {
 		Errors Section
 	*/
 
-	disableUserRequestErrors := goteamsnotify.NewMessageCardSection()
+	disableUserRequestErrors := messagecard.NewSection()
 	disableUserRequestErrors.Title = "## Disable User Request Errors"
 	disableUserRequestErrors.StartGroup = true
 
 	switch {
 	case record.Error != nil:
-		addFactPair(&msgCard, disableUserRequestErrors, "Error", record.Error.Error())
+		addFactPair(msgCard, disableUserRequestErrors, "Error", record.Error.Error())
 	case record.Error == nil:
 		disableUserRequestErrors.Text = "None"
 	}
@@ -239,13 +240,13 @@ func createTeamsMessage(record events.Record) goteamsnotify.MessageCard {
 	if err := msgCard.AddSection(disableUserRequestErrors); err != nil {
 		errMsg := fmt.Sprintf("Error returned from attempt to add disableUserRequestErrors: %v", err)
 		log.Errorf("%s: %v", myFuncName, errMsg)
-		msgCard.Text = msgCard.Text + "\n\n" + goteamsnotify.TryToFormatAsCodeSnippet(errMsg)
+		msgCard.Text = msgCard.Text + "\n\n" + messagecard.TryToFormatAsCodeSnippet(errMsg)
 	}
 
 	// If Session Termination is enabled, create Termination Results section
 	if record.SessionTerminationResults != nil {
 
-		sessionTerminationResultsSection := goteamsnotify.NewMessageCardSection()
+		sessionTerminationResultsSection := messagecard.NewSection()
 		sessionTerminationResultsSection.Title = "## Session Termination Results"
 		sessionTerminationResultsSection.StartGroup = true
 
@@ -254,7 +255,7 @@ func createTeamsMessage(record events.Record) goteamsnotify.MessageCard {
 		if err := msgCard.AddSection(sessionTerminationResultsSection); err != nil {
 			errMsg := fmt.Sprintf("Error returned from attempt to add sessionTerminationResultsSection: %v", err)
 			log.Errorf("%s: %v", myFuncName, errMsg)
-			msgCard.Text = msgCard.Text + "\n\n" + goteamsnotify.TryToFormatAsCodeSnippet(errMsg)
+			msgCard.Text = msgCard.Text + "\n\n" + messagecard.TryToFormatAsCodeSnippet(errMsg)
 		}
 
 	}
@@ -263,45 +264,45 @@ func createTeamsMessage(record events.Record) goteamsnotify.MessageCard {
 		Disable User Request Details Section - Core of alert details
 	*/
 
-	disableUserRequestDetailsSection := goteamsnotify.NewMessageCardSection()
+	disableUserRequestDetailsSection := messagecard.NewSection()
 	disableUserRequestDetailsSection.Title = "## Disable User Request Details"
 	disableUserRequestDetailsSection.StartGroup = true
 
-	addFactPair(&msgCard, disableUserRequestDetailsSection, "Username", record.Alert.Username)
-	addFactPair(&msgCard, disableUserRequestDetailsSection, "User IP", record.Alert.UserIP)
-	addFactPair(&msgCard, disableUserRequestDetailsSection, "Alert/Search Name", record.Alert.AlertName)
-	addFactPair(&msgCard, disableUserRequestDetailsSection, "Alert/Search ID", record.Alert.SearchID)
+	addFactPair(msgCard, disableUserRequestDetailsSection, "Username", record.Alert.Username)
+	addFactPair(msgCard, disableUserRequestDetailsSection, "User IP", record.Alert.UserIP)
+	addFactPair(msgCard, disableUserRequestDetailsSection, "Alert/Search Name", record.Alert.AlertName)
+	addFactPair(msgCard, disableUserRequestDetailsSection, "Alert/Search ID", record.Alert.SearchID)
 
 	if err := msgCard.AddSection(disableUserRequestDetailsSection); err != nil {
 		errMsg := fmt.Sprintf("Error returned from attempt to add disableUserRequestDetailsSection: %v", err)
 		log.Errorf("%s: %v", myFuncName, errMsg)
-		msgCard.Text = msgCard.Text + "\n\n" + goteamsnotify.TryToFormatAsCodeSnippet(errMsg)
+		msgCard.Text = msgCard.Text + "\n\n" + messagecard.TryToFormatAsCodeSnippet(errMsg)
 	}
 
 	/*
 		Alert Request Summary Section - General client request details
 	*/
 
-	alertRequestSummarySection := goteamsnotify.NewMessageCardSection()
+	alertRequestSummarySection := messagecard.NewSection()
 	alertRequestSummarySection.Title = "## Alert Request Summary"
 	alertRequestSummarySection.StartGroup = true
 
-	addFactPair(&msgCard, alertRequestSummarySection, "Received at", record.Alert.LocalTime)
-	addFactPair(&msgCard, alertRequestSummarySection, "Endpoint path", record.Alert.EndpointPath)
-	addFactPair(&msgCard, alertRequestSummarySection, "HTTP Method", record.Alert.HTTPMethod)
-	addFactPair(&msgCard, alertRequestSummarySection, "Alert Sender IP", record.Alert.PayloadSenderIP)
+	addFactPair(msgCard, alertRequestSummarySection, "Received at", record.Alert.LocalTime)
+	addFactPair(msgCard, alertRequestSummarySection, "Endpoint path", record.Alert.EndpointPath)
+	addFactPair(msgCard, alertRequestSummarySection, "HTTP Method", record.Alert.HTTPMethod)
+	addFactPair(msgCard, alertRequestSummarySection, "Alert Sender IP", record.Alert.PayloadSenderIP)
 
 	if err := msgCard.AddSection(alertRequestSummarySection); err != nil {
 		errMsg := fmt.Sprintf("Error returned from attempt to add alertRequestSummarySection: %v", err)
 		log.Errorf("%s: %v", myFuncName, errMsg)
-		msgCard.Text = msgCard.Text + "\n\n" + goteamsnotify.TryToFormatAsCodeSnippet(errMsg)
+		msgCard.Text = msgCard.Text + "\n\n" + messagecard.TryToFormatAsCodeSnippet(errMsg)
 	}
 
 	/*
 		Alert Request Headers Section
 	*/
 
-	alertRequestHeadersSection := goteamsnotify.NewMessageCardSection()
+	alertRequestHeadersSection := messagecard.NewSection()
 	alertRequestHeadersSection.StartGroup = true
 	alertRequestHeadersSection.Title = "## Alert Request Headers"
 
@@ -331,28 +332,28 @@ func createTeamsMessage(record events.Record) goteamsnotify.MessageCard {
 		for index, value := range headerValuesCopy {
 			// update value with code snippet formatting, assign back using
 			// the available index value
-			headerValuesCopy[index] = goteamsnotify.TryToFormatAsCodeSnippet(value)
+			headerValuesCopy[index] = messagecard.TryToFormatAsCodeSnippet(value)
 		}
-		addFactPair(&msgCard, alertRequestHeadersSection, header, headerValuesCopy...)
+		addFactPair(msgCard, alertRequestHeadersSection, header, headerValuesCopy...)
 	}
 
 	if err := msgCard.AddSection(alertRequestHeadersSection); err != nil {
 		errMsg := fmt.Sprintf("Error returned from attempt to add alertRequestHeadersSection: %v", err)
 		log.Errorf("%s: %v", myFuncName, errMsg)
-		msgCard.Text = msgCard.Text + "\n\n" + goteamsnotify.TryToFormatAsCodeSnippet(errMsg)
+		msgCard.Text = msgCard.Text + "\n\n" + messagecard.TryToFormatAsCodeSnippet(errMsg)
 	}
 
 	/*
 		Message Card Branding/Trailer Section
 	*/
 
-	trailerSection := goteamsnotify.NewMessageCardSection()
+	trailerSection := messagecard.NewSection()
 	trailerSection.StartGroup = true
-	trailerSection.Text = goteamsnotify.ConvertEOLToBreak(config.MessageTrailer(config.BrandingMarkdownFormat))
+	trailerSection.Text = messagecard.ConvertEOLToBreak(config.MessageTrailer(config.BrandingMarkdownFormat))
 	if err := msgCard.AddSection(trailerSection); err != nil {
 		errMsg := fmt.Sprintf("Error returned from attempt to add trailerSection: %v", err)
 		log.Errorf("%s: %v", myFuncName, errMsg)
-		msgCard.Text = msgCard.Text + "\n\n" + goteamsnotify.TryToFormatAsCodeSnippet(errMsg)
+		msgCard.Text = msgCard.Text + "\n\n" + messagecard.TryToFormatAsCodeSnippet(errMsg)
 	}
 
 	return msgCard
@@ -364,7 +365,7 @@ func createTeamsMessage(record events.Record) goteamsnotify.MessageCard {
 func sendTeamsMessage(
 	ctx context.Context,
 	webhookURL string,
-	msgCard goteamsnotify.MessageCard,
+	msgCard *messagecard.MessageCard,
 	schedule time.Time,
 	retries int,
 	retriesDelay int,
@@ -457,7 +458,7 @@ func sendTeamsMessage(
 		}
 
 		// Create Microsoft Teams client
-		mstClient := goteamsnotify.NewClient()
+		mstClient := goteamsnotify.NewTeamsClient()
 
 		// Submit message card using Microsoft Teams client, retry submission
 		// if needed up to specified number of retry attempts.
