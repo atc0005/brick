@@ -141,7 +141,6 @@ func (c configTemplate) Description() string {
 //
 // This computed timeout value is intended to be used to cancel a notification
 // attempt once it reaches this timeout threshold.
-//
 func GetNotificationTimeout(
 	baseTimeout time.Duration,
 	schedule time.Time,
