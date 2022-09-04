@@ -256,7 +256,8 @@ const (
 	LogLevelDebug string = "debug"
 )
 
-// 	apex/log Handlers
+// apex/log Handlers
+//
 // ---------------------------------------------------------
 // cli - human-friendly CLI output
 // discard - discards all logs
