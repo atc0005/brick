@@ -21,7 +21,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net"
 	"net/http"
 	"strings"
@@ -178,7 +177,7 @@ func disableUserHandler(
 		// have the option of displaying it in a raw format (e.g.,
 		// troubleshooting), replace the Body with a new io.ReadCloser to
 		// allow later access to r.Body for JSON-decoding purposes
-		requestBody, requestBodyReadErr := ioutil.ReadAll(r.Body)
+		requestBody, requestBodyReadErr := io.ReadAll(r.Body)
 		if requestBodyReadErr != nil {
 			http.Error(w, requestBodyReadErr.Error(), http.StatusBadRequest)
 			return
@@ -186,7 +185,7 @@ func disableUserHandler(
 
 		log.Debugf("raw requestBody: %s", requestBody)
 
-		r.Body = ioutil.NopCloser(bytes.NewReader(requestBody))
+		r.Body = io.NopCloser(bytes.NewReader(requestBody))
 
 		// Try to decode the request body into the struct. If there is an
 		// error, respond to the client with the error message and appropriate
