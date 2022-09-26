@@ -1,4 +1,4 @@
-# Copyright 2021 Adam Chalkley
+# Copyright 2022 Adam Chalkley
 #
 # https://github.com/atc0005/brick
 #
@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: Linting
+name: Lint and Build
 
 # Run builds for Pull Requests (new, updated)
 # `synchronized` seems to equate to pushing new commits to a linked branch
@@ -24,18 +24,10 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  linting:
-    name: Lint Dockerfile files
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    container:
-      image: ghcr.io/hadolint/hadolint:latest-debian
+  lint_and_build_using_ci_matrix:
+    name: CI matrix
+    uses: atc0005/shared-project-resources/.github/workflows/lint-and-build-using-ci-matrix.yml@master
 
-    steps:
-      - name: Check out code
-        uses: actions/checkout@v3
-
-      - name: Run hadolint against all Dockerfile files
-        run: |
-          hadolint --version
-          hadolint dependabot/docker/go/Dockerfile
+  lint_and_build_using_makefile:
+    name: Makefile
+    uses: atc0005/shared-project-resources/.github/workflows/lint-and-build-using-make.yml@master
