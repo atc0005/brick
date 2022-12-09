@@ -26,6 +26,55 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.4.23] - 2022-12-09
+
+### Overview
+
+- Bug fixes
+- Dependency updates
+- GitHub Actions Workflows updates
+- built using Go 1.19.4
+  - Statically linked
+  - Windows (x86, x64)
+  - Linux (x86, x64)
+
+### Changed
+
+- Dependencies
+  - `Go`
+    - `1.17.10` to `1.19.4`
+  - `pelletier/go-toml`
+    - `v2.0.1` to `v2.0.6`
+  - `github.com/atc0005/go-teams-notify`
+    - `v2.6.1` to `v2.7.0-rc.2`
+  - `github.com/mattn/go-colorable`
+    - `v0.1.2` to `v0.1.13`
+  - `github.com/mattn/go-isatty`
+    - `v0.0.8` to `v0.0.16`
+  - `golang.org/x/sys`
+    - `v0.0.0-20190412213103-97732733099d` to `v0.3.0`
+  - `github.com/alexflint/go-scalar`
+    - `v1.1.0` to `v1.2.0`
+  - `github.com/fatih/color`
+    - `v1.7.0` to `v1.13.0`
+  - `github.com/go-logfmt/logfmt`
+    - `v0.4.0` to `v0.5.1`
+  - `github.com/pkg/errors`
+    - `v0.8.1` to `v0.9.1`
+  - `github.com/kr/logfmt`
+    - `v0.0.0-20140226030751-b84e30acd515` to
+      `v0.0.0-20210122060352-19f9bcb100e6`
+- (GH-310) Update project to Go 1.19
+- (GH-313) Update Makefile and GitHub Actions Workflows
+- (GH-319) Refactor GitHub Actions workflows to import logic
+
+### Fixed
+
+- (GH-302) Update lintinstall Makefile recipe
+- (GH-311) Swap io/ioutil package for io package
+- (GH-312) Add missing cmd doc files
+- (GH-325) Fix Makefile Go module base path detection
+
 ## [v0.4.22] - 2022-05-11
 
 ### Overview
@@ -864,7 +913,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.22...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.23...HEAD
+[v0.4.23]: https://github.com/atc0005/brick/releases/tag/v0.4.23
 [v0.4.22]: https://github.com/atc0005/brick/releases/tag/v0.4.22
 [v0.4.21]: https://github.com/atc0005/brick/releases/tag/v0.4.21
 [v0.4.20]: https://github.com/atc0005/brick/releases/tag/v0.4.20
