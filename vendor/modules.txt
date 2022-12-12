@@ -19,7 +19,7 @@ github.com/apex/log/handlers/text
 ## explicit; go 1.14
 github.com/atc0005/go-ezproxy
 github.com/atc0005/go-ezproxy/activefile
-# github.com/atc0005/go-teams-notify/v2 v2.7.0-rc.2
+# github.com/atc0005/go-teams-notify/v2 v2.7.0
 ## explicit; go 1.14
 github.com/atc0005/go-teams-notify/v2
 github.com/atc0005/go-teams-notify/v2/messagecard
