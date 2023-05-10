@@ -30,7 +30,7 @@ import (
 // When this signal is received, the provided parent context cancel() function
 // is used to cancel all child contexts. This is intended to be run as a
 // goroutine.
-func shutdownListener(ctx context.Context, quit <-chan os.Signal, parentContextCancel context.CancelFunc) {
+func shutdownListener(_ context.Context, quit <-chan os.Signal, parentContextCancel context.CancelFunc) {
 
 	// FIXME: If we're passing in the parent context's CancelFunc, do we need
 	// the `ctx` that we're passing in?

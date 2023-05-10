@@ -83,7 +83,7 @@ func logEventDisableRequestReceived(alert events.SplunkAlertEvent, reportedUserE
 // being disabled. This function emits the output to stdout for the init
 // system to catch. This function does NOT report the intent via
 // notifications.
-func logEventDisablingUsername(alert events.SplunkAlertEvent, reportedUserEventsLog *ReportedUserEventsLog) {
+func logEventDisablingUsername(alert events.SplunkAlertEvent) {
 
 	msgTemplate := "Disabling username %q from IP %q per report from %q"
 

@@ -318,9 +318,5 @@ func (c *Config) LoadConfigFile(fileHandle io.Reader) error {
 		return err
 	}
 
-	if err := toml.Unmarshal(configFileEntries, &c.fileConfig); err != nil {
-		return err
-	}
-
-	return nil
+	return toml.Unmarshal(configFileEntries, &c.fileConfig)
 }

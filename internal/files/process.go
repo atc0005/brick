@@ -171,7 +171,7 @@ func ProcessDisableEvent(
 	case !disableEntryFound:
 
 		// log our intent to disable the username
-		logEventDisablingUsername(alert, reportedUserEventsLog)
+		logEventDisablingUsername(alert)
 
 		// disable usename
 		if err := disableUser(alert, disabledUsers); err != nil {
@@ -211,11 +211,9 @@ func ProcessDisableEvent(
 
 		userSessions, userSessionsLookupErr := getUserSessions(
 			alert,
-			reportedUserEventsLog,
 			ezproxyActiveFilePath,
 			ezproxySessionsSearchDelay,
 			ezproxySessionSearchRetries,
-			ezproxyExecutable,
 		)
 
 		if userSessionsLookupErr != nil {
@@ -259,11 +257,9 @@ func ProcessDisableEvent(
 
 		userSessions, userSessionsLookupErr := getUserSessions(
 			alert,
-			reportedUserEventsLog,
 			ezproxyActiveFilePath,
 			ezproxySessionsSearchDelay,
 			ezproxySessionSearchRetries,
-			ezproxyExecutable,
 		)
 
 		if userSessionsLookupErr != nil {
@@ -403,11 +399,9 @@ func isIgnored(
 
 func getUserSessions(
 	alert events.SplunkAlertEvent,
-	reportedUserEventsLog *ReportedUserEventsLog,
 	ezproxyActiveFilePath string,
 	ezproxySessionsSearchDelay int,
 	ezproxySessionSearchRetries int,
-	ezproxyExecutable string,
 ) (ezproxy.UserSessions, error) {
 
 	reader, readerErr := activefile.NewReader(alert.Username, ezproxyActiveFilePath)

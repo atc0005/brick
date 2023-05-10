@@ -23,13 +23,13 @@ import (
 	"github.com/apex/log"
 )
 
-func viewDisabledUsersHandler(w http.ResponseWriter, r *http.Request) {
+func viewDisabledUsersHandler(w http.ResponseWriter, _ *http.Request) {
 
 	log.Info("viewDisabledUsersHandler endpoint hit")
 	fmt.Fprintf(w, "viewDisabledUsersHandler endpoint hit")
 }
 
-func viewDisabledUserStatusHandler(w http.ResponseWriter, r *http.Request) {
+func viewDisabledUserStatusHandler(w http.ResponseWriter, _ *http.Request) {
 
 	// TODO: Pull historical disable status details from database
 	// TODO: Pull current disable status from flat-files
