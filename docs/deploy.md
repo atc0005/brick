@@ -144,31 +144,42 @@ docs did).
 
 Depending on your target environment, you'll either need the 32-bit or 64-bit
 version of the binary that you generated earlier by following the [build
-instructions](build.md). Replace the `v0.1.0-0-g721e6d2` pattern below with
-the latest available stable version.
+instructions](build.md).
 
-| If you see this `uname -m` output | Use the filename with this pattern    | Your EZProxy server has this architecture |
-| --------------------------------- | ------------------------------------- | ----------------------------------------- |
-| `x86_64`                          | `brick-v0.1.0-0-g721e6d2-linux-amd64` | 64-bit                                    |
-| `i686`                            | `brick-v0.1.0-0-g721e6d2-linux-386`   | 32-bit                                    |
+Alternatively, you can also obtain precompiled binaries for the [latest
+release](https://github.com/atc0005/brick/releases/latest).
+
+After downloading the binaries you should decompress each of them (e.g., `xz
+-d brick-linux-amd64.xz`).
+
+| If you see this `uname -m` output | Use the filename with this pattern | Your EZProxy server has this architecture |
+| --------------------------------- | ---------------------------------- | ----------------------------------------- |
+| `x86_64`                          | `brick-linux-amd64`                | 64-bit                                    |
+| `i686`                            | `brick-linux-386`                  | 32-bit                                    |
 
 For example, if you run `uname -m` on your EZproxy server and get `x86_64` as
-the output, you will want to deploy the `brick-v0.1.0-0-g721e6d2-linux-amd64`
-binary.
+the output, you will want to deploy the `brick-linux-amd64` binary.
 
 #### Deploying the binary
+
+**NOTE**:
+
+- If downloading precompiled binaries for the [latest
+  release](https://github.com/atc0005/brick/releases/latest) make sure to
+  decompress each of them (e.g., `xz -d brick-linux-amd64.xz`) before
+  deploying them.
+- If you opt to deploy `brick` using the provided DEB or RPM packages then
+  binaries will be placed in the `/usr/sbin/` path instead of the
+  `/usr/local/sbin/` path
 
 1. Copy the appropriate binary to `/usr/local/sbin/brick` on the EZproxy server
 1. Set permissions on the brick birnary
    - `sudo chmod -v u=rwx,g=rx,o=rx /usr/local/sbin/brick`
 
 If for example you learn that EZproxy is running on a 32-bit Linux
-distribution, then you will want to deploy the
-`brick-v0.1.0-0-g721e6d2-linux-386` binary to the EZproxy server as
-`/usr/local/sbin/brick` and set `0755` permissions on the file.
-
-Replace the `v0.1.0-0-g721e6d2` pattern with the latest available stable
-version.
+distribution, then you will want to deploy the `brick-linux-386` binary to the
+EZproxy server as `/usr/local/sbin/brick` and set `0755` permissions on the
+file.
 
 ### Configure `brick`
 
@@ -224,6 +235,9 @@ Results:
    the path to a configuration file.
    - e.g., `ExecStart=/usr/local/sbin/brick --config-file
      /usr/local/etc/brick/config.toml`
+   - **NOTE**: If you opt to deploy `brick` using the provided DEB or RPM
+     packages then binaries will be placed in the `/usr/sbin/` path instead of
+     the `/usr/local/sbin/` path
    - optionally, specify environment variables using a supported method to
      override default settings as needed
    - see the [configuration](configure.md) guide for supported environment

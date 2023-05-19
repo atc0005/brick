@@ -14,6 +14,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:generate go-winres make --product-version=git-tag --file-version=git-tag
+
 package main
 
 import (
@@ -184,7 +186,7 @@ func main() {
 	// listen on specified port and IP Address, block until app is terminated
 	log.Infof("%s %s is listening on %s port %d",
 		config.MyAppName,
-		config.Version,
+		config.Version(),
 		appConfig.LocalIPAddress(),
 		appConfig.LocalTCPPort(),
 	)

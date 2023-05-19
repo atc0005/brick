@@ -14,6 +14,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+//go:generate go-winres make --product-version=git-tag --file-version=git-tag
+
 package main
 
 import (
@@ -79,7 +81,7 @@ type AppConfig struct {
 
 // Branding is responsible for emitting application name, version and origin
 func Branding() {
-	fmt.Fprintf(flag.CommandLine.Output(), "\n%s %s\n%s\n\n", myAppName, config.Version, myAppURL)
+	fmt.Fprintf(flag.CommandLine.Output(), "\n%s %s\n%s\n\n", myAppName, config.Version(), myAppURL)
 }
 
 // flagsUsage displays branding information and general usage details

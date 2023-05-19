@@ -30,11 +30,18 @@ import (
 	"github.com/pelletier/go-toml/v2"
 )
 
-// Version is updated via Makefile builds by referencing the fully-qualified
+// version is updated via Makefile builds by referencing the fully-qualified
 // path to this variable, including the package. We set a placeholder value so
 // that something resembling a version string will be provided for
 // non-Makefile builds.
-var Version = "x.y.z"
+var version = "x.y.z"
+
+// Version exports the raw version string for this application. This is either
+// a default placeholder value (if non-Makefile build) or the auto-generated
+// version value provided by a Makefile build.
+func Version() string {
+	return version
+}
 
 func (c *Config) String() string {
 	return fmt.Sprintf(
@@ -119,7 +126,7 @@ func (c *Config) String() string {
 // displaying this information.
 func (c configTemplate) Version() string {
 	return fmt.Sprintf("\n%s %s\n%s\n\n",
-		MyAppName, Version, MyAppURL)
+		MyAppName, version, MyAppURL)
 }
 
 // Description emits branding information whenever the user specifies the `-h`
@@ -169,7 +176,7 @@ func MessageTrailer(format BrandingFormat) string {
 		string(format),
 		MyAppName,
 		MyAppURL,
-		Version,
+		version,
 		time.Now().Format(time.RFC3339Nano),
 	)
 }
