@@ -26,6 +26,35 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.5.0] - 2023-05-19
+
+### Overview
+
+- Add support for generating DEB, RPM packages
+- Build improvements
+- Generated binary changes
+  - filename patterns
+  - compression (~ 66% smaller)
+  - executable metadata
+- built using Go 1.19.9
+  - Statically linked
+  - Windows (x86, x64)
+  - Linux (x86, x64)
+
+### Added
+
+- (GH-350) Generate RPM/DEB packages using nFPM
+- (GH-353) Add version metadata to Windows executables
+
+### Changed
+
+- (GH-354) Switch to semantic versioning (semver) compatible versioning
+  pattern
+- (GH-355) Makefile: Compress binaries & use fixed filenames
+- (GH-352) Makefile: Refresh recipes to add "standard" set, new
+  package-related options
+- (GH-351) Build dev/stable releases using go-ci Docker image
+
 ## [v0.4.24] - 2023-05-19
 
 ### Overview
@@ -952,7 +981,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.24...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.5.0...HEAD
+[v0.5.0]: https://github.com/atc0005/brick/releases/tag/v0.5.0
 [v0.4.24]: https://github.com/atc0005/brick/releases/tag/v0.4.24
 [v0.4.23]: https://github.com/atc0005/brick/releases/tag/v0.4.23
 [v0.4.22]: https://github.com/atc0005/brick/releases/tag/v0.4.22
