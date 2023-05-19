@@ -26,6 +26,45 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.4.24] - 2023-05-19
+
+### Overview
+
+- Bug fixes
+- Dependency updates
+- GitHub Actions workflow updates
+- built using Go 1.19.9
+  - Statically linked
+  - Windows (x86, x64)
+  - Linux (x86, x64)
+
+### Changed
+
+- Dependencies
+  - `Go`
+    - `1.19.4` to `1.19.9`
+  - `pelletier/go-toml`
+    - `v2.0.6` to `v2.0.7`
+  - `atc0005/go-teams-notify`
+    - `v2.7.0-rc.2` to `v2.7.0`
+  - `mattn/go-isatty`
+    - `v0.0.16` to `v0.0.18`
+  - `golang.org/x/sys`
+    - `v0.3.0` to `v0.8.0`
+  - `fatih/color`
+    - `v1.13.0` to `v1.15.0`
+  - `go-logfmt/logfmt`
+    - `v0.5.1` to `v0.6.0`
+- (GH-332) Add Go Module Validation, Dependency Updates jobs
+- (GH-338) Drop `Push Validation` workflow
+- (GH-339) Rework workflow scheduling
+- (GH-341) Remove `Push Validation` workflow status badge
+- (GH-346) Update vuln analysis GHAW to use on.push hook
+
+### Fixed
+
+- (GH-358) Fix revive linter errors
+
 ## [v0.4.23] - 2022-12-09
 
 ### Overview
@@ -913,7 +952,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.23...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.4.24...HEAD
+[v0.4.24]: https://github.com/atc0005/brick/releases/tag/v0.4.24
 [v0.4.23]: https://github.com/atc0005/brick/releases/tag/v0.4.23
 [v0.4.22]: https://github.com/atc0005/brick/releases/tag/v0.4.22
 [v0.4.21]: https://github.com/atc0005/brick/releases/tag/v0.4.21
