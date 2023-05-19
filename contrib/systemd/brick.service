@@ -45,6 +45,12 @@ TimeoutStopSec=15s
 #
 # ExecStart=/usr/local/sbin/brick --config-file /etc/brick/config.toml
 # ExecStart=/usr/local/sbin/brick --config-file /usr/local/etc/brick/config.toml
+#
+# NOTE: If using DEB or RPM packages to deploy brick the
+# installation/deployment path will be /usr/sbin/ instead of /usr/local/sbin/.
+#
+# ExecStart=/usr/sbin/brick
+#
 ExecStart=/usr/local/sbin/brick
 
 # See README.md for setup steps related to setting required

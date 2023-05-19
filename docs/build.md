@@ -87,6 +87,10 @@ been tested.
    - if using separate `go build` invocations
      - `/tmp/brick/`
 
+**NOTE**: Depending on which `Makefile` recipe you use the generated binary
+may be compressed and have an `xz` extension. If so, you should decompress the
+binary first before deploying it (e.g., `xz -d brick-linux-amd64.xz`).
+
 <!-- Footnotes here  -->
 
 [go-docs-download]: <https://golang.org/dl>  "Download Go"

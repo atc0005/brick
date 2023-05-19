@@ -1,0 +1,68 @@
+# Copyright 2023 Adam Chalkley
+#
+# https://github.com/atc0005/brick
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# nfpm config file used for generating RPM and DEB packages.
+#
+# https://nfpm.goreleaser.com/usage/
+# https://nfpm.goreleaser.com/configuration/
+
+name: "brick-dev"
+arch: "amd64"
+platform: "linux"
+
+# The SEMVER environment variable is set via the Makefile. Call `make
+# packages` to generate packages.
+version: ${SEMVER}
+
+section: "default"
+priority: "extra"
+maintainer: "Adam Chalkley <atc0005@users.noreply.github.com>"
+description: Tooling used to automatically disable EZproxy user accounts via incoming webhook requests (dev build).
+vendor: "atc0005"
+homepage: "https://github.com/atc0005/brick"
+license: "Apache-2.0"
+# changelog: "changelog.yaml"
+contents:
+  - src: ../../release_assets/brick/brick-linux-amd64-dev
+    dst: /usr/sbin/brick_dev
+    file_info:
+      mode: 0755
+
+  - src: ../../release_assets/es/es-linux-amd64-dev
+    dst: /usr/sbin/es_dev
+    file_info:
+      mode: 0755
+
+  - src: ../../release_assets/ezproxy/ezproxy-linux-amd64-dev
+    dst: /usr/sbin/ezproxy_dev
+    file_info:
+      mode: 0755
+
+overrides:
+  rpm:
+    depends:
+      # Provides selinuxenabled tool.
+      # Installed by default even via the "minimal" installation option.
+      - libselinux-utils
+    scripts:
+      # preinstall: ./scripts/rpm/preinstall.sh
+      postinstall: ./scripts/rpm/postinstall.sh
+      # postremove: ./scripts/rpm/postremove.sh
+  deb:
+    scripts:
+      # preinstall: ./scripts/deb/preinstall.sh
+      postinstall: ./scripts/deb/postinstall.sh
+      # preremove: ./scripts/deb/preremove.sh
