@@ -15,31 +15,30 @@
 // limitations under the License.
 
 /*
-
 Package ezproxy is intended for the processing of EZproxy related files and
 sessions.
 
-PROJECT HOME
+# Project Home
 
 See our GitHub repo (https://github.com/atc0005/go-ezproxy) for the latest
 code, to file an issue or submit improvements for review and potential
 inclusion into the project.
 
-PURPOSE
+# Purpose
 
 Process EZproxy related files and sessions.
 
-FEATURES
+# Features
 
-• generate a list of audit records for session-related events for all usernames or just for a specific username
+  - generate a list of audit records for session-related events for all
+    usernames or just for a specific username
+  - generate a list of active sessions using the audit log using entires
+    without a corresponding logout event type
+  - generate a list of active sessions using the active file for all usernames
+    or just for a specific username
+  - terminate single user session or bulk user sessions
 
-• generate a list of active sessions using the audit log using entires without a corresponding logout event type
-
-• generate a list of active sessions using the active file for all usernames or just for a specific username
-
-• terminate single user session or bulk user sessions
-
-OVERVIEW
+# Overview
 
 Ultimately, this package was written in order to support retrieving session
 information for a specific username so that the session can be terminated.
@@ -58,12 +57,12 @@ If using the ezproxy/auditlog package, you can also generate a SessionEntries
 collection representing all SessionEntry values from a specified audit log
 file or just the values applicable to a specifc user.
 
-FILE FORMATS
+# File Formats
 
 Please see the doc coverage in each subpackage for coverage of the fields
 found within the audit logs and active user file relevant to our purposes.
 
-FUTURE
+# Future
 
 This package currently provides functionality for working with an active user
 or audit log file, but not for EZproxy traffic log files. Having minimal
@@ -73,6 +72,5 @@ could prove invaluable where automation is used to automatically terminate
 user sessions; after account termination, a report could be generated for the
 incident listing at a high-level the providers accessed and general statistics
 associated with the access (e.g., PDF downloads, total bandwidth, etc.).
-
 */
 package ezproxy

@@ -26,6 +26,38 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.1.8] - 2023-06-09
+
+### Changed
+
+- Dependencies
+  - drop individual GitHub Actions dependencies
+  - import `atc0005/shared-project-resources` shared/importable CI workflows
+- CI
+  - (GH-73) Switch Docker image source from Docker Hub to GitHub Container
+    Registry (GHCR)
+  - (GH-74) Expand linting GitHub Actions Workflow to include `oldstable`,
+    `unstable` container images
+    (GH-78) Update project to Go 1.19
+    (GH-81) Update Makefile and GitHub Actions Workflows
+    (GH-85) Refactor GitHub Actions workflows to import logic
+    (GH-86) Add Go Module Validation, Dependency Updates jobs
+    (GH-87) Drop `Push Validation` workflow
+    (GH-88) Rework workflow scheduling
+    (GH-90) Remove `Push Validation` workflow status badge
+    (GH-93) Update vuln analysis GHAW to remove on.push hook
+    (GH-94) Add `quick` Makefile recipe (alias)
+
+### Fixed
+
+- (GH-56) Replace godoc.org badge with pkg.go.dev badge
+- (GH-70) False positive `G307: Deferring unsafe method "Close" on type
+  "*os.File" (gosec)` linting error
+- (GH-79) Apply linting fixes for Go 1.19 release
+- (GH-80) Remove broken ref links in CHANGELOG
+- (GH-91) Update vuln analysis GHAW to use on.push hook
+- (GH-92) Disable depguard linter
+
 ## [v0.1.7] - 2020-11-16
 
 ### Changed
@@ -250,7 +282,8 @@ application is released (currently pending review).
 
 <!-- Version header ref links here  -->
 
-[Unreleased]: https://github.com/atc0005/go-ezproxy/compare/v0.1.7...HEAD
+[Unreleased]: https://github.com/atc0005/go-ezproxy/compare/v0.1.8...HEAD
+[v0.1.8]: https://github.com/atc0005/go-ezproxy/releases/tag/v0.1.8
 [v0.1.7]: https://github.com/atc0005/go-ezproxy/releases/tag/v0.1.7
 [v0.1.6]: https://github.com/atc0005/go-ezproxy/releases/tag/v0.1.6
 [v0.1.5]: https://github.com/atc0005/go-ezproxy/releases/tag/v0.1.5
@@ -262,10 +295,6 @@ application is released (currently pending review).
 
 <!-- General footnotes here  -->
 
-[repo-url-home]: <https://github.com/atc0005/go-ezproxy>  "This project's GitHub repo"
 [repo-url-issues]: <https://github.com/atc0005/go-ezproxy/issues>  "This project's issues list"
-[repo-url-release-latest]: <https://github.com/atc0005/go-ezproxy/releases/latest>  "This project's latest release"
-
-[docs-homepage]: <https://godoc.org/github.com/atc0005/go-ezproxy>  "GoDoc coverage"
 
 [related-brick-project]: <https://github.com/atc0005/brick> "atc0005/brick project URL"

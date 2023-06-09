@@ -26,18 +26,21 @@ issues:
 
 linters:
   enable:
-    - depguard
+    # https://github.com/atc0005/go-ci/issues/1024
+    # - depguard
     - dogsled
     - dupl
+    - exportloopref
     - goconst
     - gocritic
     - gofmt
     - goimports
-    - golint
     - gosec
+    - govet
     - maligned
     - misspell
     - prealloc
-    - scopelint
+    - revive
+    - staticcheck
     - stylecheck
     - unconvert

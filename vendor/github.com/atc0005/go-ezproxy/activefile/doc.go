@@ -15,11 +15,10 @@
 // limitations under the License.
 
 /*
-
 Package activefile is intended for the processing of EZproxy active users and
 hosts files.
 
-OVERVIEW
+# Overview
 
 There is only ever one Active Users and Hosts "state" file at a time. While
 Host entries are (from what can be observed) consolidated on one line, session
@@ -28,7 +27,7 @@ space-separated fields. These order-specific lines and fields are joined in
 order to reconstruct a User Session that reflects active user sessions within
 EZproxy.
 
-KNOWN TYPES
+# Known Types
 
 Known entry types include (but may not be limited to):
 
@@ -39,7 +38,7 @@ Username or Login (L)
 
 Currently, only the last two types (S, L) are relevant to our purposes.
 
-UNKNOWN TYPES
+# Unknown Types
 
 These types have been observed, but not researched sufficiently to identify
 their purpose (Pull Requests for this are welcome!):
@@ -48,7 +47,7 @@ P
 M
 s (lowercase letter)
 
-LINE ORDERING
+# Line Ordering
 
 For our purposes, we match lines that start with a capital letter S and pair
 it with the first line following it that begins with a capital letter L. We
@@ -67,7 +66,7 @@ and:
 S
 L
 
-FIELD NUMBERS
+# Field Numbers
 
 The line for for Logins (L) is composed of 2 fields:
 
@@ -88,7 +87,7 @@ The line for Sessions (S) is composed of 11 fields:
 10) unknown, 0 is recorded
 11) unknown, asterisk is recorded
 
-RACE CONDITION
+# Race Condition
 
 NOTE: EZproxy does not immediately update the Active Users and Hosts "state"
 file with state changes; when a user account logs in/out, there is a race
@@ -98,6 +97,5 @@ Sessions. In an effort to workaround this race condition, this package
 attempts to retry session read attempts a limited number of times by default
 before giving up. This retry behavior (including a delay between retry
 attempts) can be modified by the caller as needed.
-
 */
 package activefile

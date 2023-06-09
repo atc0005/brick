@@ -48,8 +48,9 @@ lintinstall:
 
 	@export PATH="${PATH}:$(go env GOPATH)/bin"
 
-	@echo "Explicitly enabling Go modules mode per command"
-	(cd; GO111MODULE="on" go get honnef.co/go/tools/cmd/staticcheck)
+	@echo "Installing latest stable staticcheck version via go install command ..."
+	go install honnef.co/go/tools/cmd/staticcheck@latest
+	staticcheck --version
 
 	@echo Installing latest stable golangci-lint version per official installation script ...
 	curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(shell go env GOPATH)/bin
@@ -66,9 +67,11 @@ linting:
 	@go vet -mod=vendor $(shell go list -mod=vendor ./... | grep -v /vendor/)
 
 	@echo "Running golangci-lint ..."
+	@golangci-lint --version
 	@golangci-lint run
 
 	@echo "Running staticcheck ..."
+	@staticcheck --version
 	@staticcheck $(shell go list -mod=vendor ./... | grep -v /vendor/)
 
 	@echo "Finished running linting checks"
@@ -105,6 +108,11 @@ pristine: goclean gitclean
 ## all: run all applicable build steps
 all: clean build
 	@echo "Completed build process ..."
+
+.PHONY: quick
+## quick: alias for build recipe
+quick: clean build
+	@echo "Completed tasks for quick build"
 
 .PHONY: build
 ## build: ensure that packages build
