@@ -17,7 +17,7 @@
 package ezproxy
 
 import (
-	"io/ioutil"
+	"io"
 	"log"
 	"os"
 	"time"
@@ -36,7 +36,7 @@ func init() {
 	// Disable logging output by default unless client code explicitly
 	// requests it
 	Logger = log.New(os.Stderr, "[ezproxy] ", 0)
-	Logger.SetOutput(ioutil.Discard)
+	Logger.SetOutput(io.Discard)
 
 }
 
@@ -51,7 +51,7 @@ func EnableLogging() {
 // all logging output.
 func DisableLogging() {
 	Logger.SetFlags(0)
-	Logger.SetOutput(ioutil.Discard)
+	Logger.SetOutput(io.Discard)
 }
 
 // These "SessionsLimit" constants are used as preallocation values for maps

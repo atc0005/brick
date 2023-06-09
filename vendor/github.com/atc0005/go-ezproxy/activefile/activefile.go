@@ -138,6 +138,10 @@ func (afr activeFileReader) filterEntries(validPrefixes []string) ([]ezproxy.Fil
 	if err != nil {
 		return nil, fmt.Errorf("func filterEntries: error encountered opening file %q: %w", afr.Filename, err)
 	}
+
+	// #nosec G307
+	// Believed to be a false-positive from recent gosec release
+	// https://github.com/securego/gosec/issues/714
 	defer func() {
 		if err := f.Close(); err != nil {
 			// Ignore "file already closed" errors
