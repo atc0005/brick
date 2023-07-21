@@ -26,6 +26,37 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.5.1] - 2023-07-21
+
+### Added
+
+- (GH-379) Add initial automated release notes config
+- (GH-381) Add initial automated release build workflow
+
+### Changed
+
+- Dependencies
+  - `Go`
+    - `1.19.9` to `1.19.11`
+  - `atc0005/go-ci`
+    - `go-ci-oldstable-build-v0.10.5` to `go-ci-oldstable-build-v0.11.5`
+  - `atc0005/go-ezproxy`
+    - `v0.1.7` to `v0.1.8`
+  - `pelletier/go-toml`
+    - `v2.0.7` to `v2.0.9`
+  - `atc0005/go-teams-notify`
+    - `v2.7.0` to `v2.7.1`
+  - `mattn/go-isatty`
+    - `v0.0.18` to `v0.0.19`
+  - `golang.org/x/sys`
+    - `v0.8.0` to `v0.10.0`
+
+- (GH-368) Update vuln analysis GHAW to remove on.push hook
+
+### Fixed
+
+- (GH-365) Disable depguard linter
+
 ## [v0.5.0] - 2023-05-19
 
 ### Overview
@@ -981,7 +1012,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.5.1...HEAD
+[v0.5.1]: https://github.com/atc0005/brick/releases/tag/v0.5.1
 [v0.5.0]: https://github.com/atc0005/brick/releases/tag/v0.5.0
 [v0.4.24]: https://github.com/atc0005/brick/releases/tag/v0.4.24
 [v0.4.23]: https://github.com/atc0005/brick/releases/tag/v0.4.23
