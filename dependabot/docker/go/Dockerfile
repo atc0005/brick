@@ -23,4 +23,4 @@
 # binaries) to reflect that version of Go.
 
 # https://hub.docker.com/_/golang
-FROM golang:1.21rc2
+FROM golang:1.21rc3
