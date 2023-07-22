@@ -25,7 +25,7 @@ require (
 	github.com/alexflint/go-arg v1.4.3
 	github.com/apex/log v1.9.0
 	github.com/atc0005/go-ezproxy v0.1.8
-	github.com/atc0005/go-teams-notify/v2 v2.7.1
+	github.com/atc0005/go-teams-notify/v2 v2.8.0
 	github.com/pelletier/go-toml/v2 v2.0.9
 )
 
