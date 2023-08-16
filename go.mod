@@ -18,7 +18,7 @@ module github.com/atc0005/brick
 
 // replace github.com/atc0005/go-ezproxy => ../go-ezproxy
 
-go 1.19
+go 1.20
 
 require (
 	github.com/Showmax/go-fqdn v1.0.0
