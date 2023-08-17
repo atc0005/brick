@@ -26,6 +26,22 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.5.2] - 2023-08-17
+
+### Changed
+
+- Dependencies
+  - `Go`
+    - `1.19.11` to `1.20.7`
+  - `atc0005/go-ci`
+    - `go-ci-oldstable-build-v0.11.5` to `go-ci-oldstable-build-v0.13.4`
+  - `atc0005/go-teams-notify`
+    - `v2.7.1` to `v2.8.0`
+  - `golang.org/x/sys`
+    - `v0.10.0` to `v0.11.0`
+- (GH-385) Update Dependabot config to monitor both branches
+- (GH-405) Update project to Go 1.20 series
+
 ## [v0.5.1] - 2023-07-21
 
 ### Added
@@ -1012,7 +1028,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.5.1...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.5.2...HEAD
+[v0.5.2]: https://github.com/atc0005/brick/releases/tag/v0.5.2
 [v0.5.1]: https://github.com/atc0005/brick/releases/tag/v0.5.1
 [v0.5.0]: https://github.com/atc0005/brick/releases/tag/v0.5.0
 [v0.4.24]: https://github.com/atc0005/brick/releases/tag/v0.4.24
