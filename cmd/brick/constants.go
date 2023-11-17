@@ -18,3 +18,9 @@ package main
 
 // MB represents 1 Megabyte
 const MB int64 = 1048576
+
+const (
+	recordActionStep2of3      string = "[step 2 of 3]"
+	recordActionStep3of3      string = "[step 3 of 3]"
+	recordActionUnknownRecord string = "[UNKNOWN]"
+)

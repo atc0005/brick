@@ -176,28 +176,28 @@ func getMsgTitle(msgTitlePrefix string, record events.Record) string {
 	// TODO: Calculate step labeling based off of enabled features (see GH-65).
 
 	case events.ActionSuccessDisableRequestReceived, events.ActionFailureDisableRequestReceived:
-		msgCardTitle = msgTitlePrefix + "[step 1 of 3] " + record.Action
+		msgCardTitle = msgTitlePrefix + recordActionStep2of3 + " " + record.Action
 
 	case events.ActionSuccessDisabledUsername, events.ActionFailureDisabledUsername:
-		msgCardTitle = msgTitlePrefix + "[step 2 of 3] " + record.Action
+		msgCardTitle = msgTitlePrefix + recordActionStep2of3 + " " + record.Action
 
 	case events.ActionSuccessDuplicatedUsername, events.ActionFailureDuplicatedUsername:
-		msgCardTitle = msgTitlePrefix + "[step 2 of 3] " + record.Action
+		msgCardTitle = msgTitlePrefix + recordActionStep2of3 + " " + record.Action
 
 	case events.ActionSuccessIgnoredUsername, events.ActionFailureIgnoredUsername:
-		msgCardTitle = msgTitlePrefix + "[step 2 of 3] " + record.Action
+		msgCardTitle = msgTitlePrefix + recordActionStep2of3 + " " + record.Action
 
 	case events.ActionSuccessIgnoredIPAddress, events.ActionFailureIgnoredIPAddress:
-		msgCardTitle = msgTitlePrefix + "[step 2 of 3] " + record.Action
+		msgCardTitle = msgTitlePrefix + recordActionStep2of3 + " " + record.Action
 
 	case events.ActionSuccessTerminatedUserSession,
 		events.ActionFailureUserSessionLookupFailure,
 		events.ActionFailureTerminatedUserSession,
 		events.ActionSkippedTerminateUserSessions:
-		msgCardTitle = msgTitlePrefix + "[step 3 of 3] " + record.Action
+		msgCardTitle = msgTitlePrefix + recordActionStep3of3 + " " + record.Action
 
 	default:
-		msgCardTitle = msgTitlePrefix + " [UNKNOWN] " + record.Action
+		msgCardTitle = msgTitlePrefix + " " + recordActionUnknownRecord + " " + record.Action
 		log.Warnf("UNKNOWN record: %v+\n", record)
 	}
 
