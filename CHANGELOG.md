@@ -26,6 +26,32 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.5.3] - 2023-11-17
+
+### Changed
+
+#### Dependency Updates
+
+- (GH-420) canary: bump golang from 1.20.7 to 1.20.8 in /dependabot/docker/go
+- (GH-450) canary: bump golang from 1.20.8 to 1.20.11 in /dependabot/docker/go
+- (GH-451) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.13.12 to go-ci-oldstable-build-v0.14.1 in /dependabot/docker/builds
+- (GH-411) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.13.4 to go-ci-oldstable-build-v0.13.5 in /dependabot/docker/builds
+- (GH-412) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.13.5 to go-ci-oldstable-build-v0.13.6 in /dependabot/docker/builds
+- (GH-415) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.13.6 to go-ci-oldstable-build-v0.13.7 in /dependabot/docker/builds
+- (GH-421) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.13.7 to go-ci-oldstable-build-v0.13.8 in /dependabot/docker/builds
+- (GH-427) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.13.8 to go-ci-oldstable-build-v0.13.9 in /dependabot/docker/builds
+- (GH-440) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.13.9 to go-ci-oldstable-build-v0.13.12 in /dependabot/docker/builds
+- (GH-447) go.mod: bump github.com/fatih/color from 1.15.0 to 1.16.0
+- (GH-442) go.mod: bump github.com/mattn/go-isatty from 0.0.19 to 0.0.20
+- (GH-417) go.mod: bump github.com/pelletier/go-toml/v2 from 2.0.9 to 2.1.0
+- (GH-418) go.mod: bump golang.org/x/sys from 0.11.0 to 0.12.0
+- (GH-433) go.mod: bump golang.org/x/sys from 0.12.0 to 0.13.0
+- (GH-445) go.mod: bump golang.org/x/sys from 0.13.0 to 0.14.0
+
+### Fixed
+
+- (GH-454) Fix goconst linting errors
+
 ## [v0.5.2] - 2023-08-17
 
 ### Changed
@@ -1028,7 +1054,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.5.2...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.5.3...HEAD
+[v0.5.3]: https://github.com/atc0005/brick/releases/tag/v0.5.3
 [v0.5.2]: https://github.com/atc0005/brick/releases/tag/v0.5.2
 [v0.5.1]: https://github.com/atc0005/brick/releases/tag/v0.5.1
 [v0.5.0]: https://github.com/atc0005/brick/releases/tag/v0.5.0
