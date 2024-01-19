@@ -26,6 +26,20 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.5.4] - 2024-01-19
+
+### Changed
+
+#### Dependency Updates
+
+- (GH-461) canary: bump golang from 1.20.11 to 1.20.12 in /dependabot/docker/go
+- (GH-469) canary: bump golang from 1.20.12 to 1.20.13 in /dependabot/docker/go
+- (GH-463) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.14.1 to go-ci-oldstable-build-v0.14.2 in /dependabot/docker/builds
+- (GH-470) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.14.2 to go-ci-oldstable-build-v0.14.3 in /dependabot/docker/builds
+- (GH-465) go.mod: bump github.com/pelletier/go-toml/v2 from 2.1.0 to 2.1.1
+- (GH-459) go.mod: bump golang.org/x/sys from 0.14.0 to 0.15.0
+- (GH-467) go.mod: bump golang.org/x/sys from 0.15.0 to 0.16.0
+
 ## [v0.5.3] - 2023-11-17
 
 ### Changed
@@ -1054,7 +1068,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.5.3...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.5.4...HEAD
+[v0.5.4]: https://github.com/atc0005/brick/releases/tag/v0.5.4
 [v0.5.3]: https://github.com/atc0005/brick/releases/tag/v0.5.3
 [v0.5.2]: https://github.com/atc0005/brick/releases/tag/v0.5.2
 [v0.5.1]: https://github.com/atc0005/brick/releases/tag/v0.5.1
