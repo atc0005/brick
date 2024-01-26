@@ -36,10 +36,11 @@ const (
 )
 
 // Even though Microsoft Teams doesn't show the additional newlines,
-// https://messagecardplayground.azurewebsites.net/ DOES show the results
-// as a formatted code block. Including the newlines now is an attempt at
-// "future proofing" the codeblock support in MessageCard values sent to
-// Microsoft Teams.
+// [MessageCard Playground] DOES show the results as a formatted code block.
+// Including the newlines now is an attempt at "future proofing" the codeblock
+// support in MessageCard values sent to Microsoft Teams.
+//
+// [MessageCard Playground]: https://messagecardplayground.azurewebsites.net/
 const (
 
 	// msTeamsCodeBlockSubmissionPrefix is the prefix appended to text input
