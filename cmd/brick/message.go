@@ -587,7 +587,7 @@ func sendEmail(
 	// FIXME: This function both logs *and* returns the error, which is
 	// duplication that will require fixing at some point. Leaving both in for
 	// the time being until this code proves stable.
-	send := func(ctx context.Context, emailCfg emailConfig, emailMsg string, myFuncName string) error {
+	send := func(_ context.Context, emailCfg emailConfig, emailMsg string, myFuncName string) error {
 
 		// Connect to the remote SMTP server.
 		c, dialErr := smtp.Dial(smtpServer)
