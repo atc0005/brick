@@ -26,6 +26,25 @@ The following types of changes will be recorded in this file:
 
 - placeholder
 
+## [v0.5.5] - 2024-02-15
+
+### Changed
+
+#### Dependency Updates
+
+- (GH-489) canary: bump golang from 1.20.13 to 1.20.14 in /dependabot/docker/go
+- (GH-474) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.14.3 to go-ci-oldstable-build-v0.14.4 in /dependabot/docker/builds
+- (GH-477) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.14.4 to go-ci-oldstable-build-v0.14.5 in /dependabot/docker/builds
+- (GH-481) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.14.5 to go-ci-oldstable-build-v0.14.6 in /dependabot/docker/builds
+- (GH-492) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.14.6 to go-ci-oldstable-build-v0.14.9 in /dependabot/docker/builds
+- (GH-494) docker: bump atc0005/go-ci from go-ci-oldstable-build-v0.14.9 to go-ci-oldstable-build-v0.15.0 in /dependabot/docker/builds
+- (GH-478) go.mod: bump github.com/atc0005/go-teams-notify/v2 from 2.8.0 to 2.9.0
+- (GH-488) go.mod: bump golang.org/x/sys from 0.16.0 to 0.17.0
+
+### Fixed
+
+- (GH-497) Fix `unused-parameter` revive linting error
+
 ## [v0.5.4] - 2024-01-19
 
 ### Changed
@@ -1068,7 +1087,8 @@ Known issues:
   - the expectation is that host-level firewall rules will be used to protect
     against this until a feature can be added to filter access
 
-[Unreleased]: https://github.com/atc0005/brick/compare/v0.5.4...HEAD
+[Unreleased]: https://github.com/atc0005/brick/compare/v0.5.5...HEAD
+[v0.5.5]: https://github.com/atc0005/brick/releases/tag/v0.5.5
 [v0.5.4]: https://github.com/atc0005/brick/releases/tag/v0.5.4
 [v0.5.3]: https://github.com/atc0005/brick/releases/tag/v0.5.3
 [v0.5.2]: https://github.com/atc0005/brick/releases/tag/v0.5.2
